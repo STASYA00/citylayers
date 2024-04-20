@@ -78,6 +78,8 @@
     integrity="sha256-NDI0K41gVbWqfkkaHj15IzU7PtMoelkzyKp8TOaFQ3s=" crossorigin=""></script>
 <title>CityLayers</title>
 @vite('resources/css/app.css')
+@vite('resources/js/map.js')
+@vite('resources/js/citymap.js')
 <meta name="csrf-token" id="csrf-token" content="{{ csrf_token() }}">
 <script>
     myToken = <?php echo json_encode(['csrfToken' => csrf_token()]); ?>

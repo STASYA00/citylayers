@@ -9,6 +9,8 @@ use App\Models\Street;
 use App\Models\Building;
 use App\Models\Openspace;
 use App\Models\Opinion;
+use App\Models\Grade;
+use App\Models\Subgrade;
 use App\Models\Opinion_de;
 use App\Models\Comment_en;
 use App\Models\Comment_de;
@@ -17,12 +19,16 @@ use App\Models\Pages;
 use App\Models\Place;
 use App\Models\PlaceLike;
 use App\Models\PlaceComment;
+use App\Models\PlaceGrade;
+use App\Models\PlaceSubgrade;
 use App\Models\Feeling;
 use App\Models\PlaceDetails;
 use App\Models\PlaceDetailPlace;
 use App\Models\PlaceDetailObservation;
 use App\Models\Stat;
 use App\Models\Preference;
+use App\Models\Category;
+use App\Models\Subcategory;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -72,8 +78,10 @@ class GlobalController extends Controller
                     ->orWhere('user_id', backpack_auth()->user()->id)
                     ->get();
 
-
-
+                $allGrades = Grade::where('user_id', null)
+                    ->where('user_id', backpack_auth()->user()->id)
+                    ->get();
+                    
                 $query = PlaceDetails::whereNotNull('latitude')->whereNotNull('longitude')
                     ->with([
                         'placeDetail',
@@ -85,6 +93,9 @@ class GlobalController extends Controller
                         'observationsDetail.feeling',
                         'user',
                         'placeComment' => function ($query) {
+                            $query->where('user_id', backpack_auth()->user()->id);
+                        },
+                        'placeGrade' => function ($query) {
                             $query->where('user_id', backpack_auth()->user()->id);
                         }
                     ]);
@@ -195,11 +206,6 @@ class GlobalController extends Controller
 
         return response()->json(['html' => $html, 'hasMorePages' => $usersWithTotals->hasMorePages()]);
     }
-
-
-
-
-
     // public function profil()
     // {
     //     return view('home');
@@ -333,6 +339,7 @@ class GlobalController extends Controller
             )
         );
     }
+    
     public function badges_overview()
     {
         $userid = backpack_auth()->user()->id;
@@ -484,8 +491,6 @@ class GlobalController extends Controller
         return view('preferences', compact('preferences', 'preferences_array'));
     }
 
-
-
     public function avatar(Request $request)
     {
         $userid = backpack_auth()->user()->id;
@@ -546,16 +551,22 @@ class GlobalController extends Controller
         return response()->json(['html' => $html, 'hasMorePages' => $placeDetails->hasMorePages()]);
     }
 
-
-
-
-
-
-
     static function pages()
     {
         $pages = Pages::all();
         return $pages;
+    }
+
+    static function categories()
+    {
+        $categories = Category::all();
+        return $categories;
+    }
+
+    static function subcategories()
+    {
+        $subcategories = Subcategory::all();
+        return $subcategories;
     }
 
     static function allusers()
@@ -867,6 +878,34 @@ class GlobalController extends Controller
             ],
             [
                 'comment' => $request->data,
+            ]
+        );
+    }
+
+    public function saveGrade(Request $request)
+    {
+        PlaceGrade::updateOrcreate(
+            [
+                'place_detail_id' => $request->id,
+                'user_id' => backpack_auth()->user()->id,
+            ],
+            [
+                'category_id' => $request->label,
+                'grade' => $request->data,
+            ]
+        );
+    }
+
+    public function saveSubgrade(Request $request)
+    {
+        PlaceSubgrade::updateOrcreate(
+            [
+                'place_detail_id' => $request->id,
+                'user_id' => backpack_auth()->user()->id,
+            ],
+            [
+                'category_id' => $request->label,
+                'subcategory_id' => $request->data,
             ]
         );
     }

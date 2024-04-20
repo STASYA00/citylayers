@@ -130,6 +130,11 @@ class User extends Authenticatable
         return $this->hasMany(PlaceComment::class, 'user_id', 'id');
     }
 
+    public function grades()
+    {
+        return $this->hasMany(PlaceGrade::class, 'user_id', 'id');
+    }
+
 
 
 }

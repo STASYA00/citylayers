@@ -93,6 +93,16 @@ class PlaceDetails extends Model
     {
         return $this->hasMany(PlaceComment::class,'place_detail_id', 'id');
     }
+
+    public function placeGrade()
+    {
+        return $this->hasOne(PlaceGrade::class, 'place_detail_id','id');
+    }
+    public function placeGrades()
+    {
+        return $this->hasMany(PlaceGrade::class,'place_detail_id','id');
+    }
+
     public function placeLikes()
     {
         return $this->hasMany(PlaceLike::class,'place_detail_id', 'id');
@@ -101,6 +111,11 @@ class PlaceDetails extends Model
     public function getListplaceCommentsAttribute()
     {
         return $this->placeComments->pluck('comment')->implode(', ');
+    }
+
+    public function getListplaceGradesAttribute()
+    {
+        return $this->placeGrades->pluck('grade')->implode(', ');
     }
 
     public function getTotalLikesAttribute()

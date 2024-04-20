@@ -29,6 +29,7 @@ Route::group([
 
     Route::crud('stat', 'StatCrudController');
     Route::crud('opinion', 'OpinionCrudController');
+    Route::crud('grade', 'GradeCrudController');
     Route::crud('space-tag', 'SpaceTagCrudController');
     Route::crud('space-tag-de', 'SpaceTagDeCrudController');
     Route::crud('opinion-de', 'OpinionDeCrudController');

@@ -25,11 +25,6 @@ Route::get('/badges_overview', function () {
 });
 
 
-
-
-
-
-
 Route::controller(GlobalController::class)->group(function () {
     // Route::get('/', 'getAll')->name('getAll')->middleware('App\Http\Middleware\MyMiddleware');
     // Route::get('/', 'homeDefault')->name('default');
@@ -40,6 +35,7 @@ Route::controller(GlobalController::class)->group(function () {
     Route::get('/', 'getAll')->name('default');
 
     Route::get('profile', 'profile')->name('profile');
+    Route::get('grade', 'grade')->name('grade');
     Route::get('badges_overview', 'badges_overview')->name('badges_overview');
     Route::post('save_profile', 'saveprofile')->name('saveprofile');
     Route::get('save_profile', 'profil')->name('profil');
@@ -55,20 +51,19 @@ Route::controller(GlobalController::class)->group(function () {
     Route::post('/place/like', 'like')->name('like');
     Route::post('/place/dislike', 'dislike')->name('dislike');
     Route::post('/place/comment', 'comment')->name('comment');
+
+    Route::post('/place/grade-test', 'grade')->name('grade');
+
+    // Route::post('map/add/grade', 'addMapGrade')->name('map.add.grade');
+
     Route::post('edit/{id}/{type}', 'edit')->name('edit');
 
     Route::get('delete', 'delete')->name('delete');
-
 
     Route::post('avatar', 'avatar')->name('avatar');
 
     Route::get('community-achievements', 'community_achievements')->name('community-achievements');
     Route::get('/load-more-community-achievements', 'loadMore_community_achievements')->name('loadMore_community_achievements');
-
-
-
-
-
 
     Route::get('impressum', function () {
         return view('impressum');
@@ -111,6 +106,12 @@ Route::get('badges_overview', function () {
     return view('badges_overview');
 });
 
+Route::get('categories', [GlobalController::class, 'categories']);
+// Route::get('category/{category_id?}', [GlobalController::class, 'categories'])->array_filter();
+
+Route::get('subcategories', [GlobalController::class, 'subcategories']);
+Route::get('subcategories/{category_id?}', [GlobalController::class, 'subcategories'])->where('category_id', 'category_id');
+Route::get('subcategory/{subcategory_id?}', [GlobalController::class, 'subcategories'])->where('subcategory_id', 'subcategory_id');
 
 
 
@@ -127,7 +128,7 @@ Route::get('signup/email', function () {
     return view('sign-up-e');
 });
 
-Route::get('add-new/{type?}/{id?}', [GlobalController::class, 'createNew'])->where('type', 'place|observation');;
+Route::get('add-new/{type?}/{id?}', [GlobalController::class, 'createNew'])->where('type', 'place|observation');
 Route::get('badges_overview', [GlobalController::class, 'badges_overview']);
 
 Route::get('filter', [GlobalController::class, 'filter']);
@@ -137,9 +138,13 @@ Route::post('map/add/place', [GlobalController::class, 'addMapPlace'])->name('ma
 
 Route::post('add/new/place', [GlobalController::class, 'addNewPlace'])->name('add.new.place');
 
+// Route::post('map/add/grade', [GlobalController::class, 'addMapGrade'])->name('map.add.grade');
+// Route::post('map/add/subgrade', [GlobalController::class, 'addMapSubgrade'])->name('map.add.subgrade');
 
 Route::post('/save-des', [GlobalController::class, 'saveDes']);
 Route::post('/save-comment', [GlobalController::class, 'saveComment']);
+Route::post('/save-grade', [GlobalController::class, 'saveGrade']);
+Route::post('/save-subgrade', [GlobalController::class, 'saveSubgrade']);
 Route::post('/set-like', [GlobalController::class, 'setLike']);
 
 Route::post('/auth/login', [AuthController::class, 'login'])->name('auth.login');

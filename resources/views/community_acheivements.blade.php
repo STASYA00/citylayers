@@ -26,7 +26,14 @@
 
                 <div class="belo m-4">
                     @if ($usersWithTotals->hasMorePages())
-                        <div class="first load-more-button cursor-pointer" data-page="{{ $usersWithTotals->currentPage() + 1 }}">see <div class="plu">+</div> all</div>
+                        <div class="first load-more-button cursor-pointer" 
+                        data-page="{{ $usersWithTotals->currentPage() + 1 }}">
+                            see 
+                            <div class="plu">
+                                +
+                            </div> 
+                            all
+                        </div>
                     @endif
                     <a href="/" class="scnd mt-2">Back</a>
                 </div>

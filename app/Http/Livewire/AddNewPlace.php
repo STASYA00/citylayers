@@ -88,9 +88,7 @@ class AddNewPlace extends Component
             ]);
         }
     }
-
-
-
+    
 
     public function render()
     {

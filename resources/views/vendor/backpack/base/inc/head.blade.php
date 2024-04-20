@@ -9,6 +9,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" /> {{-- Encrypted CSRF token for Laravel, in order for Ajax requests to work --}}
     <title>{{ isset($title) ? $title.' :: '.config('backpack.base.project_name') : config('backpack.base.project_name') }}</title>
     @vite('resources/css/app.css')
+    @vite('resources/js/map.js')
+    @vite('resources/js/citymap.js')
     @yield('before_styles')
     
     @stack('before_styles')

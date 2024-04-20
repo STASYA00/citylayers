@@ -17,9 +17,9 @@ class Comment_en extends Model
 
     protected $table = 'comments_en';
     // protected $primaryKey = 'id';
-     public $timestamps = false;
+    public $timestamps = false;
     protected $guarded = ['id'];
-     protected $fillable = [
+    protected $fillable = [
         'placeid',
         'type',
         'comment',

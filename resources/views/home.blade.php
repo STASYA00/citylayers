@@ -1,13 +1,26 @@
+@php use \App\Http\Controllers\GlobalController; @endphp
+@php  $categories = GlobalController::categories();@endphp
 @php
     $locale = session()->get('locale');
     if ($locale == null) {
         $locale = 'en';
     }
 @endphp
+
 @extends('layouts.app')
+@vite('resources/css/container.css')
+@vite('resources/css/map.css')
+@vite('resources/js/map.js')
+@vite('resources/js/citymap.js')
+
 
 @section('main')
-    <div data-barba="container">
+@vite('resources/js/map.js')
+@vite('resources/js/citymap.js')
+@vite('resources/css/container.css')
+@vite('resources/css/map.css')
+
+    <!-- <div data-barba="container">
         <div class="flex flex-col mx-auto">
             <div class="">
                 <div class="relative">
@@ -33,6 +46,9 @@
                     <div class="flex justify-center items-center">
                         <span class="fixed z-[30] top-10 mr-20 text-center">
                             Explore the map to view the activities of other users.
+                            @php
+                             echo $categories[0]->name;
+                          @endphp
                         </span>
                     </div>
 
@@ -575,6 +591,21 @@
             </div>
         </div>
     </div>
+     -->
+    <script>
+        <?php require_once("js/map.js");?>
+        <?php require_once("js/citymap.js");?>
+    </script>
+    <!-- <script src="resources/js/map.js"></script> -->
+    <script>
+        
+        let c = new CategoryPanel("body");
+        c.initiate();
+        c.load(["Accessibility", "Noise", "Safety", "Weather Resistance", "Amenities"]);
+        let m = new MapPanel("body");
+        m.initiate();
+        m.load();
+    </script>
 
     <script>
         const openPopupButton = document.getElementById('openPopup_profile');
@@ -724,9 +755,6 @@
 
         }
 
-
-
-
         function success(lat, lng) {
             mymap0.setView([lat, lng], 10);
 
@@ -738,8 +766,6 @@
         function fail() {
             alert("location failed");
         }
-
-
 
         function generateObservationHTML(observationDetail, place) {
             var obsrName = '';
@@ -792,9 +818,6 @@
 
             count = count + 1;
             place = data[i];
-
-
-
             placename = 'No Place';
 
             var addicon = '';
@@ -824,6 +847,7 @@
             const userdescription = place.description !== null ? place.description : '';
             // const comment = place.place_comment.comment !== null ? place.place_comment.comment : '';
             const comment = place.place_comment?.comment || '';
+            const grade = place.place_grade?.grade || '';
 
 
             var textarea = `
@@ -841,13 +865,7 @@
                 </div>
             `;
             }
-
-
-
-
             username = place.user.name;
-
-
 
 
             const givenDate = new Date(place.created_at); // Replace with your given date
@@ -901,81 +919,88 @@
 
             markerx = L.marker([placelatitude, placelongitude], {
                 icon: icon2
-            }).addTo(mymap0).bindPopup(
-
-
-                `<div class="bg-[#2d9bf0] p-0 w-full" x-data="{ viewp: false,viewo: false }">
-
-                    <div class="flex items-center justify-start gap-3 -mb-4 overflow-hidden">
-                        <div class="flex flex-col items-center justify-center">
-                            <div class="rounded-full bg-[#2d9bf0] border-4 border-white p-3 w-[68px] h-[68px]">
-                                <img class="w-full h-full" src="{{ asset('new_img/image.png') }}" />
-                            </div>
-                        </div>
-                        <div class="flex gap-4 mt-4">
-                            <div class="text-center">
-                                <img src="{{ asset('img/cam-2.PNG') }}" alt="" class="h-6 w-7">
-                                <div @click="viewp=!viewp" class="font-light text-white font-sm">view</div>
-                            </div>
-                            <span class="text-lg italic font-extrabold text-white">
-                            ` + placename + `
-                            </span>
-                            ` + addicon + `
-
-
-                        </div>
-                    </div>
-
-                    ` + observationsList + `
-
-                    ` + textarea + `
-
-
-
-                    <div x-data="activeliked(${place.id},${like})" class="absolute bottom-[-5px] w-full left-0 px-[10px]">
-                        <div class="flex items-center justify-between italic font-light text-white">
-                            <div class="flex items-center w-2/5 gap-10 likecomment">
-                                <div @click="comment${place.id}=!comment${place.id}" class="cursor-pointer"><img src="{{ asset('img/msg.PNG') }}" class="h-9 mt-[8px]"></div>
-
-                                <div onclick="setlike(${place.id},this)" @click="like${place.id}=!like${place.id}" class="cursor-pointer bg-[#0078d9] text-center text px-2 rounded">
-                                    <i class="fa fa-heart"
-                                    :class="like${place.id} ? 'fa-heart text-[#ffc543] liked' : 'fa-heart-o nolike'"
-                                    ></i></div>
-                            </div>
-                            <div class="w-3/5">Added by ` + username + ` on ` + formattedDate +
-                `</div>
-                        </div>
-
-                        <div class="absolute left-0 w-full" x-show="comment${place.id}">
-                            <textarea type="text" data-id="${place.id}" class="feedback w-full rounded-xl h-[60px] focus:outline-none focus:border-0 focus:ring-0 bg-[#2d9bf0] border-0 italic text-white placeholder-white leading-2 text-sm w-10/12" placeholder="Put your feedback">` +
-                comment + `</textarea>
-                            <button onclick="saveComment(this)" class="font-bold border-2 border-site px-2 py-1 text-white bg-[#2d9bf0] rounded-3xl cursor-pointer float-right">Save</button>
-                            <div @click="comment${place.id}=false" class="hideCommentBox"></div>
-                        </div>
-                    </div>
-
-                    <div x-show="viewp" class="fixed top-0 w-full height-[30vh] bg-white rounded">
-                  
-                        <img src="storage/uploads/place/${place.place_image}"  class="w-full h-full" />
-                    
-                    </div>
-                    
-                     <div x-show="viewo" class="fixed top-0 w-full height-[30vh] bg-white rounded">
-                  
-                        <img src="storage/uploads/observation/${place.obsevation_image}"  class="w-full h-full" />
-                    
-                    </div>
-                </div>
-
-
-             
+            }).addTo(mymap0) //.bindPopup(
                 
+                // createContainer()
                 
-                `
 
 
+                // `<div class="bg-[#2d9bf0] p-0 w-full" x-data="{ viewp: false,viewo: false }">
 
-            );
+                //     <div class="flex items-center justify-start gap-3 -mb-4 overflow-hidden">
+                //         <div class="flex flex-col items-center justify-center">
+                //             <div class="rounded-full bg-[#2d9bf0] border-4 border-white p-3 w-[68px] h-[68px]">
+                //                 <img class="w-full h-full" src="{{ asset('new_img/image.png') }}" />
+                //             </div>
+                //         </div>
+                //         <div class="flex gap-4 mt-4">
+                //             <div class="text-center">
+                //                 <img src="{{ asset('img/cam-2.PNG') }}" alt="" class="h-6 w-7">
+                //                 <div @click="viewp=!viewp" class="font-light text-white font-sm">view</div>
+                //             </div>
+                //             <span class="text-lg italic font-extrabold text-white">
+                //             ` + placename + `
+                //             </span>
+                //             ` + addicon + `
+
+
+                //         </div>
+                //     </div>
+
+                //     ` + observationsList + `
+
+                //     ` + textarea + `
+                //     <div class="slidecontainer">
+                //         <input type="range" min="0" max="100" value="50" class="slider" id="accessibility" onchange="updateSlider()">
+                //         <p>Accessibility: <span id="accessibility_output"></span></p>
+                //     </div>
+                //     <div x-data="activeliked(${place.id},${like})" class="absolute bottom-[-5px] w-full left-0 px-[10px]">
+                //         <div class="flex items-center justify-between italic font-light text-white">
+                //             <div class="flex items-center w-2/5 gap-10 likecomment">
+                //                 <div @click="comment${place.id}=!comment${place.id}" class="cursor-pointer">
+                //                     <img src="{{ asset('img/msg.PNG') }}" class="h-9 mt-[8px]">
+                //                 </div>
+
+                //                 <div onclick="setlike(${place.id},this)" @click="like${place.id}=!like${place.id}" class="cursor-pointer bg-[#0078d9] text-center text px-2 rounded">
+                //                     <i class="fa fa-heart"
+                //                     :class="like${place.id} ? 'fa-heart text-[#ffc543] liked' : 'fa-heart-o nolike'"
+                //                     ></i>
+                //                 </div>
+                //             </div>
+                //             <div class="w-3/5">Added by ` + username + ` on ` + formattedDate +
+                //             `</div>
+                //         </div>
+
+                //         <div class="absolute left-0 w-full" x-show="comment${place.id}">
+                //             <textarea type="text" data-id="${place.id}" class="feedback w-full 
+                //             rounded-xl h-[60px] focus:outline-none focus:border-0 focus:ring-0 bg-[#2d9bf0] 
+                //             border-0 italic text-white placeholder-white leading-2 text-sm w-10/12" placeholder="Put your feedback">` +
+                //             comment + `</textarea>
+                //             <button onclick="saveGrade(this)" class="save font-bold border-2 border-site px-2 py-1 text-white bg-[#2d9bf0] rounded-3xl cursor-pointer float-right">
+                //                 Save
+                //             </button>
+                //             <div @click="comment${place.id}=false" class="hideCommentBox">
+                //             </div>
+                //         </div>
+                //     </div>
+
+                //     <div x-show="viewp" class="fixed top-0 w-full height-[30vh] bg-white rounded">
+                  
+                //         <img src="storage/uploads/place/${place.place_image}"  class="w-full h-full" />
+                    
+                //     </div>
+                    
+                //      <div x-show="viewo" class="fixed top-0 w-full height-[30vh] bg-white rounded">
+                  
+                //         <img src="storage/uploads/observation/${place.obsevation_image}"  class="w-full h-full" />
+                    
+                //     </div>
+                // </div>
+                
+                // `
+            // );
+
+            
 
             markerx.on('popupopen', (event) => {
                 const _id = event.popup._source.placeDetailID;
@@ -1028,12 +1053,6 @@
             };
         }
 
-
-
-
-
-
-
         function getmyposition(success, fail) {
 
             var is_echo = false;
@@ -1062,7 +1081,7 @@
         }
 
         function success(lat, lng, withmarket = true) {
-            mymap0.flyTo([lat, lng], 19);
+            mymap0.flyTo([lat, lng], 6);
             if (withmarket) {
                 L.marker([lat, lng], {
                     icon: currentPosIcon
@@ -1103,12 +1122,6 @@
                 fail();
             }
         }
-
-
-
-
-
-
 
         $('body').on('click', '.addToMap', function() {
             set_empty();
@@ -1164,6 +1177,7 @@
 
                 } else {
                     submitDetailData(place_data);
+                    
                 }
 
 
@@ -1418,6 +1432,42 @@
 
         }
 
+        function saveGrade(e) {
+            
+            let latitude = 59.334591;
+            let longitude = 18.063240;
+            
+            console.log("E", e);
+            console.log($(e));
+            console.log($(e).parent().find('.feedback'));
+            
+            const data = $(e).parent().find('.feedback').val();
+            const label = 62; //$(e).parent().find('.feedback').val();
+            const id = $(e).parent().find('.feedback').data('id');
+            console.log(data);
+            console.log(id);
+
+            $(e).parent().find('.hideCommentBox').click();
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: "/save-grade",
+                data: {
+                    data: data,
+                    label: label,
+                    id: id
+                     },
+            });
+        }
+
+            
+
         function setlike(id, e) {
 
             if ($(e).find('i').hasClass('nolike')) {
@@ -1485,6 +1535,44 @@
                 }
             });
         }
+
+        function updateSlider(){
+            console.log(this);
+            var slider = document.getElementById("accessibility");
+            document.getElementById('accessibility_output').innerHTML = slider.value;
+
+            let id = document.getElementsByClassName("feedback")[0].getAttribute("data-id");
+            
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: "/save-grade",
+                data: {
+                    data: parseInt(slider.value),
+                    id: id
+                     },
+            });
+        }
+
+        // <script>
+        
+        // var slider = document.getElementById("accessibility");
+        // slider.addEventListener('onchange',function() {
+        //             this.setAttribute('value',this.value);
+        //             });
+        // var output = document.getElementById("accessibility_output");
+        // output.innerHTML = slider.value;
+
+        // slider.oninput = function() {
+        //     console.log(this.value);
+        // output.innerHTML = this.value;
+        //     }
+            
 
         $(document).ready(function() {
 
