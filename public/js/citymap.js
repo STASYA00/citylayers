@@ -59,7 +59,7 @@ class Place{
 
 class MapTransformer{
     static calcDistance(map, coords1, coords2){
-        return map.distance(coords1,coords2);
+        return map.distance(coords1, coords2);
     }
 
     static px2coords(map, x,y){
@@ -102,8 +102,28 @@ class MapTransformer{
     }
 }
 
+class MapGraphics{
+    static refDist = 1000; // distance at which a grade has influence on the hatch pattern
+    static minRad = 1; // minimal radius of a hatch pattern
+    static gridDensity = 16;  // grid scarcity:) the amount of points in each direction that would be squeezed into 256. So
+                              // if gridDensity is 4, there will be 4 points with distance 64 between them (4 x 64 = 256)
+    static tile = 256; // tile size
+    
+    static getColors(){
+
+        return ['#C4B5F0'];
+    }
+
+    static getCategoryColor(category){
+        // TODO
+        return '#C4B5F0';
+    }
+}
+
 
 class CityMap extends MapPanel{
+    
+
     constructor(parent){
         super(parent);
         this.name = MAP_CLASSNAMES.MAP;
@@ -122,21 +142,22 @@ class CityMap extends MapPanel{
 
     initiate(){
         let pin = [59.315906,18.0739635]; //[48.6890, 7.14086];
-        let mymap0 = L.map(this.parent).setView(pin, 15);
+        let pts = [[59.312152351483135, 18.079562224248082]];
+        let mapObj = L.map(this.parent).setView(pin, 15);
         let osmLayer0 = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
             subdomains: 'abcd',
             minZoom: 0,
             maxZoom: 19,
             ext: 'png'
-        }).addTo(mymap0);
-        mymap0.zoomControl.remove();
-        mymap0.addLayer(osmLayer0);
-        mymap0.touchZoom.enable();
-        mymap0.scrollWheelZoom.enable();
-        this.addGrid(mymap0);
-        let pt = [59.312152351483135, 18.079562224248082];
-        this.addMarker(mymap0, pt[0], pt[1]);
-        // this.addGrid_(mymap0);
+        }).addTo(mapObj);
+        mapObj.zoomControl.remove();
+        mapObj.addLayer(osmLayer0);
+        mapObj.touchZoom.enable();
+        mapObj.scrollWheelZoom.enable();
+        this.drawHatchLayer(mapObj, pts, MapGraphics.getColors()[0]);
+        
+        this.addMarker(mapObj, pts[0][0], pts[0][1]);
+        this.addGrid_(mapObj);
 
     }
 
@@ -144,10 +165,8 @@ class CityMap extends MapPanel{
         L.marker([lat, lon]).addTo(map);
     }
 
-    
-
-    static makeRadius(refDist, ptDist, minRad){
-        let rad = minRad;
+    static makeRadius(refDist, ptDist){
+        let rad = MapGraphics.minRad;
         
         if (Math.abs(ptDist)<refDist){
             ptDist = ptDist==0 ? 1 : ptDist;
@@ -156,90 +175,37 @@ class CityMap extends MapPanel{
         return Math.min(rad, 8);
     }
 
-    addGrid(map){
-        
-        let pt = [59.312152351483135, 18.079562224248082];
-        let refDist = 1000; //MapTransformer.distanceTiles(map, map.getZoom());
-        console.log(refDist);
+    drawHatchTile(map, pts){
+
+    }
+
+    drawHatchLayer(map, pts, category){
 
         L.GridLayer.CanvasCircles = L.GridLayer.extend({
             createTile: function (coords) {
+                console.log("COORDS::", coords);
                 
-                // console.log(coords.x, coords.y, coords.z);
-                let tcoords = MapTransformer.tile2coords(coords.x, coords.y, coords.z);
-                var tile = document.createElement('canvas');
-                tile.setAttribute("className", "canvashatch")
-        
-                var tileSize = this.getTileSize();
-                tile.setAttribute('width', tileSize.x);
-                tile.setAttribute('height', tileSize.y);
-
-                var ctx = tile.getContext('2d');
-                const pi2 = Math.PI * 2;
-                // const radius = 4;
-                ctx.fillStyle = '#C4B5F0';
-                ctx.globalAlpha = 0.3;
-                ctx.strokeStyle = "rgb(255 0 0 / 0%)";
-                // ctx.rotate(30 * Math.PI / 180);
-                ctx.beginPath();
-                let module = 16;
-                let minRad = 1;
-                let radius = minRad;
-                let orig = map.getPixelOrigin();
-                console.log("--orig:", orig);
-                console.log("ORIG::", MapTransformer.px2coords(map,0,0));
-                console.log(tileSize.x, map.getZoom());
-
-
-                for( let x=0; x<= tileSize.x; x+=module )
-                {
-                    for( let y=0; y <= tileSize.y; y+=module ){
-                        
-                        let zeroCoords = MapTransformer.px2coords(map, orig.x-(
-                            coords.x * tileSize.x + x), orig.y - (coords.y*tileSize.y + y));
-                        
-                        let dst = MapTransformer.calcDistance(map, [zeroCoords.lat, zeroCoords.lng], pt);
-
-                        radius =  CityMap.makeRadius(refDist, dst, minRad);
-                        
-                        ctx.moveTo( x + radius, y );
-                        ctx.arc( x , y , radius, 0, pi2 );
-                        if (x==tileSize.x && y==tileSize.y){
-                            console.log(coords.x, coords.y, zeroCoords);
-                        }
-                    }
-                    
-                }
-                
-                ctx.stroke();
-                ctx.fill();
-                
-                
-        
-                return tile;
+                let el = TileManager.init(category);
+                el = TileManager.update(el, map, coords, pts);
+                return el;
             }
         });
         
 
         L.GridLayer.canvasCircles = function(opts) {
+            
             return new L.GridLayer.CanvasCircles(opts);
         };
 
-        
-        let l = map.addLayer( L.GridLayer.canvasCircles() );
-        l.on('update', (e) => {
-            context.save()
-            context.clearRect(
-                0,
-                0,
-                map.getSize().x,
-                map.getSize().y
-            )
-            // context.beginPath()
-            // path(data)
-            // context.stroke()
-            context.restore()
-        })
+        // let l = new L.GridLayer.CanvasCircles();
+        // l.updateWhenZooming = true;
+        map.addLayer( L.GridLayer.canvasCircles() );
+        map.on("zoom", function(ev){
+            console.log("EV", ev);
+            let cnvs = document.getElementsByName("canvas")
+            var ctx = tile.getContext('2d');
+            
+        });
     }
 
     addGrid_(map){
@@ -256,7 +222,10 @@ class CityMap extends MapPanel{
                 let zeroCoords = MapTransformer.px2coords(map, orig.x-(coords.x * scale.x), orig.y - (coords.y*scale.y));
                 
                 let dst = MapTransformer.calcDistance(map, [zeroCoords.lat, zeroCoords.lng], [59.312152351483135, 18.079562224248082]);
-                tile.innerHTML = [tcoords.lat, tcoords.lng, dst, zeroCoords.lat, zeroCoords.lng].join(', ');
+                tile.innerHTML = [
+                    tcoords.lat, tcoords.lng, dst, 
+                    zeroCoords.lat, zeroCoords.lng
+                ].join(', ');
                 tile.style.outline = '1px solid red';
                 return tile;
             }
@@ -268,4 +237,91 @@ class CityMap extends MapPanel{
         
         map.addLayer( L.GridLayer.debugCoords() );
     }
+}
+
+class HatchDrawer{
+    /*
+    Object responsible for drawing hatch patterns.
+
+    */
+
+    static drawCircle(ctx, radius, x ,y){
+        ctx.moveTo( x + radius, y );
+        ctx.arc( x , y , radius, 0, Math.PI * 2 );
+
+    }
+
+    static locatePoint(map, tileCoords, x, y){
+        /*
+            Function that locates grid point from tile on a map and returns its coordinates.
+        */
+        let orig = map.getPixelOrigin();
+
+        let crds = MapTransformer.px2coords(map, 
+                orig.x - (tileCoords.x * MapGraphics.tile + x), 
+                orig.y - (tileCoords.y * MapGraphics.tile + y));
+        return crds
+
+    }
+
+    static make(map, ctx, tileCoords, pts){
+        let coordArray = Array.from({length: MapGraphics.tile}, 
+                            (x,i)=>i%MapGraphics.gridDensity==0 ? i : undefined).
+                            filter(e=>e!=undefined);
+
+        coordArray.forEach(x => {
+            coordArray.forEach(y =>{
+
+                let crds = this.locatePoint(map, tileCoords, x, y);
+                let dst = Math.min(...pts.map(pt=>MapTransformer.calcDistance(map, [crds.lat, crds.lng], pt)));
+                let radius =  CityMap.makeRadius(MapGraphics.refDist, dst);
+                this.drawCircle(ctx, radius, x, y);
+                })
+            })
+        }
+}
+
+class TileManager{
+
+    static clear(el){
+        // let el = document.getElementsByTagName("canvas");
+        let ctx = el.getContext("2d");
+        ctx.clearRect(0, 0, MapGraphics.tile, MapGraphics.tile)
+    }
+
+    static draw(el, map, tileCoords, pts){
+        var ctx = el.getContext('2d');
+        let color = MapGraphics.getCategoryColor("category");
+
+        this.setContext(ctx, color);
+        // ctx.rotate(30 * Math.PI / 180);
+        ctx.beginPath();
+        
+        HatchDrawer.make(map, ctx, tileCoords, pts);
+        
+        ctx.stroke();
+        ctx.fill();
+        return el;
+    }
+
+    static init(category){
+        var el = document.createElement('canvas');
+        el.setAttribute("className", category)
+        el.setAttribute('width', MapGraphics.tile);
+        el.setAttribute('height', MapGraphics.tile);
+        return el;
+    }
+
+    static setContext(ctx, color){
+        ctx.fillStyle = color;
+        ctx.globalAlpha = 0.3;
+        ctx.strokeStyle = "rgb(255 0 0 / 0%)";
+    }
+
+    static update(el, map, tileCoords, pts){
+        this.clear(el);
+        return this.draw(el, map, tileCoords, pts);
+    }
+
+
 }
