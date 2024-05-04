@@ -1,5 +1,6 @@
 @php use \App\Http\Controllers\GlobalController; @endphp
 @php  $categories = GlobalController::categories();@endphp
+@php  $subcategories = GlobalController::subcategories();@endphp
 @php
     $locale = session()->get('locale');
     if ($locale == null) {
@@ -12,11 +13,13 @@
 @vite('resources/css/map.css')
 @vite('resources/js/map.js')
 @vite('resources/js/citymap.js')
+@vite('resources/js/category.js')
 
 
 @section('main')
 @vite('resources/js/map.js')
 @vite('resources/js/citymap.js')
+@vite('resources/js/category.js')
 @vite('resources/css/container.css')
 @vite('resources/css/map.css')
 
@@ -595,11 +598,17 @@
     <script>
         <?php require_once("js/map.js");?>
         <?php require_once("js/citymap.js");?>
+        <?php require_once("js/category.js");?>
     </script>
     <!-- <script src="resources/js/map.js"></script> -->
     <script>
         
         let c = new CategoryPanel("body");
+        const categoryInput = {!! json_encode($categories) !!};
+        const subcategoryInput = {!! json_encode($subcategories) !!};
+        console.log(subcategoryInput);
+        let subcats = subcategoryInput.map(s =>new Subcategory(s.id, s.name, s.category_id))
+        let categories = categoryInput.map(c => {new Category(c.id, c.name, c.description, subcats.filter(e=>e.parent_id==c.id))})
         c.initiate();
         c.load(["Accessibility", "Noise", "Safety", "Weather Resistance", "Amenities"]);
         let m = new MapPanel("body");

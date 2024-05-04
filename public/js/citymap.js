@@ -1,13 +1,17 @@
 // import {Settings} from "./settings";
 
 class Settings{
-    static debug = true;
+    static debug = false;
 }
 
 const MAP_CLASSNAMES = {
     MAP_PANEL: "mappanel",
     MAP: "map",
+}
 
+const GRIDS = {
+    RECT: "rectangular",
+    DIAGONAL: "diagonal",
 }
 
 class MapPanel{
@@ -60,6 +64,114 @@ class MapPanel{
     }
 }
 
+
+class CityMap extends MapPanel{
+    
+    constructor(parent){
+        super(parent);
+        this.name = MAP_CLASSNAMES.MAP;
+        this.parent = parent;
+        this.id = "id";
+        this.coords = [
+            [59.31712256357835, 18.063320386846158],
+            [59.31689934021666, 18.06273718341144],
+            [59.313720404190896, 18.08545415135039],
+            [59.31884859445553, 18.059762360943395],
+            [59.312152351483135, 18.079562224248082],
+        ];
+        this.places = this.coords.map(c=>new Place(c[0], c[1], 0.8));
+
+    }
+
+    initiate(){
+        
+        let mapObj = L.map(this.parent);
+        Positioner.make(mapObj);
+        CityMap.setup(mapObj);
+        
+
+        CityMap.addOsmLayer(mapObj);
+        
+        // this.coords.forEach(coord => this.addMarker(mapObj, coord[0], coord[1]));
+        // this.addDebugGrid(mapObj);
+
+        CityMap.addHatchLayer(mapObj, this.coords, MapGraphics.getColors()[0]);
+    }
+
+
+    addMarker(map, lat, lon){
+        L.marker([lat, lon]).addTo(map);
+    }
+
+    static setup(map){
+        map.zoomControl.remove();
+        map.touchZoom.enable();
+        map.scrollWheelZoom.enable();
+
+    }
+
+    static addOsmLayer(map){
+        let osmLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            subdomains: 'abcd',
+            minZoom: 0,
+            maxZoom: 19,
+            crs: L.CRS.Simple,
+            ext: 'png'
+        }).addTo(map);
+        map.addLayer(osmLayer);
+    }
+
+    static addHatchLayer(map, pts, category){
+        
+        L.GridLayer.CanvasCircles = L.GridLayer.extend({
+            createTile: function (coords) {
+                let el = TileManager.init(category);
+                el = TileManager.update(el, map, coords, pts);
+                return el;
+            }
+        });
+
+        let hatchLayer = new L.GridLayer.CanvasCircles({crs: L.CRS.Simple});
+        map.addLayer(hatchLayer);
+        map.on("zoomend", function(ev){
+            hatchLayer.redraw();
+        });
+    }
+
+    static addDebugGrid(map){
+        /*
+            Function that draws a tile grid with tile coordinates written in 
+            grid angles. To be used for debugging.
+        */
+        
+        L.GridLayer.DebugCoords = L.GridLayer.extend({
+            createTile: function (coords) {
+                var tile = document.createElement('div');
+                let tcoords = MapTransformer.tile2coords(coords.x, coords.y, coords.z);
+                
+                let zeroCoords = MapTransformer.px2coords(map, coords, 0,0);
+                
+                let dst = MapTransformer.calcDistance(map, 
+                    [zeroCoords.lat, zeroCoords.lng], 
+                    [59.312152351483135, 18.079562224248082]);
+                tile.innerHTML = [
+                    tcoords.lat, tcoords.lng, // dst 
+                    coords.x, coords.y, coords.z
+                ].join(', ');
+                tile.style.outline = '1px solid red';
+                return tile;
+            }
+        });
+        
+        L.GridLayer.debugCoords = function(opts) {
+            return new L.GridLayer.DebugCoords(opts);
+        };
+        
+        map.addLayer( L.GridLayer.debugCoords() );
+    }
+}
+
+
 function deg2rad(angle){
     return Math.PI * angle / 180;
 }
@@ -71,7 +183,6 @@ class Place{
         this.grade = grade;
     }
 }
-
 
 class MapTransformer{
     static calcDistance(map, coords1, coords2){
@@ -103,28 +214,6 @@ class MapTransformer{
         return {lat, lng};
     }
 
-    static distanceTiles(map, zoom) {
-        /*
-            Function that returns distance between the centers of two adjacent tiles on a certain zoom level.
-            :param: zoom            map's zoom level, int
-            return: dist            distance between the centers of two adjacent tiles on x axis (in degrees), float
-        */
-        let t1 = this.tile2coords(50, 50, zoom);
-        let t2 = this.tile2coords(51, 50, zoom);
-        return this.calcDistance(map, [t1.lat, t1.lng], [t2.lat, t2.lng]);
-        // return Math.pow( (Math.pow(t1.lng-t2.lng, 2) + Math.pow(t1.lat-t2.lat, 2)), 0.5);
-    }
-
-    static distanceDiagonalTiles(zoom) {
-        /*
-            Function that returns distance between the centers of two diagonally connected tiles on a certain zoom level.
-            :param: zoom            map's zoom level, int
-            return: dist            distance between the centers of two diagonally connected tiles (in degrees), float
-        */
-        let t1 = this.tile2coords(50, 50, zoom);
-        let t2 = this.tile2coords(51, 51, zoom);
-        return Math.pow( (Math.pow(t1.lon-t2.lon, 2), Math.pow(t1.lat-t2.lat, 2)), 0.5);
-    }
 }
 
 class MapGraphics{
@@ -143,123 +232,103 @@ class MapGraphics{
         // TODO
         return '#C4B5F0';
     }
+    static getGrid(category){
+        return GRIDS.DIAGONAL;
+    }
 }
 
 class Positioner{
+    static initZoom = 15
 
-    static make(test){
-        if (test){
-            return [59.315906, 18.0739635];
+    static async make(map){
+        if (Settings.debug){
+            return this.debugGeo(map);
         }
-        return this.getCurrentPosition();
+        return this.setFromGeo(map);
     }
-
-    static getCurrentPosition(){
-        return [];
+    static debugGeo(map){
+        map.setView([59.315906, 18.0739635], this.initZoom)
+    }
+    static setFromGeo(map){
+        map.locate({setView: true, maxZoom: this.initZoom});
     }
 }
 
-class CityMap extends MapPanel{
-    
+class Grid{
+    /*
+    Object responsible for constructing different grids.
+    Currently available grids:
+        * simple rectangular
+        * diagonal 45 degrees
 
-    constructor(parent){
-        super(parent);
-        this.name = MAP_CLASSNAMES.MAP;
-        this.parent = parent;
-        this.id = "id";
-        this.coords = [
-            [59.31712256357835, 18.063320386846158],
-            [59.31689934021666, 18.06273718341144],
-            [59.313720404190896, 18.08545415135039],
-            [59.31884859445553, 18.059762360943395],
-            [59.312152351483135, 18.079562224248082],
-        ];
-        this.places = this.coords.map(c=>new Place(c[0], c[1], 0.8));
+    */
+    static controlDims(width, height){
+        /*
+            Function that controls input dimensions and sets them to default in case they are missing
+            or invalid.
+            Args:
+                width       width of the grid, int, defaults to MapGraphics.tile if undefined
+                height      height of the grid, int, defaults to MapGraphics.tile if undefined
+        */
+        width = width? width : MapGraphics.tile;
+        height = height? height : MapGraphics.tile;
+        return [width, height];
 
     }
+    static rect(width, height){
+        /*
+            Function that calculates intersection points for a regular rectangular grid. Returns
+            a set of coordinates that represent these intersections as [[x,y],[x,y]]
+            Args:
+                width       width of the grid, int, defaults to MapGraphics.tile if undefined
+                height      height of the grid, int, defaults to MapGraphics.tile if undefined
+        */
 
-    initiate(){
+        [width, height] = this.controlDims(width, height);
         
-        let mapObj = L.map(this.parent).setView(Positioner.make(Settings.debug), 15);
-        let osmLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-            subdomains: 'abcd',
-            minZoom: 0,
-            maxZoom: 19,
-            crs: L.CRS.Simple,
-            ext: 'png'
-        }).addTo(mapObj);
-        mapObj.zoomControl.remove();
-        mapObj.addLayer(osmLayer);
-        mapObj.touchZoom.enable();
-        mapObj.scrollWheelZoom.enable();
-        
-        this.coords.forEach(coord => this.addMarker(mapObj, coord[0], coord[1]));
-        // this.addGrid_(mapObj);
-        CityMap.drawHatchLayer(mapObj, this.coords, MapGraphics.getColors()[0]);
-    }
+        let xArray = Array.from({length: width + 1}, 
+            (x, i) => i % MapGraphics.gridDensity==0 ? i : undefined).
+            filter(e=>e!=undefined);
+        let yArray = Array.from({length: height + 1}, 
+            (x, i) => i % MapGraphics.gridDensity==0 ? i : undefined).
+            filter(e=>e!=undefined);
 
-    addMarker(map, lat, lon){
-        L.marker([lat, lon]).addTo(map);
-    }
-
-    static makeRadius(refDist, ptDist){
-        let rad = MapGraphics.minRad;
-        
-        if (Math.abs(ptDist)<refDist){
-            ptDist = ptDist==0 ? 1 : ptDist;
-            rad = refDist / Math.abs(ptDist);
-        }
-        return Math.min(rad, 8);
-    }
-
-    drawHatchTile(map, pts){
-
-    }
-
-    static drawHatchLayer(map, pts, category){
-        
-        L.GridLayer.CanvasCircles = L.GridLayer.extend({
-            createTile: function (coords) {
-                let el = TileManager.init(category);
-                el = TileManager.update(el, map, coords, pts);
-                return el;
-            }
+        let coords = new Array();
+        xArray.forEach(x => {
+            yArray.forEach(y =>{
+                coords.push([x, y]);
+            });
         });
-
-        let hatchLayer = new L.GridLayer.CanvasCircles({crs: L.CRS.Simple});
-        map.addLayer(hatchLayer);
-        map.on("zoomend", function(ev){
-            hatchLayer.redraw();
-        });
+        return coords;
     }
 
-    addGrid_(map){
-        
-        L.GridLayer.DebugCoords = L.GridLayer.extend({
-            createTile: function (coords) {
-                var tile = document.createElement('div');
-                let tcoords = MapTransformer.tile2coords(coords.x, coords.y, coords.z);
-                // let scale = this.getTileSize();
-                
-                let zeroCoords = MapTransformer.px2coords(map, coords, 0,0); //orig.x-(coords.x * scale.x), orig.y - (coords.y*scale.y));
-                
-                let dst = MapTransformer.calcDistance(map, 
-                    [zeroCoords.lat, zeroCoords.lng], 
-                    [59.312152351483135, 18.079562224248082]);
-                tile.innerHTML = [
-                    tcoords.lat, tcoords.lng, // dst 
-                    coords.x, coords.y, coords.z
-                ].join(', ');
-                tile.style.outline = '1px solid red';
-                return tile;
-            }
-        });
-        
-        L.GridLayer.debugCoords = function(opts) {
-            return new L.GridLayer.DebugCoords(opts);
-        };
-        
-        map.addLayer( L.GridLayer.debugCoords() );
+    static diagonal(width, height){
+        /*
+            Function that calculates intersection points for a diagonal grid, 45 degrees. Returns
+            a set of coordinates that represent these intersections as [[x,y],[x,y]]
+            Args:
+                width       width of the grid, int, defaults to MapGraphics.tile if undefined
+                height      height of the grid, int, defaults to MapGraphics.tile if undefined
+        */
+        [width, height] = this.controlDims(width, height);
+        let xArray = Array.from({length: width + 1}, 
+            (x, i) => i % MapGraphics.gridDensity==0 ? i : undefined).
+            filter(e=>e!=undefined);
+        let yArray = Array.from({length: height + 1}, 
+            (x, i) => i % MapGraphics.gridDensity==0 ? i : undefined).
+            filter(e=>e!=undefined);
+
+        let coords = new Array();
+            xArray.forEach(x => {
+                yArray.forEach(y =>{
+                    if (x%(2*MapGraphics.gridDensity)==y%(2*MapGraphics.gridDensity)){
+                        coords.push([x, y]);
+                    }
+                    
+                });
+            });
+            return coords;
+
     }
 }
 
@@ -269,24 +338,60 @@ class HatchDrawer{
 
     */
 
+    static makeRadius(refDist, ptDist){
+        /*
+            Function that calculates radius based on the distance from the nearest 
+            mark.
+            Args:
+                refDist     distance that counts as mark's influence radius
+                ptDist      actual distance from the given point to the nearest mark
+        */
+        let rad = MapGraphics.minRad;
+        
+        if (Math.abs(ptDist) < refDist){
+            // if the given point is inside the influence area
+            ptDist = ptDist==0 ? 1 : ptDist;  // avoid division by zero
+            rad = refDist / Math.abs(ptDist); // radius is inversely proportional to the distance to the 
+                                              // closest influence point
+        }
+        // radius can't be more than 8
+
+        return Math.min(rad, 8);
+    }
+
     static drawCircle(ctx, radius, x ,y){
+        /*
+            Function that draws a circle on the map given x, y, radius.
+
+            Args:
+                ctx         context to draw the circle in, Context
+                radius      circle's radius
+                x           x coordinate of the center of the circle, in pixels from top left angle of the tile
+                y           y coordinate of the center of the circle, in pixels from top left angle of the tile
+        */
         ctx.moveTo( x + radius, y );
         ctx.arc( x , y , radius, 0, Math.PI * 2 );
     }
 
     static make(map, ctx, tileCoords, pts){
-        let coordArray = Array.from({length: MapGraphics.tile + 1}, 
-                            (x,i)=>i%MapGraphics.gridDensity==0 ? i : undefined).
-                            filter(e=>e!=undefined);
+        /*
+            Function that draws circles hatch pattern on the map given tile coordinates and points
+            to compare the hatch with. Closer to the points the hatch will have a denser pattern.
 
-        coordArray.forEach(x => {
-            coordArray.forEach(y =>{
-
-                let crds = MapTransformer.px2coords(map, tileCoords, x, y);
-                let dst = Math.min(...pts.map(pt=>MapTransformer.calcDistance(map, [crds.lat, crds.lng], pt)));                
-                let radius =  CityMap.makeRadius(MapGraphics.refDist, dst);
-                this.drawCircle(ctx, radius, x, y);
-                })
+            Args:
+                map         map the points belong to
+                ctx         context to draw the circle in, Context
+                tileCoords  coordinates of the tile to draw the hatch on, calculated in leaflet units from the pixelorigin
+                            {x: 9046, y: 596, z: 16}
+                pts         reference points for drawing the hatch pattern
+        */
+        let grid = Grid.diagonal(MapGraphics.tile, MapGraphics.tile);
+        grid.forEach(coords =>{
+            let [x, y] = coords;
+            let crds = MapTransformer.px2coords(map, tileCoords, x, y);
+            let dst = Math.min(...pts.map(pt=>MapTransformer.calcDistance(map, [crds.lat, crds.lng], pt)));                
+            let radius =  this.makeRadius(MapGraphics.refDist, dst);
+            this.drawCircle(ctx, radius, x, y);
             })
         }
 }
@@ -295,7 +400,6 @@ class TileManager{
     /*
     Object responsible for management of a single tile.
     Performs init, draw, clean, update operations.
-
     */
 
     static clear(el){

@@ -19,9 +19,51 @@ const SLIDER_IDS = {
 
 }
 
+class CElement{
+    constructor(parent, id){
+        this.id = id;
+        this.name = CLASSNAMES.CATEGORY_CONTAINER;
+        this.parent = parent;
+        this.elements = []
+    }
 
-class CategoryPanel{
+    getElement(){
+        let elements = document.getElementsByClassName(this.name);
+        if (elements.length > 0){
+            return elements[0];
+        }
+        return this.initiate();
+    }
+
+    getParent(){
+        let element = document.getElementById(this.parent);
+        return element;
+    }
+
+    
+
+    initiate() {
+        let panel = document.createElement("div");
+        panel.setAttribute('class', this.name);
+        panel.setAttribute("id", this.make_id());
+        this.getParent().appendChild(panel);
+    }
+
+    load(){
+        for (let e=0; e<this.elements.length; e++){
+            let element = new this.elements[e](this.make_id(), this.id);
+            element.initiate();
+            element.load();
+        }
+    }
+    make_id(){
+        return `${this.name}_${this.id}`
+    }
+}
+
+class CategoryPanel extends CElement{
     constructor(parent){
+        super(parent, "id");
         this.name = CLASSNAMES.CATEGORY_PANEL;
         this.parent = parent ? parent : "body";
         this.id = "id";
@@ -62,15 +104,12 @@ class CategoryPanel{
         return panel;
     }
 
-    make_id(){
-        return `${this.name}_${this.id}`
-    }
+    
 }
 
-class CategoryElement extends CategoryPanel{
+class CategoryElement extends CElement{
     constructor(parent, id){
-        super(parent);
-        this.id = id;
+        super(parent, id);
         this.name = CLASSNAMES.CATEGORY_CONTAINER;
         this.parent = parent ? parent : CLASSNAMES.CATEGORY_PANEL;
         this.elements = [CategoryHeader, DoubleSlider, 
@@ -97,12 +136,11 @@ class CategoryElement extends CategoryPanel{
     }
 }
 
-class CategoryHeader extends CategoryElement{
+class CategoryHeader extends CElement{
     constructor(parent, id){
         super(parent);
-        this.id = id;
         this.name = CLASSNAMES.CATEGORY_HEADER;
-        this.parent = parent; //CLASSNAMES.CATEGORY_CONTAINER;
+        // this.parent = parent; //CLASSNAMES.CATEGORY_CONTAINER;
         this.elements = [CategoryLabel, CategorySwitch];
     }
 
@@ -114,7 +152,7 @@ class CategoryHeader extends CategoryElement{
     }
 }
 
-class CategoryLabel extends CategoryElement{
+class CategoryLabel extends CElement{
     constructor(parent, id){
         super(parent);
         this.id = id;
@@ -130,7 +168,7 @@ class CategoryLabel extends CategoryElement{
     }
 }
 
-class CategorySwitch extends CategoryElement{
+class CategorySwitch extends CElement{
     constructor(parent, id){
         super(parent);
         this.id = id;
@@ -152,7 +190,7 @@ class CategorySwitch extends CategoryElement{
     }
 }
 
-class DoubleSlider extends CategoryElement{
+class DoubleSlider extends CElement{
     constructor(parent, id){
         super(parent);
         this.name = CLASSNAMES.CATEGORY_SLIDER_CONTAINER;
@@ -208,7 +246,7 @@ class DoubleSlider extends CategoryElement{
     }
 }
 
-class Slider extends CategoryElement{
+class Slider extends CElement{
     constructor(parent, id){
         super(parent);
         this.name = CLASSNAMES.SLIDER;
@@ -270,7 +308,7 @@ class Slider extends CategoryElement{
 
 }
 
-class SliderLabelContainer extends CategoryElement{
+class SliderLabelContainer extends CElement{
     constructor(parent, id){
         super(parent);
         this.id = id;
@@ -288,7 +326,7 @@ class SliderLabelContainer extends CategoryElement{
     }
 }
 
-class SliderLabel extends CategoryElement{
+class SliderLabel extends CElement{
     constructor(parent, id){
         super(parent);
         this.id = id;
@@ -304,7 +342,7 @@ class SliderLabel extends CategoryElement{
     }
 }
 
-class SubcategoryTagContainer extends CategoryElement{
+class SubcategoryTagContainer extends CElement{
     constructor(parent, id, tags){
         super(parent);
         this.id = id;
@@ -321,7 +359,7 @@ class SubcategoryTagContainer extends CategoryElement{
     }
 }
 
-class SubcategoryTag extends CategoryElement{
+class SubcategoryTag extends CElement{
     constructor(parent, id){
         super(parent);
         this.id = id;
