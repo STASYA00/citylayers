@@ -1,3 +1,9 @@
+// import {Settings} from "./settings";
+
+class Settings{
+    static debug = true;
+}
+
 const MAP_CLASSNAMES = {
     MAP_PANEL: "mappanel",
     MAP: "map",
@@ -5,6 +11,16 @@ const MAP_CLASSNAMES = {
 }
 
 class MapPanel{
+    /*
+        Object that holds the panel with the interactive map.
+        Args:
+            parent: HTMLElement         element to place the map onto, defaults to body
+
+        How to use:
+
+        let m = new MapPanel(parent);
+        m.load();
+    */
     constructor(parent){
         this.name = MAP_CLASSNAMES.MAP_PANEL;
         this.parent = parent ? parent : "body";
@@ -62,9 +78,18 @@ class MapTransformer{
         return map.distance(coords1, coords2);
     }
 
-    static px2coords(map, x,y){
-        // return map.layerPointToLatLng(L.point(x,y));
-        return map.containerPointToLatLng(L.point(Math.abs(x),Math.abs(y)));
+    static px2coords(map, tileCoords, x,y){
+        let tcoords = MapTransformer.tile2coords(tileCoords.x, tileCoords.y, tileCoords.z);
+        x = Math.abs(x);
+        y = Math.abs(y);
+        let north = map.getBounds().getNorth();
+        let south = map.getBounds().getSouth();
+        let east = map.getBounds().getEast();
+        let west = map.getBounds().getWest();
+        let mapSize = map.getSize();
+        let lon = tcoords.lng + ((east - west) * x / mapSize.x);
+        let lat = tcoords.lat - ((north - south) * y / mapSize.y);
+        return L.latLng(lat, lon)
     }
     static coords2px(map, lat,lon){
         return map.latLngToLayerPoint(L.latLng(lat, lon));
@@ -120,6 +145,19 @@ class MapGraphics{
     }
 }
 
+class Positioner{
+
+    static make(test){
+        if (test){
+            return [59.315906, 18.0739635];
+        }
+        return this.getCurrentPosition();
+    }
+
+    static getCurrentPosition(){
+        return [];
+    }
+}
 
 class CityMap extends MapPanel{
     
@@ -141,24 +179,23 @@ class CityMap extends MapPanel{
     }
 
     initiate(){
-        let pin = [59.315906,18.0739635]; //[48.6890, 7.14086];
-        let pts = [[59.312152351483135, 18.079562224248082]];
-        let mapObj = L.map(this.parent).setView(pin, 15);
-        let osmLayer0 = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        
+        let mapObj = L.map(this.parent).setView(Positioner.make(Settings.debug), 15);
+        let osmLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
             subdomains: 'abcd',
             minZoom: 0,
             maxZoom: 19,
+            crs: L.CRS.Simple,
             ext: 'png'
         }).addTo(mapObj);
         mapObj.zoomControl.remove();
-        mapObj.addLayer(osmLayer0);
+        mapObj.addLayer(osmLayer);
         mapObj.touchZoom.enable();
         mapObj.scrollWheelZoom.enable();
-        this.drawHatchLayer(mapObj, pts, MapGraphics.getColors()[0]);
         
-        this.addMarker(mapObj, pts[0][0], pts[0][1]);
-        this.addGrid_(mapObj);
-
+        this.coords.forEach(coord => this.addMarker(mapObj, coord[0], coord[1]));
+        // this.addGrid_(mapObj);
+        CityMap.drawHatchLayer(mapObj, this.coords, MapGraphics.getColors()[0]);
     }
 
     addMarker(map, lat, lon){
@@ -179,52 +216,39 @@ class CityMap extends MapPanel{
 
     }
 
-    drawHatchLayer(map, pts, category){
-
+    static drawHatchLayer(map, pts, category){
+        
         L.GridLayer.CanvasCircles = L.GridLayer.extend({
             createTile: function (coords) {
-                console.log("COORDS::", coords);
-                
                 let el = TileManager.init(category);
                 el = TileManager.update(el, map, coords, pts);
                 return el;
             }
         });
-        
 
-        L.GridLayer.canvasCircles = function(opts) {
-            
-            return new L.GridLayer.CanvasCircles(opts);
-        };
-
-        // let l = new L.GridLayer.CanvasCircles();
-        // l.updateWhenZooming = true;
-        map.addLayer( L.GridLayer.canvasCircles() );
-        map.on("zoom", function(ev){
-            console.log("EV", ev);
-            let cnvs = document.getElementsByName("canvas")
-            var ctx = tile.getContext('2d');
-            
+        let hatchLayer = new L.GridLayer.CanvasCircles({crs: L.CRS.Simple});
+        map.addLayer(hatchLayer);
+        map.on("zoomend", function(ev){
+            hatchLayer.redraw();
         });
     }
 
     addGrid_(map){
-        let orig = map.getPixelOrigin();
-        
-        console.log(orig);
         
         L.GridLayer.DebugCoords = L.GridLayer.extend({
             createTile: function (coords) {
                 var tile = document.createElement('div');
                 let tcoords = MapTransformer.tile2coords(coords.x, coords.y, coords.z);
-                let scale = this.getTileSize();
+                // let scale = this.getTileSize();
                 
-                let zeroCoords = MapTransformer.px2coords(map, orig.x-(coords.x * scale.x), orig.y - (coords.y*scale.y));
+                let zeroCoords = MapTransformer.px2coords(map, coords, 0,0); //orig.x-(coords.x * scale.x), orig.y - (coords.y*scale.y));
                 
-                let dst = MapTransformer.calcDistance(map, [zeroCoords.lat, zeroCoords.lng], [59.312152351483135, 18.079562224248082]);
+                let dst = MapTransformer.calcDistance(map, 
+                    [zeroCoords.lat, zeroCoords.lng], 
+                    [59.312152351483135, 18.079562224248082]);
                 tile.innerHTML = [
-                    tcoords.lat, tcoords.lng, dst, 
-                    zeroCoords.lat, zeroCoords.lng
+                    tcoords.lat, tcoords.lng, // dst 
+                    coords.x, coords.y, coords.z
                 ].join(', ');
                 tile.style.outline = '1px solid red';
                 return tile;
@@ -248,32 +272,18 @@ class HatchDrawer{
     static drawCircle(ctx, radius, x ,y){
         ctx.moveTo( x + radius, y );
         ctx.arc( x , y , radius, 0, Math.PI * 2 );
-
-    }
-
-    static locatePoint(map, tileCoords, x, y){
-        /*
-            Function that locates grid point from tile on a map and returns its coordinates.
-        */
-        let orig = map.getPixelOrigin();
-
-        let crds = MapTransformer.px2coords(map, 
-                orig.x - (tileCoords.x * MapGraphics.tile + x), 
-                orig.y - (tileCoords.y * MapGraphics.tile + y));
-        return crds
-
     }
 
     static make(map, ctx, tileCoords, pts){
-        let coordArray = Array.from({length: MapGraphics.tile}, 
+        let coordArray = Array.from({length: MapGraphics.tile + 1}, 
                             (x,i)=>i%MapGraphics.gridDensity==0 ? i : undefined).
                             filter(e=>e!=undefined);
 
         coordArray.forEach(x => {
             coordArray.forEach(y =>{
 
-                let crds = this.locatePoint(map, tileCoords, x, y);
-                let dst = Math.min(...pts.map(pt=>MapTransformer.calcDistance(map, [crds.lat, crds.lng], pt)));
+                let crds = MapTransformer.px2coords(map, tileCoords, x, y);
+                let dst = Math.min(...pts.map(pt=>MapTransformer.calcDistance(map, [crds.lat, crds.lng], pt)));                
                 let radius =  CityMap.makeRadius(MapGraphics.refDist, dst);
                 this.drawCircle(ctx, radius, x, y);
                 })
@@ -282,6 +292,11 @@ class HatchDrawer{
 }
 
 class TileManager{
+    /*
+    Object responsible for management of a single tile.
+    Performs init, draw, clean, update operations.
+
+    */
 
     static clear(el){
         // let el = document.getElementsByTagName("canvas");
