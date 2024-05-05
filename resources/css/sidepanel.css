@@ -1,0 +1,95 @@
+.space-grotesk {
+  font-family: "Space Grotesk", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+body {
+    display: flex;
+    --main-bg-color: #FFFFFF;
+    width: 100%;
+    --secondary-color: #014751;
+    --tertiary-color: #DFE6E9;
+    --side-panel-color: #3ACE8E;
+    font-family: "Space Grotesk";
+}
+
+hr{
+  border: 1px solid var(--secondary-color);
+  /* stroke-linecap: round; */
+  border-radius: 2px;
+
+}
+
+
+.mappanel{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  z-index: 1;
+}
+
+.categorysidepanel{
+  display: flex;
+  flex-direction: column;
+  width: 25%;
+  position: absolute;
+  top: 10%;
+  left: 30%;
+  background-color: var(--side-panel-color);
+  color: var(--secondary-color);
+  padding: 15px;
+  border-radius: 10px;
+  padding: 15px;
+  border-radius: 10px;
+  z-index: 2;
+  align-items: flex-start;
+
+  font-size: 14px;
+  font-weight: 300;
+}
+
+.categorysidetagcontainersmall {
+  gap: 7px;
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  justify-items: flex-start;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+
+.categorysidetagcontainer{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  row-gap: 15px;
+}
+
+.categorysidetagcontainersmall > .subcategorytag span{
+  background-color: inherit;
+  border-width: 1px;
+}
+.categorysidetagcontainersmall > .subcategorytag span:before {
+  background-color: var(--main-bg-color);
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+.categorysidetagcontainersmall > .subcategorytag input:checked + span {
+  background-color: var(--main-bg-color);
+  color: var(--secondary-color);
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.categorysidetagcontainer > button{
+  text-align: start;
+}
+.logo{
+  width: 100px;
+  margin-top: 10px;
+  margin-left: 10px;
+}

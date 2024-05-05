@@ -32,6 +32,21 @@ body {
     row-gap: 12px;
   }
 
+  .categorypanelheader{
+    font-size: 14px;
+    margin-top: 15px;
+    font-weight: 300;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+    margin-left: 10px;
+  }
+  .categorypanellabel{
+    font-size: 14px;
+    font-weight: 700;
+    font-style: bold;
+  }
   .categorycontainer{
     display: flex;
     flex-direction: column;
@@ -229,16 +244,19 @@ body {
   /* Subcategory Tag */
 
   .tagcontainer {
-    display: flex;
+    display: inline-flex;
     flex-direction: row;
     flex-wrap: wrap;
-
-    font-size: 13px;
+    font-size: 9px;
     font-weight: 300;
-    line-height: 13px;
-    text-align: left;
-
+    line-height: 9px;
     gap: 7px;
+    overflow: none;
+    justify-content: flex-start;
+    box-sizing: border-box;
+    align-items: center;
+    align-content: stretch;
+    justify-content: space-between;
     
   }
 
@@ -246,8 +264,13 @@ body {
     position: relative;
     display: inline-block;
     box-sizing: border-box;
-    width: 50px;
+    min-width: 55px;
     height: 25px;
+    max-width: 120px;
+    flex-grow: 5;
+    height: 25px;
+    flex-shrink: 3;
+    column-gap: 7px;
   }
 
   .subcategorytag input {
@@ -271,6 +294,9 @@ body {
 
     position: absolute;
     cursor: pointer;
+    font-size: 9px;
+    line-height: 9px;
+    text-align: center;
     top: 0;
     left: 0;
     right: 0;
@@ -317,6 +343,14 @@ body {
 
   .subcategorytag span {
     border-radius: 34px;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+    text-align: center;
+    max-width: fit-content;
+    min-width: fit-content;
+    padding: 6px;
+    box-sizing: border-box;
   }
   
   /* .subcategorytag span:before {

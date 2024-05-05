@@ -10,6 +10,7 @@
 
 @extends('layouts.app')
 @vite('resources/css/container.css')
+@vite('resources/css/sidepanel.css')
 @vite('resources/css/map.css')
 @vite('resources/js/map.js')
 @vite('resources/js/citymap.js')
@@ -20,6 +21,7 @@
 @vite('resources/js/map.js')
 @vite('resources/js/citymap.js')
 @vite('resources/js/category.js')
+@vite('resources/css/sidepanel.css')
 @vite('resources/css/container.css')
 @vite('resources/css/map.css')
 
@@ -606,11 +608,12 @@
         let c = new CategoryPanel("body");
         const categoryInput = {!! json_encode($categories) !!};
         const subcategoryInput = {!! json_encode($subcategories) !!};
-        console.log(subcategoryInput);
-        let subcats = subcategoryInput.map(s =>new Subcategory(s.id, s.name, s.category_id))
-        let categories = categoryInput.map(c => {new Category(c.id, c.name, c.description, subcats.filter(e=>e.parent_id==c.id))})
+        
+        let subcats = subcategoryInput.map(s => new Subcategory(s.id, s.name, s.category_id))
+        let categories = categoryInput.map(c => new Category(c.id, c.name, c.description, subcats.filter(e=>e.parent_id==c.id)))
+        
         c.initiate();
-        c.load(["Accessibility", "Noise", "Safety", "Weather Resistance", "Amenities"]);
+        c.load(categories);  // ["Accessibility", "Noise", "Safety", "Weather Resistance", "Amenities"]
         let m = new MapPanel("body");
         m.initiate();
         m.load();

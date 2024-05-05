@@ -1,7 +1,7 @@
 // import {Settings} from "./settings";
 
 class Settings{
-    static debug = false;
+    static debug = true;
 }
 
 const MAP_CLASSNAMES = {
@@ -80,7 +80,6 @@ class CityMap extends MapPanel{
             [59.312152351483135, 18.079562224248082],
         ];
         this.places = this.coords.map(c=>new Place(c[0], c[1], 0.8));
-
     }
 
     initiate(){
@@ -118,6 +117,7 @@ class CityMap extends MapPanel{
             crs: L.CRS.Simple,
             ext: 'png'
         }).addTo(map);
+        osmLayer.setZIndex(100);
         map.addLayer(osmLayer);
     }
 
@@ -133,6 +133,7 @@ class CityMap extends MapPanel{
 
         let hatchLayer = new L.GridLayer.CanvasCircles({crs: L.CRS.Simple});
         map.addLayer(hatchLayer);
+        hatchLayer.setZIndex(101);
         map.on("zoomend", function(ev){
             hatchLayer.redraw();
         });
