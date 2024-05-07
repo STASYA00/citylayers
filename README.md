@@ -160,6 +160,10 @@ sharing their thoughts on a range of urban phenomena.
   ```sh
   php artisan migrate --seed
   ```
+
+* Copy [Update query](update.sql) and run it in the SQL tab:
+  ![Running SQL query](./assets/update_sql.jpg)
+
 * Run the server:
   ```sh
   php artisan serve
