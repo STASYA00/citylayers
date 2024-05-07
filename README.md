@@ -138,11 +138,23 @@ sharing their thoughts on a range of urban phenomena.
 
 * Go to XAMPP, start Apache and MySQL Server
 * Go to ```http://localhost:8080/phpmyadmin/``` (replace 8080 with your Apache server port from config file)
+
+* Create a dataset ``citylayers_db`` if it does not exist
+  ![create dataset](./assets/create_db_php.jpg)
+
+* Select your dataset; go to privileges
+  ![db privileges](./assets/db_privileges.jpg)
+
+* Create a new user, add pwd, give all the necessary rights
+
 * Set environmental variables in the config file:
   DB_CONNECTION=mysql\
   DB_HOST=127.0.0.1 \
   DB_PORT=3306 \
-  DB_DATABASE=your_database_name DB_USERNAME=your_database_username DB_PASSWORD=your_database_password
+  DB_DATABASE=citylayers_db DB_USERNAME=your_database_username DB_PASSWORD=your_database_password
+
+  *your_database_username* and *your_database_password* are the values you created in the previous step, when 
+  adding a user account with the rights to access the database
 
 * Run database migrations and seeders:
   ```sh
