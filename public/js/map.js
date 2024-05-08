@@ -90,6 +90,22 @@ class Logo extends CElement{
     }
 }
 
+class Button extends CElement{
+    constructor(parent, category){
+        super(parent, category);
+        this.name = "pinButton";
+        this.content = "Add a pin";
+    }
+
+    initiate() {
+        var element = document.createElement("button");
+        element.innerHTML = this.content;
+        element.setAttribute('class', this.name);
+        element.setAttribute("id", this.make_id());
+        this.getParent().appendChild(element);
+    }
+}
+
 class CategoryPanelHeader extends CElement{
     constructor(parent, id){
         super(parent);
@@ -149,7 +165,7 @@ class CategoryPanel extends CElement{
         this.name = CLASSNAMES.CATEGORY_PANEL;
         this.parent = parent ? parent : "body";
         this.id = "id";
-        this.elements = [Logo, CategoryPanelHeader];
+        this.elements = [Logo, CategoryPanelHeader,  Button];
     }
 
     load(categories) {
