@@ -362,14 +362,14 @@ input[type="range"] {
 
 .pinButton {
   position: absolute;
-  text-transform: uppercase;
   bottom: 0;
   left: 0;
-  width: calc(29% - 24px);
-  height: 40px;
-  border-radius: 10px;
-  color: var(--tertiary-color);
-  background-color: var(--secondary-color);
+  right: 0;
   z-index: 10;
-  margin: 12px;
+  margin: 12px auto;
+
+  @media (min-width: 768px) {
+    width: calc(29% - 24px);
+    margin: 12px;
+  }
 }

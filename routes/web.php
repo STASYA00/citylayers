@@ -113,7 +113,9 @@ Route::get('subcategories', [GlobalController::class, 'subcategories']);
 Route::get('subcategories/{category_id?}', [GlobalController::class, 'subcategories'])->where('category_id', 'category_id');
 Route::get('subcategory/{subcategory_id?}', [GlobalController::class, 'subcategories'])->where('subcategory_id', 'subcategory_id');
 
-
+Route::get('add-pin', function () {
+    return view('addPin');
+});
 
 //<-------------------------new routes---------------------------------------->
 

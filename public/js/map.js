@@ -90,7 +90,7 @@ class Logo extends CElement{
     }
 }
 
-class Button extends CElement{
+class PinButton extends CElement{
     constructor(parent, category){
         super(parent, category);
         this.name = "pinButton";
@@ -100,9 +100,12 @@ class Button extends CElement{
     initiate() {
         var element = document.createElement("button");
         element.innerHTML = this.content;
-        element.setAttribute('class', this.name);
+        element.setAttribute('class', ""+ this.name + " primary-button");
         element.setAttribute("id", this.make_id());
         this.getParent().appendChild(element);
+        element.addEventListener("click", () => {
+            window.location.href = "<?php echo URL::to('add-pin'); ?>";
+        });
     }
 }
 
@@ -165,7 +168,7 @@ class CategoryPanel extends CElement{
         this.name = CLASSNAMES.CATEGORY_PANEL;
         this.parent = parent ? parent : "body";
         this.id = "id";
-        this.elements = [Logo, CategoryPanelHeader,  Button];
+        this.elements = [Logo, CategoryPanelHeader,  PinButton];
     }
 
     load(categories) {
