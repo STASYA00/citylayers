@@ -6,3 +6,37 @@
     z-index: 10;
     margin: 12px auto;
 }
+
+#img-uploader{
+    display: none;
+}
+
+.img-container{
+    display: flex;
+    border: solid 1px var(--secondary-color);
+    border-radius: 10px;
+    width: calc(100vw - 24px);
+    max-height: calc(100vw - 24px);
+    min-height: 100px;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+}
+
+.img-text{
+    text-transform: uppercase;
+    color: var(--secondary-color);
+    text-align: center;
+    font-weight: 600;
+    font-size: 12pt;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.img-text span{
+    font-size: 30px;
+    font-weight: 300;
+    margin-right: 6px;
+}
+

@@ -1056,4 +1056,8 @@ img {
     border-radius: 10px;
     color: var(--tertiary-color);
     background-color: var(--secondary-color);
-  }
+
+}
+.primary-button:disabled{
+    opacity: 0.5;
+}
