@@ -153,6 +153,7 @@
 
 body {
     font-family: "Space Grotesk", sans-serif;
+    color: var(--secondary-color);
 }
 
 .plusbtn {
@@ -1050,10 +1051,12 @@ img {
 
 .primary-button {
     text-transform: uppercase;
-    width: calc(100vw - 24px);
-    max-width: 350px;
-    height: 40px;
+    width: calc(100vw - 48px);
+    max-width: 400px;
+    height: 50px;
     border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
     color: var(--tertiary-color);
     background-color: var(--secondary-color);
 

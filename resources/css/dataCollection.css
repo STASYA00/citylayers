@@ -1,10 +1,31 @@
+.flex-wrapper{
+    display: flex;
+    margin: 24px;
+}
+
+h1{
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1.3em;
+}
+
+h2{
+    font-size: 20px;
+    font-weight: 400;
+}
+
+p{
+    font-size: 14px;
+    font-weight: 400;
+}
+
 .primary-button{
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
     z-index: 10;
-    margin: 12px auto;
+    margin: 24px auto;
 }
 
 #img-uploader{
@@ -15,8 +36,7 @@
     display: flex;
     border: solid 1px var(--secondary-color);
     border-radius: 10px;
-    width: calc(100vw - 24px);
-    max-height: calc(100vw - 24px);
+    max-height: calc(90vw);
     min-height: 100px;
     overflow: hidden;
     align-items: center;
@@ -28,7 +48,7 @@
     color: var(--secondary-color);
     text-align: center;
     font-weight: 600;
-    font-size: 12pt;
+    font-size: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -38,5 +58,18 @@
     font-size: 30px;
     font-weight: 300;
     margin-right: 6px;
+}
+
+footer{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 24px;
+}
+
+.nav-buttons{
+    display: flex;
+    justify-content: space-between;
 }
 
