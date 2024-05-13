@@ -51,7 +51,7 @@
             <div class="steps" x-text="'step: ' + $store.data.step.current "></div>
             <div class="nav-buttons">
                 <button class="back-button" @click="$store.data.prevStep()"> back </button>
-                <button class="next-button" @click="$store.data.nextStep()"> next </button>
+                <button class="next-button" @click="$store.data.nextStep()" x-text="$store.data.place_data['categories'][$store.data.step.current-1] && $store.data.place_data['categories'][$store.data.step.current-1].grade ? 'next' : 'skip'"> next </button>
             </div>
         </footer>
     </section>
@@ -109,15 +109,11 @@
             },
 
             setGrade(i, value) {
-                console.log(i, value);
                 this.place_data['categories'][i - 1].grade = value;
-                console.log(this.place_data);
             },
 
             setTag(e, i, tag) {
-                console.log(i, tag, e.target.checked);
                 const index = this.place_data['categories'][i - 1].tags.indexOf(tag);
-                console.log(index);
                 if (e.target.checked) {
                     this.place_data['categories'][i - 1].tags.push(tag);
                 } else if (index > -1) {
@@ -127,7 +123,7 @@
         });
 
         Alpine.effect(() => {
-            console.log("step: " + Alpine.store('data').step.current);
+            // console.log("place_data: " + Alpine.store('data').step.current, Alpine.store('data').place_data);
         });
 
         if (navigator && navigator.geolocation) {

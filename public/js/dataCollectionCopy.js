@@ -14,23 +14,27 @@ const copyData=[
         tags: ["water", "wind"],
     },
     {
-        question: "How would you rate the movement around this place?",
+        question: "How would you rate the <u>movement</u> around this place?",
         subquestion: "Which aspects of movement are you rating?",
         tags: ["walking", "cycling"],
     },
     {
-        question: "How would you rate the <u>beauty</u> of this space?",
-        subquestion: "Which features of beauty are you rating?",
-        tags: ["buildings", "landmarks"],
+        question: "How would you rate the <u>protection</u> in this place?",
+        subquestion: "Which types of protection are you rating?",
+        tags: ["cars", "visibilty", "traffic signs"],
     },
     {
-        question: "How would you rate the <u>beauty</u> of this space?",
-        subquestion: "Which features of beauty are you rating?",
-        tags: ["buildings", "landmarks"],
+        question: "How comfortable do you find the <u>climate</u> here?",
+        subquestion: "Which types of climate (protection) are you rating?",
+        tags: ["heat", "humidity"],
     },
     {
-        question: "How would you rate the <u>beauty</u> of this space?",
-        subquestion: "Which features of beauty are you rating?",
-        tags: ["buildings", "landmarks"],
+        question: "How enjoyable are the available <u>activities</u> in this area?",
+        subquestion: "Which activities are you rating?",
+        tags: ["sports", "shopping"],
+    },
+    {
+        question: "Is there anything else about this place that you particularly liked or disliked?",
+        description: "Feel free to share any additional observations, opinions and reflections."
     }
 ]
