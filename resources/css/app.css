@@ -11,7 +11,7 @@
     scroll-behavior: smooth;
 }
 
-.panel{
+.panel {
     color: green;
     background-color: orange;
     position: absolute;
@@ -21,9 +21,10 @@
     height: 100%;
 }
 
-.slick-dots li button:before{
+.slick-dots li button:before {
     font-size: 10px !important;
 }
+
 .swal-title {
     color: #000;
 }
@@ -1044,7 +1045,7 @@ img {
 
 /* AUREL APP CSS STARTS HERE */
 
-:root{
+:root {
     --secondary-color: #014751;
     --tertiary-color: #DFE6E9;
 }
@@ -1061,6 +1062,39 @@ img {
     background-color: var(--secondary-color);
 
 }
-.primary-button:disabled{
+
+.primary-button:disabled {
     opacity: 0.5;
+}
+
+.tag {
+    display: inline-block;
+    position: relative;
+    border: 1px solid var(--secondary-color);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.tag input{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.tag div{
+    padding: 4px 16px;
+    display: flex;
+}
+
+.tag input[type=checkbox]:checked ~ div {
+    background-color: #50bcf2;
+  }
+
+.tag label{
+    font-size:14px;
+    text-transform: capitalize;
 }

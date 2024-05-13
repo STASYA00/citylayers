@@ -11,14 +11,10 @@
 
 <div class="flex-wrapper" x-data>
     <section x-show="$store.data.step.current == 0">
-        <h1>What do you want to pin to the map?</h1>
-        <p> Begin by adding a photo of the place you want to share. Then, follow a few steps to share
-            your thoughts about this place with others. Once completed, your contribution will be displayed on the map
-            for
-            everyone to see.</p>
-        <button class="primary-button" :disabled="!$store . data . allowedLocation" @click="$store.data.nextStep()">
-            Let's
-            get started </button>
+        <h1 x-text=$store.data.copy_data[$store.data.step.current].question></h1>
+        <p x-text=$store.data.copy_data[$store.data.step.current].text></p>
+        <button class="primary-button" x-bind::disabled="!$store.data.allowedLocation" @click="$store.data.nextStep()">
+            Let's get started </button>
         <label for="img-uploader">
             <div class="img-container">
                 <input id="img-uploader" @change="$store.data.setImage(event)" type="file" accept=".jpg, .png">
@@ -31,13 +27,25 @@
         </label>
     </section>
     <section x-cloak x-show="$store.data.step.current > 0">
-        <h1 class="question" x-html="$store.data.copy.questions[$store.data.step.current-1]"></h1>
-        <input type="range" id="slider" name="slider" min="0" max="1" step="0.1" />
-        <h2 class="subquestion" x-html="$store.data.copy.subquestions[$store.data.step.current-1]"></h2>
-        <div class="tags-container">
-            <template x-for="tag in $store.data.tags[$store.data.step.current-1]">
-                <li x-text="tag"></li>
-            </template>
+        <h1 class="question" x-html="$store.data.copy_data[$store.data.step.current].question"></h1>
+        <input type="range" id="slider" name="slider" min="0" max="1" step="0.1"
+            x-bind:value="$store.data.place_data['categories'][$store.data.step.current-1] && $store.data.place_data['categories'][$store.data.step.current-1].grade"
+            @change="$store.data.setGrade($store.data.step.current,event.target.value)" />
+        <div x-cloak x-show="$store.data.place_data['categories'][$store.data.step.current-1] && $store.data.place_data['categories'][$store.data.step.current-1].grade">
+            <h2 class="subquestion" x-html="$store.data.copy_data[$store.data.step.current].subquestion"></h2>
+            <p class="description">Select one or more tags below</p>
+            <div class="tags-container">
+                <template x-for="tag in $store.data.copy_data[$store.data.step.current].tags">
+                    <div class="tag selectable">
+                        <input type="checkbox" :id="tag" :name="tag"
+                            x-bind:checked="$store.data.place_data['categories'][$store.data.step.current-1] && $store.data.place_data['categories'][$store.data.step.current-1].tags.includes(tag)"
+                            @change="$store.data.setTag(event, $store.data.step.current, tag)">
+                        <div>
+                            <label :for="tag" x-text="tag"></label>
+                        </div>
+                    </div>
+                </template>
+            </div>
         </div>
         <footer>
             <div class="steps" x-text="'step: ' + $store.data.step.current "></div>
@@ -50,6 +58,7 @@
 </div>
 
 <script>
+    <?php require_once ("js/dataCollectionCopy.js");?>
 
     document.addEventListener('alpine:init', () => {
         Alpine.store('data', {
@@ -66,30 +75,12 @@
                 timestamp: null,
                 latitude: null,
                 longitude: null,
-                categories: [],
+                categories: [{ grade: null, tags: [] }, { grade: null, tags: [] }, { grade: null, tags: [] }, { grade: null, tags: [] }, { grade: null, tags: [] }, { grade: null, tags: [] }],
                 place_img: null,
                 comment: null,
             },
 
-            copy: {
-                questions: [
-                    "How would you rate the <u>beauty</u> of this space?",
-                    "What do you think of the <u>sounds</u> around you?",
-                    "How would you rate the movement around this place?"
-                ],
-                subquestions: [
-                    "Which features of beauty are you rating?",
-                    "Which sounds are you rating?",
-                    "Which aspects of movement are you rating?"
-                ],
-                tagsDescription: "Select one or more tags below"
-            },
-
-            tags: [
-                ["buildings", "landmarks"],
-                ["water", "wind"],
-                ["walking", "cycling"]
-            ],
+            copy_data: copyData,
 
             nextStep() {
                 if (this.step.current < this.step.length) this.step.current += 1;
@@ -116,6 +107,23 @@
                     this.place_data['place_image'] = file;
                 }
             },
+
+            setGrade(i, value) {
+                console.log(i, value);
+                this.place_data['categories'][i - 1].grade = value;
+                console.log(this.place_data);
+            },
+
+            setTag(e, i, tag) {
+                console.log(i, tag, e.target.checked);
+                const index = this.place_data['categories'][i - 1].tags.indexOf(tag);
+                console.log(index);
+                if (e.target.checked) {
+                    this.place_data['categories'][i - 1].tags.push(tag);
+                } else if (index > -1) {
+                    this.place_data['categories'][i - 1].tags.splice(index, 1);
+                }
+            }
         });
 
         Alpine.effect(() => {
