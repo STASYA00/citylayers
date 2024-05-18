@@ -9,7 +9,11 @@
 @section('main')
 @vite('resources/css/dataCollection.css')
 
-<div class="flex-wrapper" id="main-container" x-data>
+<div class="main-wrapper" id="main-container" x-data>
+    <div class="header">
+        <img class="logo" src="images/logo_2.svg">
+        <button class="exit-button">send and exit</button>
+    </div>
     <template x-if="$store.data.step.current == 0 || $store.data.step.current == $store.data.step.length">
         <section>
             <h1 x-text=$store.data.copy_data[$store.data.step.current].question></h1>
@@ -21,15 +25,13 @@
                 <label for="img-uploader">
                     <div class="img-container">
                         <input id="img-uploader" @change="$store.data.setImage(event)" type="file" accept=".jpg, .png">
-                        <img id="img-preview">
+                        <img id="img-preview" x-bind:src="$store.data.image_src">
                         <div class="img-text" x-show="!$store.data.place_data['place_image']">
-                            <div>+</div> Add a
-                            picture
+                            <div>+</div> Add a picture
                         </div>
                     </div>
                     <div class="img-text" x-cloak x-show="$store.data.place_data['place_image']">
-                        <div>+</div> Retake
-                        picture
+                        <div>+</div> Retake picture
                     </div>
                 </label>
             </template>
@@ -47,6 +49,10 @@
                     data-thumb-color="#ff0000"
                     x-bind:value="$store.data.place_data['categories'][$store.data.step.current-1].grade"
                     @change="$store.data.setGrade($store.data.step.current,event.target.value)" />
+                <div class="ranges-container">
+                    <span x-text="$store.data.copy_data[$store.data.step.current].range[0]"></span>
+                    <span x-text="$store.data.copy_data[$store.data.step.current].range[1]"></span>
+                </div>
             </div>
             <div x-cloak x-show="$store.data.place_data['categories'][$store.data.step.current-1].grade">
                 <h2 class="subquestion" x-html="$store.data.copy_data[$store.data.step.current].subquestion"></h2>
@@ -65,10 +71,13 @@
                 </div>
             </div>
             <footer>
-                <div class="steps" x-text="'step: ' + $store.data.step.current "></div>
+                <div class="steps"></div>
+                <hr>
                 <div class="nav-buttons">
                     <button class="back-button" @click="$store.data.prevStep()"> back </button>
-                    <button class="next-button" :class="$store.data.place_data['categories'][$store.data.step.current-1].grade ? 'next' : 'skip'" @click="$store.data.nextStep()"
+                    <button class="next-button"
+                        x-bind:class="$store.data.place_data['categories'][$store.data.step.current - 1].grade ? 'next' : 'skip'"
+                        @click="$store.data.nextStep()"
                         x-text="$store.data.place_data['categories'][$store.data.step.current-1].grade ? 'next' : 'skip'">
                         next </button>
                 </div>
@@ -102,6 +111,8 @@
                 comment: null,
             },
 
+            image_src: '',
+
             copy_data: copyData,
 
             nextStep() {
@@ -123,7 +134,8 @@
                 if (file) {
                     const fileReader = new FileReader();
                     fileReader.onload = event => {
-                        document.getElementById('img-preview').setAttribute('src', event.target.result);
+                        this.image_src = event.target.result;
+                        // document.getElementById('img-preview').setAttribute('src', event.target.result);
                     }
                     fileReader.readAsDataURL(file);
                     this.place_data['place_image'] = file;
@@ -157,8 +169,11 @@
 
 
         Alpine.effect(() => {
-            const thumbColor = copyData[Alpine.store('data').step.current].color ? copyData[Alpine.store('data').step.current].color : '';
+            const step = Alpine.store('data').step.current;
+            const thumbColor = copyData[step].color ? copyData[step].color : '';
             mainContainer.style.setProperty('--thumb-color', thumbColor);
+            mainContainer.style.setProperty('--step-current', step);
+            mainContainer.style.setProperty('--step-length', Alpine.store('data').step.length);
         });
 
 
