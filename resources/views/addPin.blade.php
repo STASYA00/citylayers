@@ -9,62 +9,84 @@
 @section('main')
 @vite('resources/css/dataCollection.css')
 
-<div class="flex-wrapper" x-data>
-    <section x-show="$store.data.step.current == 0">
-        <h1 x-text=$store.data.copy_data[$store.data.step.current].question></h1>
-        <p x-text=$store.data.copy_data[$store.data.step.current].text></p>
-        <button class="primary-button" x-bind::disabled="!$store.data.allowedLocation" @click="$store.data.nextStep()">
-            Let's get started </button>
-        <label for="img-uploader">
-            <div class="img-container">
-                <input id="img-uploader" @change="$store.data.setImage(event)" type="file" accept=".jpg, .png">
-                <img id="img-preview">
-                <div class="img-text" x-show="!$store.data.place_data['place_image']"> <span>+</span> Add a picture
-                </div>
-            </div>
-            <div class="img-text" x-cloak x-show="$store.data.place_data['place_image']"> <span>+</span> Retake picture
-            </div>
-        </label>
-    </section>
-    <section x-cloak x-show="$store.data.step.current > 0">
-        <h1 class="question" x-html="$store.data.copy_data[$store.data.step.current].question"></h1>
-        <input type="range" id="slider" name="slider" min="0" max="1" step="0.1"
-            x-bind:value="$store.data.place_data['categories'][$store.data.step.current-1] && $store.data.place_data['categories'][$store.data.step.current-1].grade"
-            @change="$store.data.setGrade($store.data.step.current,event.target.value)" />
-        <div x-cloak x-show="$store.data.place_data['categories'][$store.data.step.current-1] && $store.data.place_data['categories'][$store.data.step.current-1].grade">
-            <h2 class="subquestion" x-html="$store.data.copy_data[$store.data.step.current].subquestion"></h2>
-            <p class="description">Select one or more tags below</p>
-            <div class="tags-container">
-                <template x-for="tag in $store.data.copy_data[$store.data.step.current].tags">
-                    <div class="tag selectable">
-                        <input type="checkbox" :id="tag" :name="tag"
-                            x-bind:checked="$store.data.place_data['categories'][$store.data.step.current-1] && $store.data.place_data['categories'][$store.data.step.current-1].tags.includes(tag)"
-                            @change="$store.data.setTag(event, $store.data.step.current, tag)">
-                        <div>
-                            <label :for="tag" x-text="tag"></label>
+<div class="flex-wrapper" id="main-container" x-data>
+    <template x-if="$store.data.step.current == 0 || $store.data.step.current == $store.data.step.length">
+        <section>
+            <h1 x-text=$store.data.copy_data[$store.data.step.current].question></h1>
+            <p x-text=$store.data.copy_data[$store.data.step.current].description></p>
+            <button class="primary-button" x-bind::disabled="!$store.data.allowedLocation"
+                @click="$store.data.step.current == 0 ? $store.data.nextStep() : $store.data.submit()"
+                x-text=$store.data.copy_data[$store.data.step.current].button></button>
+            <template x-if="$store.data.step.current == 0">
+                <label for="img-uploader">
+                    <div class="img-container">
+                        <input id="img-uploader" @change="$store.data.setImage(event)" type="file" accept=".jpg, .png">
+                        <img id="img-preview">
+                        <div class="img-text" x-show="!$store.data.place_data['place_image']">
+                            <div>+</div> Add a
+                            picture
                         </div>
                     </div>
-                </template>
+                    <div class="img-text" x-cloak x-show="$store.data.place_data['place_image']">
+                        <div>+</div> Retake
+                        picture
+                    </div>
+                </label>
+            </template>
+            <template x-if="$store.data.step.current == $store.data.step.length">
+                <textarea type="text" id="comment-uploader" name="comment" @change="$store.data.setComment(event)"
+                    placeholder="Type your comment here"></textarea>
+            </template>
+        </section>
+    </template>
+    <template x-cloak x-if="$store.data.step.current > 0 && $store.data.step.current < $store.data.step.length">
+        <section>
+            <div class="question-container">
+                <h1 class="question" x-html="$store.data.copy_data[$store.data.step.current].question"></h1>
+                <input type="range" id="slider" class="range-slider" name="slider" min="0" max="100"
+                    data-thumb-color="#ff0000"
+                    x-bind:value="$store.data.place_data['categories'][$store.data.step.current-1].grade"
+                    @change="$store.data.setGrade($store.data.step.current,event.target.value)" />
             </div>
-        </div>
-        <footer>
-            <div class="steps" x-text="'step: ' + $store.data.step.current "></div>
-            <div class="nav-buttons">
-                <button class="back-button" @click="$store.data.prevStep()"> back </button>
-                <button class="next-button" @click="$store.data.nextStep()" x-text="$store.data.place_data['categories'][$store.data.step.current-1] && $store.data.place_data['categories'][$store.data.step.current-1].grade ? 'next' : 'skip'"> next </button>
+            <div x-cloak x-show="$store.data.place_data['categories'][$store.data.step.current-1].grade">
+                <h2 class="subquestion" x-html="$store.data.copy_data[$store.data.step.current].subquestion"></h2>
+                <span>Select one or more tags below</span>
+                <div class="tags-container">
+                    <template x-for="tag in $store.data.copy_data[$store.data.step.current].tags">
+                        <div class="tag selectable">
+                            <input type="checkbox" :id="tag" :name="tag"
+                                x-bind:checked="$store.data.place_data['categories'][$store.data.step.current-1].tags.includes(tag)"
+                                @change="$store.data.setTag(event, $store.data.step.current, tag)">
+                            <div class="tag-element">
+                                <label :for="tag" x-text="tag"></label>
+                            </div>
+                        </div>
+                    </template>
+                </div>
             </div>
-        </footer>
-    </section>
+            <footer>
+                <div class="steps" x-text="'step: ' + $store.data.step.current "></div>
+                <div class="nav-buttons">
+                    <button class="back-button" @click="$store.data.prevStep()"> back </button>
+                    <button class="next-button" :class="$store.data.place_data['categories'][$store.data.step.current-1].grade ? 'next' : 'skip'" @click="$store.data.nextStep()"
+                        x-text="$store.data.place_data['categories'][$store.data.step.current-1].grade ? 'next' : 'skip'">
+                        next </button>
+                </div>
+            </footer>
+        </section>
+    </template>
 </div>
 
 <script>
     <?php require_once ("js/dataCollectionCopy.js");?>
 
+    const mainContainer = document.getElementById('main-container');
+
     document.addEventListener('alpine:init', () => {
         Alpine.store('data', {
             step: {
                 current: 0,
-                length: 6,
+                length: 7,
             },
 
             allowedLocation: false,
@@ -108,6 +130,13 @@
                 }
             },
 
+            setComment(e) {
+                const comment = e.target.value;
+                if (comment) {
+                    this.place_data['comment'] = comment;
+                }
+            },
+
             setGrade(i, value) {
                 this.place_data['categories'][i - 1].grade = value;
             },
@@ -119,12 +148,19 @@
                 } else if (index > -1) {
                     this.place_data['categories'][i - 1].tags.splice(index, 1);
                 }
+            },
+
+            submit() {
+                console.log(this.place_data);
             }
         });
 
+
         Alpine.effect(() => {
-            // console.log("place_data: " + Alpine.store('data').step.current, Alpine.store('data').place_data);
+            const thumbColor = copyData[Alpine.store('data').step.current].color ? copyData[Alpine.store('data').step.current].color : '';
+            mainContainer.style.setProperty('--thumb-color', thumbColor);
         });
+
 
         if (navigator && navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(

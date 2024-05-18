@@ -1090,10 +1090,6 @@ img {
     display: flex;
 }
 
-.tag input[type=checkbox]:checked ~ div {
-    background-color: #50bcf2;
-  }
-
 .tag label{
     font-size:14px;
     text-transform: capitalize;
