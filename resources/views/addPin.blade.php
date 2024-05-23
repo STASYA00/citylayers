@@ -11,8 +11,11 @@
 
 <div class="main-wrapper" id="main-container" x-data>
     <div class="header">
-        <img class="logo" src="images/logo_2.svg">
-        <button class="exit-button">send and exit</button>
+        <img class="logo" src="../images/logo_2.svg">
+        <button x-show="$store.data.step.current !== 0 && $store.data.step.current !== $store.data.step.length"
+            class="exit-button" @click="$store.data.submit()">send and exit</button>
+        <button x-show="$store.data.step.current == $store.data.step.length" class="back-button"
+            @click="$store.data.prevStep()"> back </button>
     </div>
     <template x-if="$store.data.step.current == 0 || $store.data.step.current == $store.data.step.length">
         <section>
@@ -22,18 +25,22 @@
                 @click="$store.data.step.current == 0 ? $store.data.nextStep() : $store.data.submit()"
                 x-text=$store.data.copy_data[$store.data.step.current].button></button>
             <template x-if="$store.data.step.current == 0">
-                <label for="img-uploader">
-                    <div class="img-container">
-                        <input id="img-uploader" @change="$store.data.setImage(event)" type="file" accept=".jpg, .png">
-                        <img id="img-preview" x-bind:src="$store.data.image_src">
-                        <div class="img-text" x-show="!$store.data.place_data['place_image']">
-                            <div>+</div> Add a picture
+                <div>
+                    <label for="img-uploader">
+                        <div class="img-container">
+                            <input id="img-uploader" @change="$store.data.setImage(event)" type="file"
+                                accept=".jpg, .png">
+                            <img id="img-preview" x-bind:src="$store.data.image_src">
+                            <div class="img-text" x-show="!$store.data.place_data['place_image']">
+                                <div>+</div> Add a picture
+                            </div>
                         </div>
-                    </div>
-                    <div class="img-text" x-cloak x-show="$store.data.place_data['place_image']">
-                        <div>+</div> Retake picture
-                    </div>
-                </label>
+                        <div class="img-text" x-cloak x-show="$store.data.place_data['place_image']">
+                            <div>+</div> Retake picture
+                        </div>
+                    </label>
+                    <span class="skip-span" x-show="!$store.data.place_data['place_image']">or skip</span>
+                </div>
             </template>
             <template x-if="$store.data.step.current == $store.data.step.length">
                 <textarea type="text" id="comment-uploader" name="comment" @change="$store.data.setComment(event)"
@@ -135,7 +142,6 @@
                     const fileReader = new FileReader();
                     fileReader.onload = event => {
                         this.image_src = event.target.result;
-                        // document.getElementById('img-preview').setAttribute('src', event.target.result);
                     }
                     fileReader.readAsDataURL(file);
                     this.place_data['place_image'] = file;
@@ -163,7 +169,9 @@
             },
 
             submit() {
-                console.log(this.place_data);
+                const place_data = Alpine.raw(this.place_data);
+                console.log(place_data);
+                submitData(place_data);
             }
         });
 
@@ -190,6 +198,54 @@
             );
         }
     });
+
+    function uuidv4() {
+        return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
+            (+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16)
+        );
+    }
+
+    function submitData(place_data) {
+
+        place_data["place_id"] = uuidv4();
+        place_data["timestamp"] = new Date().getTime();
+
+        const formData = new FormData();
+
+        // for (const [key, value] of Object.entries(place_data)) {
+        //     // console.log(`${key}: ${value}`);
+        //     formData.append(`${key}`, `${value}`);
+        // }
+
+        if (place_data["place_image"]) {
+            formData.append('place_image', place_data["place_image"]);
+        }
+
+        console.log(formData);
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+
+        $.ajax({
+            type: 'POST',
+            url: "/map/add/place",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                window.location.href = '/add-pin/post-success';
+                alert("success");
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                window.location.href = '/add-pin/post-error';
+                alert("error");
+            }
+        });
+    }
 </script>
 
 @endsection

@@ -1050,6 +1050,55 @@ img {
     --tertiary-color: #DFE6E9;
 }
 
+h1 {
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1.3em;
+    margin-bottom: 18px;
+}
+
+h2 {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.3em;
+}
+
+p {
+    font-size: 14px;
+    font-weight: 400;
+    margin-bottom: 20px;
+}
+
+span {
+    font-size: 14px;
+    font-weight: 400;
+    margin-bottom: 8px;
+    opacity: 0.6;
+}
+
+.main-wrapper {
+    margin: 24px;
+}
+
+.main-wrapper section {
+    margin-top: 98px;
+}
+
+.header{
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: var(--tertiary-color);
+    padding: 12px 24px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.header .logo{
+    width: 100px;
+}
+
 .primary-button {
     text-transform: uppercase;
     width: calc(100vw - 48px);

@@ -1,54 +1,5 @@
-.main-wrapper {
-    margin: 24px;
-}
-
-.main-wrapper section {
-    margin-top: 98px;
-}
-
-.header{
-    width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: var(--tertiary-color);
-    padding: 12px 24px;
-    display: flex;
-    justify-content: space-between;
-}
-
-.header .logo{
-    width: 100px;
-}
-
 .exit-button{
     text-decoration: underline;
-}
-
-h1 {
-    font-size: 28px;
-    font-weight: 400;
-    line-height: 1.3em;
-    margin-bottom: 18px;
-}
-
-h2 {
-    font-size: 20px;
-    font-weight: 400;
-    line-height: 1.3em;
-}
-
-p {
-    font-size: 14px;
-    font-weight: 400;
-    margin-bottom: 20px;
-}
-
-span {
-    font-size: 14px;
-    font-weight: 400;
-    margin-bottom: 8px;
-    opacity: 0.6;
 }
 
 .primary-button {
@@ -62,6 +13,12 @@ span {
 
 #img-uploader {
     display: none;
+}
+
+.skip-span{
+    display: block;
+    text-align: center;
+    margin-top: 18px;
 }
 
 .img-container {
@@ -129,19 +86,19 @@ button {
     font-size: 14px;
 }
 
-.nav-buttons .next-button {
+.next-button {
     background-color: var(--secondary-color);
     color: white;
     padding: 4px 16px;
     border-radius: 4px;
 }
 
-.nav-buttons .next-button.skip {
+.next-button.skip {
     background-color: var(--tertiary-color);
     color: var(--secondary-color);
 }
 
-.nav-buttons .back-button::before {
+.back-button::before {
     content: '';
     border: solid var(--secondary-color);
     border-width: 1px 0 0 1px;
