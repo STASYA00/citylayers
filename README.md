@@ -88,6 +88,21 @@ sharing their thoughts on a range of urban phenomena.
 
 ### Intro
 
+CityLayers at its current stage:
+
+<video width="960" height="640" controls>
+  <source src="assets/20240526_1808.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+
+
+<div>
+  <img src="assets/screen_1.jpg" width="500px"/>
+  <img src="assets/screen_2.jpg" width="500px"/>
+  <img src="assets/screen_3.jpg" width="500px"/>
+  <img src="assets/screen_4.jpg" width="500px"/>
+</div>
+
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -109,7 +124,7 @@ sharing their thoughts on a range of urban phenomena.
 <!-- GETTING STARTED -->
 ## Getting Started for developers
 
-
+Refer to [API quickstart](./quickstart_api.md) when developing the frontend part 🙃
 
 ### Prerequisites
 
