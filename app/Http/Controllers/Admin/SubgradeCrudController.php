@@ -27,7 +27,7 @@ class SubgradeCrudController extends CrudController
     public function setup()
     {
         echo "setup";
-        CRUD::setModel(\App\Models\Subgrade::class);
+        CRUD::setModel(\App\Models\PlaceSubgrade::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/subgrades-test');
         CRUD::setEntityNameStrings('subgrade', 'subgrades test');
     }

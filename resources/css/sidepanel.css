@@ -7,12 +7,13 @@
 
 body {
     display: flex;
+    font-family: "Space Grotesk";
     --main-bg-color: #FFFFFF;
     width: 100%;
     --secondary-color: #014751;
     --tertiary-color: #DFE6E9;
     --side-panel-color: #3ACE8E;
-    font-family: "Space Grotesk";
+    ;
 }
 
 hr{
@@ -34,10 +35,10 @@ hr{
 .categorysidepanel{
   display: flex;
   flex-direction: column;
-  width: 25%;
+  width: 300px;
   position: absolute;
   top: 10%;
-  left: 30%;
+  left: 25%;
   background-color: var(--side-panel-color);
   color: var(--secondary-color);
   padding: 15px;
@@ -46,9 +47,6 @@ hr{
   border-radius: 10px;
   z-index: 2;
   align-items: flex-start;
-
-  font-size: 14px;
-  font-weight: 300;
 }
 
 .categorysidetagcontainersmall {
@@ -71,7 +69,7 @@ hr{
 
 .categorysidetagcontainersmall > .subcategorytag span{
   background-color: inherit;
-  border-width: 1px;
+  border: 1px solid var(--secondary-color);
 }
 .categorysidetagcontainersmall > .subcategorytag span:before {
   background-color: var(--main-bg-color);
@@ -88,8 +86,87 @@ hr{
 .categorysidetagcontainer > button{
   text-align: start;
 }
+
+.categorysidetagcontainertitle{
+  text-align: start;
+  background-color: inherit;
+  border: none;
+}
+
+.closebutton{
+  background-color: inherit;
+  border: none;
+  padding-bottom: 12px;
+}
+
+.sidepanelclose{
+  background-color: inherit;
+  border: none;
+  padding-bottom: 12px;
+}
+
 .logo{
   width: 100px;
-  margin-top: 10px;
-  margin-left: 10px;
+}
+
+.geopanel {
+  position: absolute;
+    left: 55%;
+    top: 3%;
+    width: 160px;
+    z-index: 21;
+    background-color: var(--main-bg-color);
+    box-sizing: border-box;
+    border: 2px solid var(--secondary-color);
+    border-radius: 16px;
+    height: 27px;
+    font-size: 12px;
+    line-height: 12px;
+    text-align: center;
+    display: inline-flex;
+    vertical-align: middle;
+    justify-content: center;
+    align-items: center;
+}
+
+.aboutlabel{
+  position: absolute;
+  left: 88%;
+  top: 3%;
+  width: 160px;
+  z-index: 21;
+  color: var(--secondary-color);
+  text-transform: capitalize;
+  text-decoration: underline;
+  height: 27px;
+  font-size: 14px;
+  text-align: center;
+  display: inline-flex;
+  vertical-align: middle;
+  justify-content: center;
+  align-items: center;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.aboutpanel {
+  display: flex;
+  flex-direction: column;
+
+  position: absolute;
+  left: 80%;
+  top: 7%;
+  z-index: 21;
+  height: fit-content;
+  background-color: var(--secondary-color);
+  color: var(--main-bg-color);
+  
+  margin: 15px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 15px;
+  row-gap: 15px;
+  font-size: 12px;
 }

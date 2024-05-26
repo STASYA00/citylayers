@@ -89,3 +89,43 @@
   .logo{
     width: 100px;
   }
+
+  .geopanel {
+    position: absolute;
+    left: 55%;
+    top: 3%;
+    width: 160px;
+    z-index: 21;
+    background-color: var(--main-bg-color);
+    box-sizing: border-box;
+    border: 2px solid var(--secondary-color);
+    border-radius: 20px;
+    height: 27px;
+    font-size: 12px;
+    text-align: center;
+    display: inline-flex;
+    vertical-align: middle;
+    justify-content: center;
+    align-items: center;
+    line-height: 12px;
+  }
+
+  .aboutpanel {
+    position: absolute;
+    left: 90%;
+    top: 3%;
+    width: 160px;
+    z-index: 21;
+
+    color: var(--secondary-color);
+    text-transform: capitalize;
+    text-decoration: underline;
+    height: 27px;
+    font-size: 12px;
+    text-align: center;
+    display: inline-flex;
+    vertical-align: middle;
+    justify-content: center;
+    align-items: center;
+  }
+

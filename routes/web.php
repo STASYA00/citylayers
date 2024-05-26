@@ -107,6 +107,8 @@ Route::get('badges_overview', function () {
 });
 
 Route::get('categories', [GlobalController::class, 'categories']);
+Route::get('places', [GlobalController::class, 'places']);
+Route::get('comments', [GlobalController::class, 'comments']);
 // Route::get('category/{category_id?}', [GlobalController::class, 'categories'])->array_filter();
 
 Route::get('subcategories', [GlobalController::class, 'subcategories']);
@@ -143,11 +145,12 @@ Route::post('add/new/place', [GlobalController::class, 'addNewPlace'])->name('ad
 // Route::post('map/add/grade', [GlobalController::class, 'addMapGrade'])->name('map.add.grade');
 // Route::post('map/add/subgrade', [GlobalController::class, 'addMapSubgrade'])->name('map.add.subgrade');
 
-Route::post('/save-des', [GlobalController::class, 'saveDes']);
+// Route::post('/save-des', [GlobalController::class, 'saveDes']);
 Route::post('/save-comment', [GlobalController::class, 'saveComment']);
 Route::post('/save-grade', [GlobalController::class, 'saveGrade']);
+Route::post('/save-place', [GlobalController::class, 'savePlace']);
 Route::post('/save-subgrade', [GlobalController::class, 'saveSubgrade']);
-Route::post('/set-like', [GlobalController::class, 'setLike']);
+// Route::post('/set-like', [GlobalController::class, 'setLike']);
 
 Route::post('/auth/login', [AuthController::class, 'login'])->name('auth.login');
 
