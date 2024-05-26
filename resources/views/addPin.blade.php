@@ -31,15 +31,15 @@
                             <input id="img-uploader" @change="$store.data.setImage(event)" type="file"
                                 accept=".jpg, .png">
                             <img id="img-preview" x-bind:src="$store.data.image_src">
-                            <div class="img-text" x-show="!$store.data.place_data['place_image']">
+                            <div class="img-text" x-show="!$store.data.place_data['img']">
                                 <div>+</div> Add a picture
                             </div>
                         </div>
-                        <div class="img-text" x-cloak x-show="$store.data.place_data['place_image']">
+                        <div class="img-text" x-cloak x-show="$store.data.place_data['img']">
                             <div>+</div> Retake picture
                         </div>
                     </label>
-                    <span class="skip-span" x-show="!$store.data.place_data['place_image']">or skip</span>
+                    <span class="skip-span" x-show="!$store.data.place_data['img']">or skip</span>
                 </div>
             </template>
             <template x-if="$store.data.step.current == $store.data.step.length">
@@ -108,13 +108,13 @@
             allowedLocation: false,
 
             place_data: {
-                place_id: null,
-                username: null,
+                id: null,
+                user: null,
                 timestamp: null,
-                latitude: null,
-                longitude: null,
+                lat: null,
+                lon: null,
                 categories: [{ grade: null, tags: [] }, { grade: null, tags: [] }, { grade: null, tags: [] }, { grade: null, tags: [] }, { grade: null, tags: [] }, { grade: null, tags: [] }],
-                place_img: null,
+                img: null,
                 comment: null,
             },
 
@@ -131,8 +131,8 @@
             },
 
             setLocation(pos) {
-                this.place_data['latitude'] = pos.coords.latitude;
-                this.place_data['longitude'] = pos.coords.longitude;
+                this.place_data['lat'] = pos.coords.latitude;
+                this.place_data['lon'] = pos.coords.longitude;
                 this.allowedLocation = true;
             },
 
@@ -144,7 +144,7 @@
                         this.image_src = event.target.result;
                     }
                     fileReader.readAsDataURL(file);
-                    this.place_data['place_image'] = file;
+                    this.place_data['img'] = file;
                 }
             },
 
@@ -207,21 +207,10 @@
 
     function submitData(place_data) {
 
-        place_data["place_id"] = uuidv4();
+        place_data["id"] = uuidv4();
         place_data["timestamp"] = new Date().getTime();
 
-        const formData = new FormData();
-
-        // for (const [key, value] of Object.entries(place_data)) {
-        //     // console.log(`${key}: ${value}`);
-        //     formData.append(`${key}`, `${value}`);
-        // }
-
-        if (place_data["place_image"]) {
-            formData.append('place_image', place_data["place_image"]);
-        }
-
-        console.log(formData);
+        console.log(place_data);
 
         $.ajaxSetup({
             headers: {
@@ -232,17 +221,17 @@
 
         $.ajax({
             type: 'POST',
-            url: "/map/add/place",
-            data: formData,
+            url: "/save-place",
+            data: place_data,
             contentType: false,
             processData: false,
             success: function (data) {
-                window.location.href = '/add-pin/post-success';
                 alert("success");
+                // window.location.href = '/add-pin/post-success';
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                window.location.href = '/add-pin/post-error';
                 alert("error");
+                // window.location.href = '/add-pin/post-error';
             }
         });
     }
