@@ -67,7 +67,6 @@ class GlobalController extends Controller
                 $infos = Infosperso::where('user_id', $userid)->first();
 
                 $allPlaces = Place::where('user_id', null)
-                    ->where('parent_id', NULL)
                     ->orWhere('user_id', backpack_auth()->user()->id)
                     ->get();
 
@@ -82,58 +81,6 @@ class GlobalController extends Controller
                     ->where('user_id', backpack_auth()->user()->id)
                     ->get();
                     
-                $query = PlaceDetails::whereNotNull('latitude')->whereNotNull('longitude')
-                    ->with([
-                        'placeDetail',
-                        'placeDetail.place',
-                        'placeDetail.placeChild',
-                        'observationsDetail',
-                        'observationsDetail.observation',
-                        'observationsDetail.observationChild',
-                        'observationsDetail.feeling',
-                        'user',
-                        'placeComment' => function ($query) {
-                            $query->where('user_id', backpack_auth()->user()->id);
-                        },
-                        'placeGrade' => function ($query) {
-                            $query->where('user_id', backpack_auth()->user()->id);
-                        }
-                    ]);
-
-                if (session()->has('placeIds') && count(session('placeIds')) > 0 && session()->has('observationIds') && count(session('observationIds')) > 0) {
-
-                    $query->where(function ($query) {
-                        $query->whereHas('placeDetail', function ($subQuery) {
-                            $subQuery->whereIn('place_id', session('placeIds'));
-                        });
-                    });
-                    $query->orWhere(function ($query) {
-                        $query->whereHas('observationsDetail', function ($subQuery) {
-                            $subQuery->whereIn('observation_id', session('observationIds'));
-                        });
-                    });
-                } elseif (session()->has('placeIds') && count(session('placeIds')) > 0) {
-                    $query->where(function ($query) {
-                        $query->whereHas('placeDetail', function ($subQuery) {
-                            $subQuery->whereIn('place_id', session('placeIds'));
-                        });
-                    });
-                } elseif (session()->has('observationIds') && count(session('observationIds')) > 0) {
-                    $query->Where(function ($query) {
-                        $query->whereHas('observationsDetail', function ($subQuery) {
-                            $subQuery->whereIn('observation_id', session('observationIds'));
-                        });
-                    });
-                }
-
-
-
-
-                // var_dump(session('placeIds'));
-                // die();
-
-
-                $all_data = $query->get();
 
 
                 $feelings = Feeling::all();
@@ -146,7 +93,7 @@ class GlobalController extends Controller
                     'home',
                     compact(
                         'infos',
-                        'all_data',
+                        // 'all_data',
                         'userid',
                         'allPlaces',
                         'allObservations',
@@ -165,8 +112,6 @@ class GlobalController extends Controller
         } else {
             return view('index');
         }
-
-        // dd('good');
     }
 
     // public function getAll()
@@ -223,91 +168,7 @@ class GlobalController extends Controller
         return $distance;
     }
 
-    public function allbadges()
-    {
-        $explorer = 0;
-        if (backpack_auth()->user()->placeDetails->count() > 0) {
-            $explorer = 1;
-        }
-
-        $citymaker = 0;
-        if (backpack_auth()->user()->observations->count() >= 10) {
-            $citymaker = 1;
-        }
-
-
-        $architect = 0;
-        $allplace = backpack_auth()->user()->placeDetails->flatMap(function ($placeDetail) {
-            return $placeDetail->placeDetail->pluck('place_id');
-        });
-        if ($allplace->count() >= 20) {
-            $architect = 1;
-        }
-
-        $flaneur = 0;
-        $allobservation = backpack_auth()->user()->placeDetails->flatMap(function ($placeDetail) {
-            return $placeDetail->observationsDetail->map(function ($observation) {
-                return $observation->only(['place_detail_id', 'observation_id']);
-            });
-        })->unique();
-        if ($allobservation->count() >= 20) {
-            $flaneur = 1;
-        }
-
-
-        $urbanist = 0;
-        $higherCount = max($allplace->count(), $allobservation->count());
-        if ($higherCount >= 30) {
-            $urbanist = 1;
-        }
-
-        $influencer = 0;
-        $alllikes = backpack_auth()->user()->placeDetails->flatMap(function ($placeDetail) {
-            return $placeDetail->placeLikes;
-        });
-        if ($alllikes->count() >= 10) {
-            $influencer = 1;
-        }
-
-        $star = 0;
-        if ($alllikes->count() >= 20) {
-            $star = 1;
-        }
-
-        $guru = 0;
-        if (backpack_auth()->user()->likedPlaces->count() >= 10) {
-            $guru = 1;
-        }
-
-        $investigator = 0;
-        $totalImagesCount = backpack_auth()->user()->placeDetails->sum(function ($placeDetail) {
-            $observationImageCount = !empty($placeDetail->obsevation_image) ? 1 : 0;
-            $placeImageCount = !empty($placeDetail->place_image) ? 1 : 0;
-            return $observationImageCount + $placeImageCount;
-        });
-
-        if (($totalImagesCount) >= 10) {
-            $investigator = 1;
-        }
-
-        $supermapper = 0;
-        if (backpack_auth()->user()->score >= 500) {
-            $supermapper = 1;
-        }
-
-        return compact(
-            'explorer',
-            'citymaker',
-            'architect',
-            'flaneur',
-            'urbanist',
-            'influencer',
-            'star',
-            'guru',
-            'investigator',
-            'supermapper',
-        );
-    }
+   
 
     public function profile()
     {
@@ -340,40 +201,7 @@ class GlobalController extends Controller
         );
     }
     
-    public function badges_overview()
-    {
-        $userid = backpack_auth()->user()->id;
-        $locale = session()->get('locale');
-        $name = backpack_auth()->user()->name;
-        $score = backpack_auth()->user()->score;
-
-        $badgeData = $this->allbadges();
-        extract($badgeData);
-
-
-
-
-        // dd($citymaker);
-        return view(
-            'badges_overview',
-            compact(
-                'name',
-                'score',
-                'explorer',
-                'citymaker',
-                'architect',
-                'flaneur',
-                'urbanist',
-                'influencer',
-                'star',
-                'guru',
-                'investigator',
-                'supermapper',
-
-            )
-        );
-    }
-
+   
     public function saveprofile(Request $request)
     {
         $userid = backpack_auth()->user()->id;
@@ -529,32 +357,24 @@ class GlobalController extends Controller
             return view('placeDetail', compact('placeSignle'));
         }
     }
-    public function dashboard()
-    {
-        $userid = backpack_auth()->user()->id;
-        $placeDetails = User::with('placeDetails')->find($userid)->placeDetails()->orderBy('id', 'desc')->paginate(10);
-
-        $score = backpack_auth()->user()->score;
-
-
-        return view('dashboard', compact('placeDetails', 'score'));
-    }
-    public function loadMore_dashboard(Request $request)
-    {
-        $userid = backpack_auth()->user()->id;
-        $page = $request->get('page');
-
-        $placeDetails = User::with('placeDetails')->find($userid)->placeDetails()->orderBy('id', 'desc')->paginate(10, ['*'], 'page', $page);
-
-        $html = view('item_dashboard', compact('placeDetails'))->render();
-
-        return response()->json(['html' => $html, 'hasMorePages' => $placeDetails->hasMorePages()]);
-    }
+    
 
     static function pages()
     {
         $pages = Pages::all();
         return $pages;
+    }
+
+    static function comments()
+    {
+        $comments = PlaceComment::all();
+        return $comments;
+    }
+
+    static function places()
+    {
+        $places = Place::all();
+        return $places;
     }
 
     static function categories()
@@ -859,16 +679,7 @@ class GlobalController extends Controller
     }
 
 
-    public function saveDes(Request $request)
-    {
-
-        PlaceDetails::where('id', $request->id)
-            ->update([
-
-                'description' => $request->data
-
-            ]);
-    }
+   
     public function saveComment(Request $request)
     {
         PlaceComment::updateOrcreate(
@@ -888,10 +699,23 @@ class GlobalController extends Controller
             [
                 'place_detail_id' => $request->id,
                 'user_id' => backpack_auth()->user()->id,
-            ],
+            ], 
             [
                 'category_id' => $request->label,
                 'grade' => $request->data,
+            ]
+        );
+    }
+
+    public function savePlace(Request $request)
+    {
+        Place::updateOrcreate(
+            [
+                'user_id' => backpack_auth()->user()->id,
+            ], 
+            [
+                'longitude' => $request->longitude,
+                'latitude' => $request->latitude,
             ]
         );
     }
@@ -910,22 +734,7 @@ class GlobalController extends Controller
         );
     }
 
-    public function setLike(Request $request)
-    {
-
-        $placeLike = PlaceLike::where('place_detail_id', $request->id)
-            ->where('user_id', backpack_auth()->user()->id)
-            ->first();
-
-        if ($placeLike) {
-            $placeLike->delete();
-        } else {
-            PlaceLike::create([
-                'place_detail_id' => $request->id,
-                'user_id' => backpack_auth()->user()->id,
-            ]);
-        }
-    }
+    
 
     public function truncate()
     {

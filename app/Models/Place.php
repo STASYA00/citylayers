@@ -2,32 +2,29 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+// use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
 
-use Illuminate\Database\Eloquent\Relations\HasMany;
+// use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Place extends Model
 {
-    use HasFactory;
+    // use HasFactory;
+    use CrudTrait;
+
+    /*
+    |--------------------------------------------------------------------------
+    | GLOBAL VARIABLES
+    |--------------------------------------------------------------------------
+    */
+
+    protected $table = 'places';
+    protected $guarded = ['id'];
 
     protected $fillable = [
-        'name',
-        'image',
         'user_id',
-        'description',
-        'parent_id'
+        'longitude',
+        'latitude'
     ];
-
-
-
-    /**
-     * The subplaces that belong to the Place
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function subplaces(): HasMany
-    {
-        return $this->hasMany(Place::class,  'parent_id');
-    }
 }

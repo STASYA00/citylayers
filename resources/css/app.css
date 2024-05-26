@@ -3,6 +3,12 @@
 @tailwind components;
 @tailwind utilities;
 
+.space-grotesk {
+    font-family: "Space Grotesk", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+  }
 * {
     margin: 0;
     padding: 0;
@@ -151,7 +157,7 @@
 }
 
 body {
-    font-family: "Roboto", sans-serif;
+    font-family: "Space Grotesk", sans-serif;
 }
 
 .plusbtn {
@@ -205,10 +211,6 @@ img {
     display: none;
 }
 
-.btn {
-    @apply py-4 text-base font-medium transition rounded-full;
-}
-
 .btn-primary {
     @apply text-white bg-blue-500 w-[360px] hover:bg-blue-400;
 }
@@ -217,17 +219,7 @@ img {
     @apply w-[360px] py-3 text-blue-500 transition border-2 border-blue-500 hover:bg-blue-100;
 }
 
-.form-input {
-    @apply h-12 rounded-full w-[360px];
-    @apply text-center text-blue-500 border-2 border-blue-500;
-    outline: 0px;
-}
 
-.form-input:focus {
-    @apply border-blue-500;
-    outline: 0;
-    box-shadow: none;
-}
 
 .ml {
     margin-left: 42%;
@@ -532,7 +524,7 @@ img {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: start;
+    align-items: flex-start;
     gap: 0.7rem;
 }
 
