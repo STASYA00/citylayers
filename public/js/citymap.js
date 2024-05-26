@@ -1,5 +1,6 @@
 // import {Settings} from "./settings";
 
+
 class Settings{
     static debug = true;
 }
@@ -14,7 +15,12 @@ const GRIDS = {
     DIAGONAL: "diagonal",
 }
 
+
+
+
 class MapPanel{
+
+    static toggleComment = (i, on)=>{console.log(i, on)};
     /*
         Object that holds the panel with the interactive map.
         Args:
@@ -25,15 +31,31 @@ class MapPanel{
         let m = new MapPanel(parent);
         m.load();
     */
+
     constructor(parent){
         this.name = MAP_CLASSNAMES.MAP_PANEL;
         this.parent = parent ? parent : "body";
         this.id = "id";
+        this.children = [];
     }
 
-    load() {
-        let citymap = new CityMap(this.make_id());
-        citymap.initiate();
+    load(categories, obs) {
+        
+        let citymap = new CityMap(this.make_id(), categories, obs);
+        // citymap.initiate();
+        this.children.push(citymap);
+    }
+
+    reload(category, lower, upper) {
+        this.children[0].reload(category, lower, upper);
+    }
+
+    reloadMarkers(subcategory, on){
+        this.children[0].toggleMarkers(subcategory, on);
+    }
+
+    activate(id, on){
+        this.children[0].activateMarker(id, on);
     }
 
     getElement(){
@@ -64,42 +86,129 @@ class MapPanel{
     }
 }
 
+const TAG_ICONS = {
+    NORMAL : 'images/tag_icon.png',
+    SELECTED : 'images/tag_selected.svg'
+}
+
 
 class CityMap extends MapPanel{
     
-    constructor(parent){
+    constructor(parent, categories, places){
         super(parent);
         this.name = MAP_CLASSNAMES.MAP;
         this.parent = parent;
         this.id = "id";
-        this.coords = [
-            [59.31712256357835, 18.063320386846158],
-            [59.31689934021666, 18.06273718341144],
-            [59.313720404190896, 18.08545415135039],
-            [59.31884859445553, 18.059762360943395],
-            [59.312152351483135, 18.079562224248082],
-        ];
-        this.places = this.coords.map(c=>new Place(c[0], c[1], 0.8));
+        this.places = places; //ObservationGenerator.make(15, "Accessibility")
+        this.coords = this.places.map(c=>c["pt"]);
+        this.categories = categories;
+        this._map = this.initiate();
+        
+        this._icon = this._makeIcon(TAG_ICONS.NORMAL);
+        this._markers = new Array();
+    }
+
+    _filterObservations(category, lower, upper){
+        return this.places.filter(c=>c["category"]==category).filter(c=>(c["grade"] >lower && c["grade"] < upper));
     }
 
     initiate(){
         
-        let mapObj = L.map(this.parent);
-        Positioner.make(mapObj);
-        CityMap.setup(mapObj);
-        
-
-        CityMap.addOsmLayer(mapObj);
+        let _map = L.map(this.parent);
+        Positioner.make(_map);
+        CityMap.setup(_map);
+        CityMap.addOsmLayer(_map);
         
         // this.coords.forEach(coord => this.addMarker(mapObj, coord[0], coord[1]));
         // this.addDebugGrid(mapObj);
+        // this.categories.forEach(category=> CityMap.addHatchLayer(_map, 
+        //                 this._filterObservations(category.name, 0, 100).map(c=>c["pt"]), 
+        //                 category.name));
 
-        CityMap.addHatchLayer(mapObj, this.coords, MapGraphics.getColors()[0]);
+        return _map
+    }
+
+    reload(category, lower, upper){
+        let _coords = this._filterObservations(category.name, lower, upper).map(c=>c["pt"]);
+        this._map.eachLayer(function(layer){
+            if (layer.options.name == category.name){
+                layer.remove();
+            }
+        });
+        CityMap.addHatchLayer(this._map, _coords, category);
+        // _coords.forEach(c=> this.addMarker(category.name, c.lat, c.lng))
+        // setTimeout(()=>{CityMap.addHatchLayer(this._map, _coords, category)}, 0);
+        
+
+    }
+
+    _makeIcon(icon_path){
+        
+        icon_path = icon_path==undefined ? TAG_ICONS.NORMAL : icon_path;
+
+        return L.icon({
+            iconUrl: icon_path,
+            // shadowUrl: 'leaf-shadow.png',
+        
+            iconSize:     [15, 15], // size of the icon
+            // shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [7, 7], // point of the icon which will correspond to marker's location
+            // shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+        });
     }
 
 
-    addMarker(map, lat, lon){
-        L.marker([lat, lon]).addTo(map);
+    addMarker(lat, lon, id, subcategory){
+        
+        if (!this._markers.map(c=>c.options.id).includes(id)){
+            let m = L.marker([lat, lon], {icon: this._icon, id: id, subcat:subcategory}).addTo(this._map).on('click', (e)=>{
+                                                            
+                let _icon_path = e.target.options.icon.options.iconUrl == 
+                                            TAG_ICONS.NORMAL ? TAG_ICONS.SELECTED : TAG_ICONS.NORMAL
+                e.target.setIcon(this._makeIcon(_icon_path));
+    
+                MapPanel.toggleComment(id, _icon_path==TAG_ICONS.SELECTED);
+            });
+            this._markers.push(m);
+            return m;
+        }
+        return this.getMarker(id)[0];
+    }
+
+    getMarker(id){
+        return this._markers.filter(m => m.options.id==id);
+    }
+
+    activateMarker(id, on){
+        
+        let _places = this.places.filter(c=>c.pt.id==id);
+        if (_places.length==0) {return;}
+        let m = this.addMarker(_places[0].pt.lat, _places[0].pt.lng, _places[0].pt.id, _places[0].subcat); 
+        let _icon_path = on == true ? TAG_ICONS.SELECTED : TAG_ICONS.NORMAL
+        m.setIcon(this._makeIcon(_icon_path));
+        
+        this._markers.filter(m=> m.options.id!=id).forEach(m=>m.setIcon(this._makeIcon(TAG_ICONS.NORMAL)));
+        this._map.setView([_places[0].pt.lat, _places[0].pt.lng]);
+        return;
+    }
+
+    toggleMarkers(subcategory, on){
+        return on==true? this.addMarkers(subcategory) : this.clearMarkers(subcategory);
+    }
+
+    addMarkers(subcategory){
+        
+        let _places = this.places.filter(c=>c["subcat"]?.name==subcategory);
+        _places.forEach(place =>{
+            this.addMarker(place.pt.lat, place.pt.lng, place.pt.id, subcategory);
+        })
+    }
+
+    clearMarkers(subcategory){
+        this._markers.filter(m => m.options.subcat==subcategory).forEach(m=>this._map.removeLayer(m));
+        
+        this._markers = this._markers.filter(m => m.options.subcat!=subcategory);
     }
 
     static setup(map){
@@ -112,6 +221,7 @@ class CityMap extends MapPanel{
     static addOsmLayer(map){
         let osmLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
             subdomains: 'abcd',
+            name: "osm",
             minZoom: 0,
             maxZoom: 19,
             crs: L.CRS.Simple,
@@ -122,16 +232,23 @@ class CityMap extends MapPanel{
     }
 
     static addHatchLayer(map, pts, category){
-        
+        // let randomShift = 4; //Math.ceil(Math.random() * 5);
+        // let module = Math.max(16, Math.ceil(Math.random() * 20));
+        // let modules = [8, 12, 16];
+        // let randomShift = modules[Math.floor(Math.random()*modules.length)];
+        // let module = modules[Math.floor(Math.random()*modules.length)];
+        // console.log(randomShift, module);
         L.GridLayer.CanvasCircles = L.GridLayer.extend({
             createTile: function (coords) {
-                let el = TileManager.init(category);
-                el = TileManager.update(el, map, coords, pts);
+                let el = TileManager.init(category.name);
+                
+                el = TileManager.update(el, map, coords, pts, `#${category.color}`); //, randomShift, module);
                 return el;
             }
-        });
-
-        let hatchLayer = new L.GridLayer.CanvasCircles({crs: L.CRS.Simple});
+        }
+    );
+        let hatchLayer = new L.GridLayer.CanvasCircles({crs: L.CRS.Simple, 
+                                                        name: `${category.name}`});
         map.addLayer(hatchLayer);
         hatchLayer.setZIndex(101);
         map.on("zoomend", function(ev){
@@ -226,7 +343,7 @@ class MapGraphics{
     
     static getColors(){
 
-        return ['#C4B5F0'];
+        return ['#C4B5F0', '#B1CDEF', '#5DB3B5'];
     }
 
     static getCategoryColor(category){
@@ -303,7 +420,7 @@ class Grid{
         return coords;
     }
 
-    static diagonal(width, height){
+    static diagonal(width, height, gridDensity){
         /*
             Function that calculates intersection points for a diagonal grid, 45 degrees. Returns
             a set of coordinates that represent these intersections as [[x,y],[x,y]]
@@ -311,18 +428,19 @@ class Grid{
                 width       width of the grid, int, defaults to MapGraphics.tile if undefined
                 height      height of the grid, int, defaults to MapGraphics.tile if undefined
         */
+       let gd = gridDensity==undefined?MapGraphics.gridDensity : gridDensity;
         [width, height] = this.controlDims(width, height);
         let xArray = Array.from({length: width + 1}, 
-            (x, i) => i % MapGraphics.gridDensity==0 ? i : undefined).
+            (x, i) => i % gd==0 ? i : undefined).
             filter(e=>e!=undefined);
         let yArray = Array.from({length: height + 1}, 
-            (x, i) => i % MapGraphics.gridDensity==0 ? i : undefined).
+            (x, i) => i % gd==0 ? i : undefined).
             filter(e=>e!=undefined);
 
         let coords = new Array();
             xArray.forEach(x => {
                 yArray.forEach(y =>{
-                    if (x%(2*MapGraphics.gridDensity)==y%(2*MapGraphics.gridDensity)){
+                    if (x % ( 2 * gd ) == y % (2 * gd)){
                         coords.push([x, y]);
                     }
                     
@@ -386,11 +504,13 @@ class HatchDrawer{
                             {x: 9046, y: 596, z: 16}
                 pts         reference points for drawing the hatch pattern
         */
+        // let randomShift = Math.random() * 10;
+        // let module = Math.ceil(Math.random() * 20);
         let grid = Grid.diagonal(MapGraphics.tile, MapGraphics.tile);
         grid.forEach(coords =>{
             let [x, y] = coords;
             let crds = MapTransformer.px2coords(map, tileCoords, x, y);
-            let dst = Math.min(...pts.map(pt=>MapTransformer.calcDistance(map, [crds.lat, crds.lng], pt)));                
+            let dst = Math.min(...pts.map(pt=>MapTransformer.calcDistance(map, [crds.lat, crds.lng], [pt["lat"], pt["lng"]])));                
             let radius =  this.makeRadius(MapGraphics.refDist, dst);
             this.drawCircle(ctx, radius, x, y);
             })
@@ -409,9 +529,8 @@ class TileManager{
         ctx.clearRect(0, 0, MapGraphics.tile, MapGraphics.tile)
     }
 
-    static draw(el, map, tileCoords, pts){
+    static draw(el, map, tileCoords, pts, color){
         var ctx = el.getContext('2d');
-        let color = MapGraphics.getCategoryColor("category");
 
         this.setContext(ctx, color);
         // ctx.rotate(30 * Math.PI / 180);
@@ -434,13 +553,13 @@ class TileManager{
 
     static setContext(ctx, color){
         ctx.fillStyle = color;
-        ctx.globalAlpha = 0.3;
+        ctx.globalAlpha = 0.7;
         ctx.strokeStyle = "rgb(255 0 0 / 0%)";
     }
 
-    static update(el, map, tileCoords, pts){
+    static update(el, map, tileCoords, pts, color){
         this.clear(el);
-        return this.draw(el, map, tileCoords, pts);
+        return this.draw(el, map, tileCoords, pts, color);
     }
 
 

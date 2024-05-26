@@ -90,6 +90,8 @@ sharing their thoughts on a range of urban phenomena.
 
 CityLayers at its current stage:
 
+(Check the [video](assets/20240526_1808.mp4) to get a full picture)
+
 <video width="960" height="640" controls>
   <source src="assets/20240526_1808.mp4" type="video/mp4">
 Your browser does not support the video tag.
