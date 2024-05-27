@@ -26,11 +26,9 @@
     @vite('resources/js/app.js')
     @vite('resources/js/map.js')
     @vite('resources/js/citymap.js')
-    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     @livewireScripts
     @stack('scripts')
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
         ::-webkit-scrollbar {
             width: 0;

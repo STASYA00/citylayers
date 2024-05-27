@@ -348,3 +348,16 @@ body {
   /* .subcategorytag span:before {
     border-radius: 50%;
   } */
+
+  .pinButton{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-width: 240px;
+    height: 30px;
+    color: var(--tertiary-color);
+    background-color: var(--secondary-color);
+    z-index: 10;
+    margin: 12px;
+  }
