@@ -29,6 +29,9 @@
 @vite('resources/css/sidepanel.css')
 @vite('resources/css/container.css')
 @vite('resources/css/map.css')
+
+<div class="left-container"></div>
+<div class="right-container"></div>
     
     <script>
         <?php require_once("js/container.js");?>
@@ -73,7 +76,8 @@
         }
         
 
-        let body = "body"; 
+        let rightContainer = "right-container"; 
+        let leftContainer = "left-container"; 
         const placeInput = {!! json_encode($places) !!};
         const commentInput = {!! json_encode($comments) !!};
         const categoryInput = {!! json_encode($categories) !!};
@@ -109,13 +113,15 @@
         SubcatAssigner.make(obs, subcats);
         CommentAssigner.make(obs, comments);
 
-        let m = new MapPanel(body);
-        let c = new CategoryPanel(body, 
+        let m = new MapPanel(rightContainer);
+        let c = new CategoryPanel(leftContainer, 
                     (category, lower, upper)=>{m.reload(category, lower, upper)}, 
                     (category, lower, upper)=>{m.reload(category, lower, upper)},
                 );
-
-        let commentPanel = new CommentPanel(body);
+        let commentPanel = new CommentPanel(rightContainer);
+        // let aboutLabel = new AboutLabel(rightContainer);
+        // let aboutPanel = new AboutPanel(rightContainer);
+        let topTagPanel = new TopTagPanel(rightContainer);
 
         CategoryPanel.markertoggle = (subcat, on)=>{m.reloadMarkers(subcat, on)};
         MapPanel.toggleComment = (i, on)=>{CommentPanel.focusComment(i, on)};
@@ -124,10 +130,17 @@
         c.initiate();
         m.initiate();
         commentPanel.initiate();
+        topTagPanel.initiate();
+        // aboutLabel.initiate();
+        // aboutPanel.initiate();
+
 
         m.load(categories, obs);
         c.load(categories);  // ["Accessibility", "Noise", "Safety", "Weather Resistance", "Amenities"]
         commentPanel.load(comments);
+        topTagPanel.load();
+        // aboutLabel.load();
+        // aboutPanel.load();
         // saveGrade();
         
         setTimeout(()=>{m.reload(obs)}, 0);

@@ -99,7 +99,7 @@ class CategoryPanel extends CElement{
         this.name = CLASSNAMES.CATEGORY_PANEL;
         this.parent = parent ? parent : "body";
         this.id = "id";
-        this.elements = [Logo, CategoryPanelHeader, TopTagPanel, AboutLabel, AboutPanel, PinButton];
+        this.elements = [Logo, CategoryPanelHeader, PinButton];
         this.activation = activation;  // callback to activate observations' categories
         this.filtering = filtering;  // callback to filter observations
     }
@@ -813,7 +813,7 @@ class TopTagPanel extends CElement{
     constructor(parent){
         super(parent);
         this.id = "geocodingpanelid";
-        this.parent = "body";
+        this.parent = parent ? parent : "body";
         this.name = CLASSNAMES.GEOCODONG_PANEL;
         this.content = "";
         
@@ -899,7 +899,7 @@ class AboutLabel extends CElement{
     constructor(parent){
         super(parent);
         this.id = "aboutlabelid";
-        this.parent = "body";
+        this.parent = parent ? parent : "body";
         this.name = CLASSNAMES.ABOUT_LABEL;
         this.content = "about";
         
@@ -965,7 +965,7 @@ class AboutPanel extends CElement{
     constructor(parent){
         super(parent);
         this.id = "id";
-        this.parent = "body";
+        this.parent = parent ? parent : "body";
         this.name = CLASSNAMES.ABOUT_PANEL;
         
         this.elements = [AboutPanelCloseButton,

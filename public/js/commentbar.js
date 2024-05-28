@@ -1,67 +1,67 @@
-class CommentPanel extends CElement{
+class CommentPanel extends CElement {
 
-    toggleMarker = (value) =>{console.log(value)};
+    toggleMarker = (value) => { console.log(value) };
 
-    constructor(parent, comments){
+    constructor(parent, comments) {
         super(parent, "id");
         this.name = CLASSNAMES.COMMENTPANEL;
         this.content = comments;
-        
+
         this.elements = [
-                CommentCloseButton,
-                CommentSearch,
-                CommentContainer
+            CommentCloseButton,
+            CommentSearch,
+            CommentContainer
         ];
     }
 
-    getParent(){
+    getParent() {
         let elements = document.getElementsByClassName(this.parent);
-        if (elements.length>0){
+        if (elements.length > 0) {
             return elements[0];
         }
     }
 
 
     load(comments) {
-        this.elements.forEach(el =>{
+        this.elements.forEach(el => {
             let element = new el(this.make_id(), "id");
             element.initiate();
             element.load(comments);
         });
     }
 
-    static search(value){
-        
-        let comments = Array.from(document.getElementsByClassName(CLASSNAMES.COMMENTTEXT)); 
-        comments.forEach(c=>c.parentElement.setAttribute("style", "order: 8"));
+    static search(value) {
+
+        let comments = Array.from(document.getElementsByClassName(CLASSNAMES.COMMENTTEXT));
+        comments.forEach(c => c.parentElement.setAttribute("style", "order: 8"));
         comments.filter(c => c.innerHTML.toLowerCase().includes(value.toLowerCase())).forEach(
-            c=>c.parentElement.setAttribute("style", "order: 1")
+            c => c.parentElement.setAttribute("style", "order: 1")
         );
     }
 
-    static focusComment(id, on){
+    static focusComment(id, on) {
         //2px solid var(--secondary-color);
 
         let _comment = document.getElementById(`commentpane_${id}`);
         console.log(_comment);
-        if (_comment!=undefined){
-            if (on == true){
+        if (_comment != undefined) {
+            if (on == true) {
                 _comment.scrollIntoView({
                     behavior: 'smooth'
-               });
-               _comment.focus();
+                });
+                _comment.focus();
             }
-            
+
         }
     }
 
 
-    static toggle(place_id, on){
-        let panel = document.getElementById(`${CLASSNAMES.COMMENTCONTAINER}_id`);
-        panel.style.display = panel.style.display === "none" ? "flex" : "none";
+    static toggle() {
+        let panel = document.getElementById(`${CLASSNAMES.COMMENTPANEL}_id`);
+        panel.classList.toggle("open");
     }
 
-    static hideAll(){
+    static hideAll() {
         let panels = document.getElementsByClassName(CLASSNAMES.CATEGORY_SIDE_PANEL);
         Array.from(panels).forEach(panel => {
             panel.style.display = "none";
@@ -69,40 +69,39 @@ class CommentPanel extends CElement{
     }
 }
 
-class CommentContainer extends CElement{
-    constructor(parent, id){
+class CommentContainer extends CElement {
+    constructor(parent, id) {
         super(parent);
         this.id = id;
         this.name = CLASSNAMES.COMMENTCONTAINER;
         this.elements = [];
     }
 
-    addComment(comment, id){
+    addComment(comment, id) {
         let div = new CommentPane(this.make_id(), id, comment);
         div.initiate();
         div.load();
     }
 
     load(comments) {
-        this.elements.forEach(el =>{
+        this.elements.forEach(el => {
             let element = new el(this.make_id(), "main");
             element.initiate();
             element.load();
         });
-        comments.forEach((c, i) =>{ this.addComment(c, i.toString());
-        this.getElement().style.display = "none";
+        comments.forEach((c, i) => {
+            this.addComment(c, i.toString());
         });
     }
 }
 
-class CommentPane extends CElement{
-    constructor(parent, id, comment){
+class CommentPane extends CElement {
+    constructor(parent, id, comment) {
         super(parent);
         this.id = id;
         this.name = CLASSNAMES.COMMENTPANE;
         this.content = comment;
-        // this.parent = parent; //CLASSNAMES.CATEGORY_CONTAINER;
-        this.elements = [CommentSymbol, CommentText];
+        this.elements = [CommentText];
     }
 
     initiate() {
@@ -111,24 +110,23 @@ class CommentPane extends CElement{
         el.setAttribute("id", this.make_id());
         this.getParent().appendChild(el);
         el.setAttribute("tabindex", "0");
-        el.onclick = ()=>{
+        el.onclick = () => {
             console.log(el);
             console.log(document.activeElement == el);
             CommentPanel.toggleMarker(this.id, document.activeElement == el);
-
         }
     }
 
-    load(){
-        for (let e=0; e<this.elements.length; e++){
+    load() {
+        for (let e = 0; e < this.elements.length; e++) {
             let element = new this.elements[e](this.make_id(), this.id, this.content);
             element.initiate();
         }
     }
 }
 
-class CommentText extends CElement{
-    constructor(parent, id, content){
+class CommentText extends CElement {
+    constructor(parent, id, content) {
         super(parent);
         this.id = id;
         this.content = content
@@ -144,48 +142,31 @@ class CommentText extends CElement{
     }
 }
 
-class CommentSymbol extends CElement{
-    constructor(parent, category){
-        super(parent, category);
-        this.name = CLASSNAMES.COMMENTSYMBOL;
-        this.content = `"`; // U+02715
-    }
+class CommentCloseButton extends CElement {
 
-    initiate() {
-        let element = document.createElement("div");
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        element.innerHTML = this.content;
-        this.getParent().appendChild(element);
-    }
-}
-
-class CommentCloseButton extends CElement{
-    
-    constructor(parent){
+    constructor(parent) {
         super(parent, "id");
         this.name = CLASSNAMES.COMMENTPANEL_CLOSE;
-        this.content = ["&#9206", "&#9207;"]; // U+02715
+        this.content = "<div class='chevron'></div>";
     }
 
     initiate() {
         let element = document.createElement("button");
         element.setAttribute('class', this.name);
         element.setAttribute("id", this.make_id());
-        element.innerHTML = this.content[0];
-        element.onclick = (e)=>{
-            e.target.innerHTML = e.target.innerHTML.charCodeAt().toString()==
-                            this.content[0].substring(2, 6) ? this.content[1] : this.content[0];
+        element.innerHTML = this.content;
+        element.onclick = (e) => {
+            element.classList.toggle("open");
             CommentPanel.toggle();
         };
         this.getParent().appendChild(element);
     }
-    
+
 }
 
-class CommentSearch extends CElement{
+class CommentSearch extends CElement {
     // <input type="text" placeholder="Search..">
-    constructor(parent){
+    constructor(parent) {
         super(parent, "id");
         this.name = CLASSNAMES.COMMENTSEARCH;
         this.content = "Search through comments" // Search through comments 
@@ -195,13 +176,13 @@ class CommentSearch extends CElement{
         let element = document.createElement("div");
         element.setAttribute('class', this.name);
         element.setAttribute("id", this.make_id());
-        element.innerHTML = "🔎︎";
+        // element.innerHTML = "🔎︎";
         this.getParent().appendChild(element);
         let e1 = document.createElement("input");
         e1.setAttribute("type", "text");
         e1.setAttribute("placeholder", this.content);
-        e1.oninput = (e)=>{
-            
+        e1.oninput = (e) => {
+
             CommentPanel.search(e.target.value);
         }
         element.appendChild(e1);

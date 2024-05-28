@@ -1,4 +1,10 @@
 
+.right-container{
+    position: relative;
+    flex: auto;
+    height: 100%;
+}
+
 .mappanel{
     position: relative;
     width: 100%;

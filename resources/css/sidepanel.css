@@ -23,15 +23,6 @@ hr{
 
 }
 
-
-.mappanel{
-  position: relative;
-  width: 100%;
-  height: 100%;
-  outline: none;
-  z-index: 1;
-}
-
 .categorysidepanel{
   display: flex;
   flex-direction: column;

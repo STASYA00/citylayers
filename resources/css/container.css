@@ -1,33 +1,13 @@
-/* 
-<uniquifier>: Use a unique and descriptive class name
-<weight>: Use a value from 300 to 700 
-*/
-
-.space-grotesk {
-  font-family: "Space Grotesk", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-}
-
-body {
-    display: flex;
-    --main-bg-color: #FFFFFF;
-    width: 100%;
-    font-family: "Space Grotesk";
-    --secondary-color: #014751;
-    --tertiary-color: #DFE6E9;
-    ;
-}
-
 .categorypanel{
+    position: relative;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
     background-color: var(--tertiary-color);
     color: var(--secondary-color);
-    width: 30%;
+    width: 38vw;
     min-width: 300px;
+    max-width: 350px;
     height: 100vh;
     padding: 12px;
     row-gap: 12px;
@@ -371,18 +351,19 @@ input[type="range"] {
   } */
 
 .pinButton {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: 100;
-  margin: 12px auto;
+  margin: var(--margin-1) auto;
 }
 
 @media screen and (min-width: 768px) {
   .pinButton {
-    width: fit-content;
-    min-width: calc(300px - 24px);
-    margin: 12px;
+    width: calc(38vw - var(--margin-2));
+    min-width: calc(300px - var(--margin-2));
+    max-width: calc(350px - var(--margin-2));
+    margin: var(--margin-1);
   }
 }
