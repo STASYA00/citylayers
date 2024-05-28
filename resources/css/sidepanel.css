@@ -1,29 +1,16 @@
-.space-grotesk {
-  font-family: "Space Grotesk", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-}
-
 body {
-    display: flex;
-    font-family: "Space Grotesk";
-    --main-bg-color: #FFFFFF;
-    width: 100%;
-    --secondary-color: #014751;
-    --tertiary-color: #DFE6E9;
-    --side-panel-color: #3ACE8E;
-    ;
+  --main-bg-color: #FFFFFF;
+  --side-panel-color: #3ACE8E;
 }
 
-hr{
+hr {
   border: 1px solid var(--secondary-color);
   /* stroke-linecap: round; */
   border-radius: 2px;
 
 }
 
-.categorysidepanel{
+.categorysidepanel {
   display: flex;
   flex-direction: column;
   width: 300px;
@@ -51,108 +38,105 @@ hr{
   align-content: flex-start;
 }
 
-.categorysidetagcontainer{
+.categorysidetagcontainer {
   width: 100%;
   display: flex;
   flex-direction: column;
   row-gap: 15px;
 }
 
-.categorysidetagcontainersmall > .subcategorytag span{
+.categorysidetagcontainersmall>.subcategorytag span {
   background-color: inherit;
   border: 1px solid var(--secondary-color);
 }
-.categorysidetagcontainersmall > .subcategorytag span:before {
+
+.categorysidetagcontainersmall>.subcategorytag span:before {
   background-color: var(--main-bg-color);
   -webkit-transition: .4s;
   transition: .4s;
 }
-.categorysidetagcontainersmall > .subcategorytag input:checked + span {
+
+.categorysidetagcontainersmall>.subcategorytag input:checked+span {
   background-color: var(--main-bg-color);
   color: var(--secondary-color);
   -webkit-transition: .4s;
   transition: .4s;
 }
 
-.categorysidetagcontainer > button{
+.categorysidetagcontainer>button {
   text-align: start;
 }
 
-.categorysidetagcontainertitle{
+.categorysidetagcontainertitle {
   text-align: start;
   background-color: inherit;
   border: none;
 }
 
-.closebutton{
+.closebutton {
   background-color: inherit;
   border: none;
   padding-bottom: 12px;
 }
 
-.sidepanelclose{
+.sidepanelclose {
   background-color: inherit;
   border: none;
   padding-bottom: 12px;
 }
 
-.logo{
+.logo {
   width: 100px;
 }
 
 .geopanel {
   position: absolute;
-    left: 55%;
-    top: 3%;
-    width: 160px;
-    z-index: 21;
-    background-color: var(--main-bg-color);
-    box-sizing: border-box;
-    border: 2px solid var(--secondary-color);
-    border-radius: 16px;
-    height: 27px;
-    font-size: 12px;
-    line-height: 12px;
-    text-align: center;
-    display: inline-flex;
-    vertical-align: middle;
-    justify-content: center;
-    align-items: center;
-}
-
-.aboutlabel{
-  position: absolute;
-  left: 88%;
-  top: 3%;
-  width: 160px;
+  top: 0;
+  margin: var(--margin-1) auto;
+  left: 0;
+  right: 0;
   z-index: 21;
-  color: var(--secondary-color);
-  text-transform: capitalize;
-  text-decoration: underline;
+  background-color: var(--primary-color);
+  box-sizing: border-box;
+  border: 1px solid var(--secondary-color);
+  border-radius: 20px;
   height: 27px;
-  font-size: 14px;
+  min-width: 150px;
+  width: fit-content;
+  font-size: 12px;
+  line-height: 12px;
   text-align: center;
   display: inline-flex;
   vertical-align: middle;
   justify-content: center;
   align-items: center;
-  font-weight: 900;
+}
+
+.aboutlabel {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 21;
+  color: var(--secondary-color);
+  text-transform: capitalize;
+  text-decoration: underline;
+  font-size: 12px;
+  margin: 16px;
+  font-weight: 800;
   cursor: pointer;
 }
 
 .aboutpanel {
   display: flex;
   flex-direction: column;
-
   position: absolute;
-  left: 80%;
-  top: 7%;
+  right: 0;
+  top: 0;
   z-index: 21;
   height: fit-content;
   background-color: var(--secondary-color);
-  color: var(--main-bg-color);
-  
-  margin: 15px;
+  color: var(--primary-color);
+  margin: 12px;
   box-sizing: border-box;
   border-radius: 10px;
   justify-content: flex-start;
@@ -160,4 +144,7 @@ hr{
   padding: 15px;
   row-gap: 15px;
   font-size: 12px;
+  font-weight: 100;
+  max-width: 350px;
+  width: calc(100vw - var(--margin-2));
 }

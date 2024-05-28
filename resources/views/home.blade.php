@@ -119,8 +119,8 @@
                     (category, lower, upper)=>{m.reload(category, lower, upper)},
                 );
         let commentPanel = new CommentPanel(rightContainer);
-        // let aboutLabel = new AboutLabel(rightContainer);
-        // let aboutPanel = new AboutPanel(rightContainer);
+        let aboutLabel = new AboutLabel(rightContainer);
+        let aboutPanel = new AboutPanel(rightContainer);
         let topTagPanel = new TopTagPanel(rightContainer);
 
         CategoryPanel.markertoggle = (subcat, on)=>{m.reloadMarkers(subcat, on)};
@@ -131,16 +131,16 @@
         m.initiate();
         commentPanel.initiate();
         topTagPanel.initiate();
-        // aboutLabel.initiate();
-        // aboutPanel.initiate();
+        aboutLabel.initiate();
+        aboutPanel.initiate();
 
 
         m.load(categories, obs);
         c.load(categories);  // ["Accessibility", "Noise", "Safety", "Weather Resistance", "Amenities"]
         commentPanel.load(comments);
         topTagPanel.load();
-        // aboutLabel.load();
-        // aboutPanel.load();
+        aboutLabel.load();
+        aboutPanel.load();
         // saveGrade();
         
         setTimeout(()=>{m.reload(obs)}, 0);

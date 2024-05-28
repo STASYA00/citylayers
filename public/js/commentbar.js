@@ -31,6 +31,8 @@ class CommentPanel extends CElement {
     }
 
     static search(value) {
+        let panel = document.getElementById(`${CLASSNAMES.COMMENTPANEL}_id`);
+        if(!panel.classList.contains("open")) panel.classList.add("open");
 
         let comments = Array.from(document.getElementsByClassName(CLASSNAMES.COMMENTTEXT));
         comments.forEach(c => c.parentElement.setAttribute("style", "order: 8"));
@@ -40,8 +42,6 @@ class CommentPanel extends CElement {
     }
 
     static focusComment(id, on) {
-        //2px solid var(--secondary-color);
-
         let _comment = document.getElementById(`commentpane_${id}`);
         console.log(_comment);
         if (_comment != undefined) {
@@ -182,7 +182,6 @@ class CommentSearch extends CElement {
         e1.setAttribute("type", "text");
         e1.setAttribute("placeholder", this.content);
         e1.oninput = (e) => {
-
             CommentPanel.search(e.target.value);
         }
         element.appendChild(e1);
