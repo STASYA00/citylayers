@@ -12,9 +12,10 @@
 <div class="main-wrapper" id="main-container" x-data>
     <div class="header">
         <img class="logo" src="../images/logo_2.svg">
-        <button x-show="$store.data.step.current !== 0 && $store.data.step.current !== $store.data.step.length"
+        <button x-show="$store.data.step.current == 0" class="exit-button" @click="history.back()">exit</button>
+        <button x-cloak x-show="$store.data.step.current !== 0 && $store.data.step.current !== $store.data.step.length"
             class="exit-button" @click="$store.data.submit()">send and exit</button>
-        <button x-show="$store.data.step.current == $store.data.step.length" class="back-button"
+        <button x-cloak x-show="$store.data.step.current == $store.data.step.length" class="back-button"
             @click="$store.data.prevStep()"> back </button>
     </div>
     <template x-if="$store.data.step.current == 0 || $store.data.step.current == $store.data.step.length">
