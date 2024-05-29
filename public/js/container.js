@@ -692,17 +692,23 @@ class CategorySidePanel extends CElement {
 
     static toggleSide(category) {
         let sidePanel = document.getElementById(`${CLASSNAMES.CATEGORY_SIDE_PANEL}_${category}`);
+        let container = document.getElementById(`${CLASSNAMES.CATEGORY_CONTAINER}_${category}`);
         if (sidePanel.style.display === "none") {
             this.hideAll();
         }
+        container.classList.toggle("simple-drop-shadow");
         sidePanel.style.display = sidePanel.style.display === "none" ? "flex" : "none";
     }
 
     static hideAll() {
         let panels = document.getElementsByClassName(CLASSNAMES.CATEGORY_SIDE_PANEL);
+        let containers = document.getElementsByClassName(CLASSNAMES.CATEGORY_CONTAINER);
         Array.from(panels).forEach(panel => {
-            panel.style.display = "none";
         })
+        for (let i = 0; i < panels.length; i++) {
+            panels[i].style.display = "none";
+            containers[i].classList.remove("simple-drop-shadow");            
+        }
     }
 }
 

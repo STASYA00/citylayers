@@ -13,7 +13,6 @@
   row-gap: var(--margin-1);
   font-size: 12px;
   overflow-y: scroll;
-  padding-bottom: calc(50px + var(--margin-2));
 }
 
 .categorypanelheader {

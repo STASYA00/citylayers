@@ -106,7 +106,7 @@ class CommentPane extends CElement {
 
     initiate() {
         let el = document.createElement("div");
-        el.setAttribute('class', this.name);
+        el.setAttribute('class', this.name + " simple-drop-shadow");
         el.setAttribute("id", this.make_id());
         this.getParent().appendChild(el);
         el.setAttribute("tabindex", "0");

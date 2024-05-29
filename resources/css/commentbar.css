@@ -9,7 +9,6 @@
     justify-content: flex-start;
     justify-items: flex-end;
     flex-wrap: wrap;
-    margin: 12px 0;
     transform: translateY(150px);
     will-change: transform;
     transition: all .3s ease-in-out;
@@ -51,10 +50,9 @@
     width: 100%;
     height: 100%;
     display: flex;
-    padding: 0 12px;
+    padding: var(--margin-1);
     overflow-x: scroll;
     scrollbar-width: none;
-    padding-top: 12px;
     color: var(--secondary-color);
     scroll-snap-type: x mandatory;
     scroll-padding-left: var(--margin-1);
