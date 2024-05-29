@@ -29,6 +29,7 @@ const CLASSNAMES = {
     ABOUT_PANEL: "aboutpanel",
     ABOUTPANEL_CLOSE: "aboutpanelclose",
     ABOUT_DESCRIPTION: "aboutdescription",
+    ABOUT_TEXT: "abouttext",
 
     COMMENTPANEL : "commentpanel",
     COMMENTCONTAINER : "commentcontainer",
@@ -1031,13 +1032,14 @@ class AboutDescription extends CElement{
         element.setAttribute("id", this.make_id());
         element.innerHTML = this.content; //emoji.emojify(this.content);
         this.getParent().appendChild(element);
+        // this.getParent().appendChild('</hr>');
     }
 }
 
 class AboutText extends CElement{
     constructor(parent){
         super(parent);
-        this.name = CLASSNAMES.ABOUT_DESCRIPTION;
+        this.name = CLASSNAMES.ABOUT_TEXT;
         this.content = `City Layers embody the motto “act local to go global” 
         by relying on citizen mapping as a holistic and inclusive city-making 
         practice that aims to tackle the contemporary spatial, social and 

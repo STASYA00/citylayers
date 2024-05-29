@@ -30,8 +30,10 @@
 @vite('resources/css/container.css')
 @vite('resources/css/map.css')
 
-<div class="left-container"></div>
-<div class="right-container"></div>
+<div class="main-map">
+    <div class="left-container"></div>
+    <div class="right-container"></div>
+</div>
     
     <script>
         <?php require_once("js/container.js");?>

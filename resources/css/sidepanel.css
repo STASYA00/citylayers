@@ -82,7 +82,6 @@ hr {
 .sidepanelclose {
   background-color: inherit;
   border: none;
-  padding-bottom: 12px;
 }
 
 .logo {
@@ -147,4 +146,16 @@ hr {
   font-weight: 100;
   max-width: 350px;
   width: calc(100vw - var(--margin-2));
+}
+
+.aboutdescription{
+  font-size: 14px;
+  border-bottom: solid 1px var(--primary-color);
+  font-weight: 500;
+  padding-bottom: var(--margin-1);
+
+}
+
+.abouttext{
+  padding: var(--margin-1) 0;
 }
