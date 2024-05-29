@@ -21,6 +21,13 @@
     margin-top: 18px;
 }
 
+span {
+    font-size: 14px;
+    font-weight: 400;
+    margin-bottom: 8px;
+    opacity: 0.6;
+}
+
 .img-container {
     display: flex;
     border: solid 1px var(--secondary-color);

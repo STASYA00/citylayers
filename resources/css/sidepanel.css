@@ -3,32 +3,28 @@ body {
   --side-panel-color: #3ACE8E;
 }
 
-hr {
-  border: 1px solid var(--secondary-color);
-  /* stroke-linecap: round; */
-  border-radius: 2px;
-
-}
-
 .categorysidepanel {
   display: flex;
   flex-direction: column;
-  width: 300px;
   position: absolute;
+  width: 38vw;
+  min-width: 300px;
+  max-width: 350px;
   top: 10%;
-  left: 25%;
+  left: var(--margin-1);
   background-color: var(--side-panel-color);
   color: var(--secondary-color);
-  padding: 15px;
+  padding: var(--margin-1);
+  padding-bottom: var(--margin-2);
   border-radius: 10px;
-  padding: 15px;
-  border-radius: 10px;
-  z-index: 2;
+  z-index: 100;
   align-items: flex-start;
+  font-size: 14px;
+  gap: var(--margin-1);
 }
 
 .categorysidetagcontainersmall {
-  gap: 7px;
+  gap: 8px;
   display: inline-flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -42,25 +38,7 @@ hr {
   width: 100%;
   display: flex;
   flex-direction: column;
-  row-gap: 15px;
-}
-
-.categorysidetagcontainersmall>.subcategorytag span {
-  background-color: inherit;
-  border: 1px solid var(--secondary-color);
-}
-
-.categorysidetagcontainersmall>.subcategorytag span:before {
-  background-color: var(--main-bg-color);
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-.categorysidetagcontainersmall>.subcategorytag input:checked+span {
-  background-color: var(--main-bg-color);
-  color: var(--secondary-color);
-  -webkit-transition: .4s;
-  transition: .4s;
+  row-gap: var(--margin-1);
 }
 
 .categorysidetagcontainer>button {
@@ -71,12 +49,14 @@ hr {
   text-align: start;
   background-color: inherit;
   border: none;
+  font-size: 12px;
+  font-weight: 300;
 }
 
 .closebutton {
   background-color: inherit;
   border: none;
-  padding-bottom: 12px;
+  padding-bottom: var(--margin-1);
 }
 
 .sidepanelclose {

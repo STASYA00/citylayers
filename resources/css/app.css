@@ -1067,11 +1067,8 @@ p {
     margin-bottom: 20px;
 }
 
-span {
-    font-size: 14px;
-    font-weight: 400;
-    margin-bottom: 8px;
-    opacity: 0.6;
+hr{
+    border-color: var(--secondary-color);
 }
 
 .main-wrapper {
@@ -1132,9 +1129,15 @@ span {
     cursor: pointer;
 }
 
-.tag div{
-    padding: 4px 16px;
+.tag input:disabled{
+    cursor: auto;
+}
+
+.tag .tag-element{
+    padding: 4px 12px;
+    font-size: 12px;
     display: flex;
+    align-items: center;
 }
 
 .tag label{
