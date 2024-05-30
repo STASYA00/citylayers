@@ -31,7 +31,8 @@ class CommentPanel extends CElement {
     }
 
     static search(value) {
-        let panel = document.getElementById(`${CLASSNAMES.COMMENTPANEL}_id`);
+        const panel = document.getElementById(`${CLASSNAMES.COMMENTPANEL}_id`);
+        const container = document.getElementById(`${CLASSNAMES.COMMENTCONTAINER}_id`);
         if(!panel.classList.contains("open")) panel.classList.add("open");
 
         let comments = Array.from(document.getElementsByClassName(CLASSNAMES.COMMENTTEXT));
@@ -39,6 +40,8 @@ class CommentPanel extends CElement {
         comments.filter(c => c.innerHTML.toLowerCase().includes(value.toLowerCase())).forEach(
             c => c.parentElement.setAttribute("style", "order: 1")
         );
+        //scroll container to the left to have the searched comment in view.
+        container.scrollLeft= 0;
     }
 
     static focusComment(id, on) {
