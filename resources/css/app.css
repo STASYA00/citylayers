@@ -1148,3 +1148,7 @@ hr{
 .simple-drop-shadow{
     box-shadow: 0px 3px 2px 1px rgba(58, 72, 76, 20%);
 }
+
+input[type=range]::-moz-range-progress{
+    background-color: transparent;
+}

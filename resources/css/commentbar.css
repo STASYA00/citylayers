@@ -12,11 +12,11 @@
     transform: translateY(150px);
     will-change: transform;
     transition: all .3s ease-in-out;
+}
 
-    &.open {
-        transform: translateY(0px);
-        transition: all .3s ease-in-out;
-    }
+.commentpanel.open {
+    transform: translateY(0px);
+    transition: all .3s ease-in-out;
 }
 
 .commentpanelclose {
@@ -28,21 +28,21 @@
     margin: 0 12px;
     will-change: transform;
     transition: transform .3s ease-in-out;
+}
 
-    &.open {
-        transform: rotate(180deg);
-        transition: transform .3s ease-in-out;
-    }
+.commentpanelclose.open {
+    transform: rotate(180deg);
+    transition: transform .3s ease-in-out;
+}
 
-    .chevron {
-        border: solid var(--secondary-color);
-        border-width: 0 1px 1px 0;
-        display: inline-block;
-        padding: 4px;
-        margin-bottom: 4px;
-        transform: rotate(45deg);
-        -webkit-transform: rotate(45deg);
-    }
+.commentpanelclose .chevron {
+    border: solid var(--secondary-color);
+    border-width: 0 1px 1px 0;
+    display: inline-block;
+    padding: 4px;
+    margin-bottom: 4px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
 }
 
 
