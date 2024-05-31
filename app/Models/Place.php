@@ -23,7 +23,6 @@ class Place extends Model
     protected $guarded = ['id'];
 
     protected $fillable = [
-        'user_id',
         'longitude',
         'latitude'
     ];

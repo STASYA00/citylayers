@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class PlaceComment extends Model
@@ -16,8 +17,8 @@ class PlaceComment extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'place_comments';
+    protected $table = 'comments';
     protected $guarded = ['id'];
-
-    protected $fillable = ['place_detail_id', 'user_id','comment'];
+    use HasFactory;
+    protected $fillable = ['place_id', 'comment'];
 }

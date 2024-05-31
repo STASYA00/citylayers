@@ -28,14 +28,10 @@ class Grade extends Model
         // 'created_at',
         // 'updated_at',
     ];
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    // public function subobservs(): HasMany
+    // public function user()
     // {
-    //     return $this->hasMany(Observation::class, 'parent_id');
+    //     return $this->belongsTo(User::class);
     // }
+
 
 }

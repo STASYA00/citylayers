@@ -17,6 +17,7 @@ body {
     font-family: "Space Grotesk";
     --secondary-color: #014751;
     --tertiary-color: #DFE6E9;
+    --thumb-color: #220022;
     ;
 }
 
@@ -133,7 +134,8 @@ body {
   }
 
   input[type=range]::-webkit-slider-thumb:hover {
-    background: #C4B5F0;} 
+    background: #C4B5F0;
+  } 
 
 input[type=range].startSlider::-webkit-slider-thumb {
   scale: 60%;

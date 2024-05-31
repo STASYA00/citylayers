@@ -15,13 +15,12 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            AdminUserSeeder::class,
+            
             // GlobalSeeder::class
-            PlaceSeeder::class,
-            ObservationSeeder::class,
-            FeelingSeeder::class,
-            PreferencesTableSeeder::class,
-            // SubplaceSeeder::class
+            CategoriesSeeder::class,
+            SubcategoriesSeeder::class,
+            QuestionSeeder::class
+            
 
         ]);
     }
