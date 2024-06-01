@@ -92,6 +92,7 @@ Route::post('add/new/place', [GlobalController::class, 'addNewPlace'])->name('ad
 // Route::post('/save-des', [GlobalController::class, 'saveDes']);
 Route::post('/save-comment', [GlobalController::class, 'saveComment']);
 Route::post('/save-grade', [GlobalController::class, 'saveGrade']);
+Route::post('/save-image', [GlobalController::class, 'saveImage']);
 Route::post('/save-place', [GlobalController::class, 'savePlace']);
 Route::post('/save-subgrade', [GlobalController::class, 'saveSubgrade']);
 

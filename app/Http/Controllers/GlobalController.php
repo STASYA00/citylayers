@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Place;
 use App\Models\PlaceComment;
 use App\Models\PlaceGrade;
+use App\Models\PlaceImage;
 use App\Models\PlaceSubgrade;
 
 use App\Models\Category;
@@ -292,6 +293,8 @@ class GlobalController extends Controller
 
 
 
+
+
     public function filter()
     {
 
@@ -321,6 +324,34 @@ class GlobalController extends Controller
                 'place_id' => $request->place_id ,
                 'category_id' => $request->category_id,
                 'grade' => $request->grade,
+            ]
+        );
+        return response()->json([
+            'status' => 'success'
+
+        ]);
+    }
+
+    public function saveImage(Request $request)
+    {
+        // $imageName = 'korv.png';
+        // $request->image->storeAs('public/uploads/place/', $imageName);
+        
+        // if ($request->hasFile('image')) {
+        //     $request->validate([
+        //         'image' => 'required|image|mimes:jpeg,png,jpg,gif',
+        //     ]);
+
+        //     $imageName = $request->image_name . $request->image->extension();
+            
+        //     $request->image->storeAs('public/uploads/place/', $imageName);
+            
+        // }
+
+        PlaceImage::create(
+            [
+                'place_id' => $request->id ?? 0,
+                'image' => $request->image_name ?? 'korv.png',
             ]
         );
         return response()->json([

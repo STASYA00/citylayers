@@ -178,12 +178,11 @@
                     const fileReader = new FileReader();
                     fileReader.onload = event => {
                         this.image_src = event.target.result;
-                        this.place_data['img'] = event.target.result;
-                        console.log(this.place_data["img"]);
+                        
                     }
                     fileReader.readAsDataURL(file);
-                    // this.place_data['img'] = this.image_src;
-                    // console.log(this.image_src);
+                    this.place_data["image"] = file;
+                    
                 }
             },
 
@@ -253,6 +252,7 @@
             type: 'POST',
             url: `/${url}`,
             data: d,
+            processData: false,
             success: function (data) {
                 if (callback!=undefined){
                     callback(data);
@@ -277,8 +277,8 @@
         });
 
         let d = {
-                longitude: place_data["lon"],
-                latitude: place_data["lat"]
+                longitude: place_data["longitude"],
+                latitude: place_data["latitude"]
             };
 
 
@@ -293,6 +293,17 @@
                     sendRequest(d, "save-comment");
 
                 }
+                
+                d.image = place_data["image"];
+                console.log(place_data["image"]);
+                d.image_name = `${uuidv4()}.${d.image.name.split('.').pop()}`;
+                console.log(d);
+                sendRequest(d, "save-image");
+
+
+                // if (d.image!=undefined && d.image!=null &&d.image!=""){
+                //     sendRequest(d, "save-image");
+                // }
                 
                 place_data["categories"].forEach((indata, i)=>{
                     let k = {
@@ -315,21 +326,7 @@
         );
         
 
-        $.ajax({
-            type: 'POST',
-            url: "/save-comment",
-            data: {
-                data: place_data, 
-                id: place_data["id"],
-                comment: place_data["comment"]},
-            success: function (data) {
-                console.log(data);
-                //window.location.href = '/add-pin/post-success';
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                //window.location.href = '/add-pin/post-error';
-            }
-        });
+        
     }
 </script>
 
