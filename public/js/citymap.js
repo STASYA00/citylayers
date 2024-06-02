@@ -2,7 +2,7 @@
 
 
 class Settings{
-    static debug = true;
+    static debug = false;
 }
 
 const MAP_CLASSNAMES = {
@@ -109,7 +109,11 @@ class CityMap extends MapPanel{
     }
 
     _filterObservations(category, lower, upper){
-        return this.places.filter(c=>c["category"]==category).filter(c=>(c["grade"] >lower && c["grade"] < upper));
+        if (category==undefined){
+            return [];
+        }
+        return this.places.filter(c => c.grade.filter(g=>g["category_id"].toString()==category.toString()).length>0)
+                    .filter(c=>c.grade.filter(g=>g["grade"]>lower && g["grade"] < upper).length>0 );
     }
 
     initiate(){
@@ -129,7 +133,8 @@ class CityMap extends MapPanel{
     }
 
     reload(category, lower, upper){
-        let _coords = this._filterObservations(category.name, lower, upper).map(c=>c["pt"]);
+        
+        let _coords = this._filterObservations(category.id, lower, upper).map(c=>c["pt"]);
         this._map.eachLayer(function(layer){
             if (layer.options.name == category.name){
                 layer.remove();
@@ -232,17 +237,13 @@ class CityMap extends MapPanel{
     }
 
     static addHatchLayer(map, pts, category){
-        // let randomShift = 4; //Math.ceil(Math.random() * 5);
-        // let module = Math.max(16, Math.ceil(Math.random() * 20));
-        // let modules = [8, 12, 16];
-        // let randomShift = modules[Math.floor(Math.random()*modules.length)];
-        // let module = modules[Math.floor(Math.random()*modules.length)];
-        // console.log(randomShift, module);
+        
         L.GridLayer.CanvasCircles = L.GridLayer.extend({
             createTile: function (coords) {
                 let el = TileManager.init(category.name);
                 
-                el = TileManager.update(el, map, coords, pts, `#${category.color}`); //, randomShift, module);
+                el = TileManager.update(el, map, coords, 
+                                        pts, `#${category.color}`); //, randomShift, module);
                 return el;
             }
         }
@@ -341,15 +342,6 @@ class MapGraphics{
                               // if gridDensity is 4, there will be 4 points with distance 64 between them (4 x 64 = 256)
     static tile = 256; // tile size
     
-    static getColors(){
-
-        return ['#C4B5F0', '#B1CDEF', '#5DB3B5'];
-    }
-
-    static getCategoryColor(category){
-        // TODO
-        return '#C4B5F0';
-    }
     static getGrid(category){
         return GRIDS.DIAGONAL;
     }
@@ -504,8 +496,6 @@ class HatchDrawer{
                             {x: 9046, y: 596, z: 16}
                 pts         reference points for drawing the hatch pattern
         */
-        // let randomShift = Math.random() * 10;
-        // let module = Math.ceil(Math.random() * 20);
         let grid = Grid.diagonal(MapGraphics.tile, MapGraphics.tile);
         grid.forEach(coords =>{
             let [x, y] = coords;

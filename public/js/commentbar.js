@@ -89,7 +89,7 @@ class CommentContainer extends CElement{
             element.initiate();
             element.load();
         });
-        comments.forEach((c, i) =>{ this.addComment(c, i.toString());
+        comments.forEach((c) =>{ this.addComment(c.comment, c.place_id);
         this.getElement().style.display = "none";
         });
     }
@@ -112,8 +112,6 @@ class CommentPane extends CElement{
         this.getParent().appendChild(el);
         el.setAttribute("tabindex", "0");
         el.onclick = ()=>{
-            console.log(el);
-            console.log(document.activeElement == el);
             CommentPanel.toggleMarker(this.id, document.activeElement == el);
 
         }

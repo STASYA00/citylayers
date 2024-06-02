@@ -5,6 +5,7 @@ const CLASSNAMES = {
     CATEGORY_CONTAINER: "categorycontainer",
     CATEGORY_SLIDER_CONTAINER: "categoryslider",
     CATEGORY_HEADER: "categoryheader",
+    CATEGORY_HEADER_TITLE: "categoryheadertitle",
     CATEGORY_SWITCH: "categoryswitch",
     SLIDER: "slider",
     SLIDER_LABEL_CONTAINER: "sliderlabelcontainer",
@@ -93,15 +94,14 @@ class CElement{
 
 class CategoryPanel extends CElement{
     markertoggle = ()=>{console.log("No action assigned")}; // callback to toggle markers
+    activation = ()=>{}; // callback to activate observations' categories or to filter observations
 
-    constructor(parent, activation, filtering){
+    constructor(parent){
         super(parent, "id");
         this.name = CLASSNAMES.CATEGORY_PANEL;
         this.parent = parent ? parent : "body";
         this.id = "id";
         this.elements = [Logo, CategoryPanelHeader, TopTagPanel, AboutLabel, AboutPanel, PinButton];
-        this.activation = activation;  // callback to activate observations' categories
-        this.filtering = filtering;  // callback to filter observations
     }
 
     load(categories) {
@@ -116,10 +116,7 @@ class CategoryPanel extends CElement{
     }
 
     addCategory(category){
-        let div = new CategoryElement(this.make_id(), category, 
-                                      this.activation, 
-                                      this.filtering
-                                    );
+        let div = new CategoryElement(this.make_id(), category);
         div.initiate();
         div.load();
     }
@@ -183,11 +180,15 @@ class Logo extends CElement{
     }
 
     initiate() {
+        var el = document.createElement("a");
+        el.href = "/";
+        this.getParent().appendChild(el);
         var element = document.createElement("img");
         element.src = this.content;
         element.setAttribute('class', this.name);
         element.setAttribute("id", this.make_id());
-        this.getParent().appendChild(element);
+        // element.onclick = ()=>{};
+        el.appendChild(element);
     }
 }
 
@@ -205,7 +206,7 @@ class PinButton extends CElement{
         element.setAttribute("id", this.make_id());
         this.getParent().appendChild(element);
         element.addEventListener("click", () => {
-            window.location.href = "<?php echo URL::to('add-pin'); ?>";
+            window.location.href = "/add-pin";
         });
     }
 }
@@ -257,12 +258,8 @@ class CategoryPanelDescr extends CElement{
 
 
 class CategoryElement extends CElement{
-    constructor(parent, category, 
-                activation, filtering
-            ){
+    constructor(parent, category){
         super(parent, category.name);
-        this.activation = activation; 
-        this.filtering = filtering; 
         this.content = category
         this.name = CLASSNAMES.CATEGORY_CONTAINER;
         this.parent = parent ? parent : CLASSNAMES.CATEGORY_PANEL;
@@ -288,13 +285,13 @@ class CategoryElement extends CElement{
                     element = new this.elements[e](this.make_id(), 
                                                    this.content);
                     break;
-                case (CategoryHeader):
+                case (CategoryHeader): 
                     element = new this.elements[e](this.make_id(), 
-                                    this.id, this.activation, this.content);
+                                    this.id, this.content);
                     break;
                 case (DoubleSlider):
                     element = new this.elements[e](this.make_id(), 
-                                    this.id, this.filtering, this.content);
+                                    this.id, this.content);
                     break;
                 default:
                     element = new this.elements[e](this.make_id(), 
@@ -310,41 +307,35 @@ class CategoryElement extends CElement{
         let panel = document.createElement("div");
         panel.setAttribute('class', this.name);
         panel.setAttribute("id", this.make_id());
-        panel.onclick = (e)=>{
-            if ((this.getElement().getBoundingClientRect().bottom - e.clientY) / 
-                    this.getElement().getBoundingClientRect().height <= 0.4 ){
-                        CategorySidePanel.toggleSide(this.id);
-                    }
-            
-        };
+        
         this.getParent().appendChild(panel);
     }
 }
 
 class CategoryHeader extends CElement{
-    constructor(parent, id, activation, category){
+    constructor(parent, id, category){
         super(parent);
         this.id = id;
         this.name = CLASSNAMES.CATEGORY_HEADER;
-        this.activation = activation;
         this.category = category;
         // this.parent = parent; //CLASSNAMES.CATEGORY_CONTAINER;
-        this.elements = [CategoryLabel, CategorySwitch];
+        this.elements = [CategoryInfo, 
+            CategoryLabel, CategorySwitch];
     }
 
     load(){
         for (let e=0; e<this.elements.length; e++){
-            let element = new this.elements[e](this.make_id(), this.id, this.activation, this.category);
+            let element = new this.elements[e](this.make_id(), this.id, this.category);
             element.initiate();
         }
     }
 }
 
 class CategoryLabel extends CElement{
-    constructor(parent, id, activation){
+    constructor(parent, id){
         super(parent);
         this.id = id;
-        this.name = CLASSNAMES.CATEGORY_HEADER;
+        this.name = CLASSNAMES.CATEGORY_HEADER_TITLE;
         this.parent = parent; //CLASSNAMES.CATEGORY_HEADER;
     }
     initiate() {
@@ -357,13 +348,12 @@ class CategoryLabel extends CElement{
 }
 
 class CategorySwitch extends CElement{
-    constructor(parent, id, activation, category){
+    constructor(parent, id, category){
         super(parent);
         this.id = id;
         this.name = CLASSNAMES.CATEGORY_SWITCH;
         this.category = category;
         this.parent = parent; //CLASSNAMES.CATEGORY_HEADER;
-        this.activation = activation;  // activation function
     }
 
     static isActive(category){
@@ -379,9 +369,10 @@ class CategorySwitch extends CElement{
         let e1 = document.createElement("input");
         e1.setAttribute("type", "checkbox");
         e1.onchange = ()=>{
-            this.activation(this.category, 
+            CategoryPanel.activation(this.category, 
                             CategorySwitch.isActive(this.id) ? DoubleSlider.getCurrentValue(this.id).min : 0, 
                             CategorySwitch.isActive(this.id) ? DoubleSlider.getCurrentValue(this.id).max : 0);
+            DoubleSlider.activate(this.id, CategorySwitch.isActive(this.id));
         }
         let e2 = document.createElement("span");
         element.appendChild(e1);
@@ -390,14 +381,40 @@ class CategorySwitch extends CElement{
     }
 }
 
+class CategoryInfo extends CElement{
+    constructor(parent, category){
+        super(parent, category);
+        this.name = "material-symbols-outlined";
+        this.content = "info"; 
+        this.id = category;
+    }
+
+    initiate() {
+        var element = document.createElement("span");
+        element.innerHTML = this.content;
+        element.setAttribute('class', this.name);
+        element.onclick = ()=>{
+             CategorySidePanel.toggleSide(this.id);            
+        };
+        this.getParent().appendChild(element);
+    }
+}
+
 class DoubleSlider extends CElement{
-    constructor(parent, id, filtering, category){
+    constructor(parent, id, category){
         super(parent);
         this.name = CLASSNAMES.CATEGORY_SLIDER_CONTAINER;
         this.parent = parent; //CLASSNAMES.CATEGORY_CONTAINER;
-        this.filtering = filtering;
         this.category = category;
         this.id = id;
+    }
+
+    static activate(category, value){
+        let id = `categoryslider_${category}`;
+        
+        Slider.activate(`${id}_${SLIDER_IDS.LOW}` ,value);
+        Slider.activate(`${id}_${SLIDER_IDS.HIGH}` ,value);
+
     }
 
     load(){
@@ -408,15 +425,17 @@ class DoubleSlider extends CElement{
         s2.initiate();
 
         s1.limit(() => {s1.controlSlider(s2, true); 
-            this.filtering(this.category, 
+            CategoryPanel.activation(this.category, 
                 CategorySwitch.isActive(this.id) ? s1.getValue(): 0, 
                 CategorySwitch.isActive(this.id) ? s2.getValue() : 0);
         });
         s2.limit(() => {s2.controlSlider(s1, false); 
-            this.filtering(this.category, 
+            CategoryPanel.activation(this.category, 
                 CategorySwitch.isActive(this.id) ? s1.getValue(): 0, 
                 CategorySwitch.isActive(this.id) ? s2.getValue() : 0);
-        })
+        });
+        DoubleSlider.activate(this.id, false);
+
     }
 
     initiate() {
@@ -478,6 +497,11 @@ class Slider extends CElement{
 
     getElement(){
         return document.getElementById(this.make_id());
+    }
+
+    static activate(id, value){
+        let res = value==undefined || value == true ? false : true;
+        document.getElementById(`${CLASSNAMES.SLIDER}_${id}`).disabled = res;
     }
 
     controlSlider(other, is_start) {
@@ -616,7 +640,6 @@ class SubcategoryTag extends CElement{
             SubcategoryTagContainer.addLabel(category, this.id, true);
         }        
         CategoryPanel.markertoggle(this.id, !existing_ids.includes(new_id));
-        
         
     }
 

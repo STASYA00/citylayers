@@ -3,6 +3,8 @@
 @php  $comments = GlobalController::comments();@endphp
 @php  $categories = GlobalController::categories();@endphp
 @php  $subcategories = GlobalController::subcategories();@endphp
+@php  $grades = GlobalController::grades();@endphp
+@php  $subgrades = GlobalController::subgrades();@endphp
 @php
     $locale = session()->get('locale');
     if ($locale == null) {
@@ -25,10 +27,12 @@
 @vite('resources/js/citymap.js')
 <!-- @vite('resources/js/commentbar.js') -->
 @vite('resources/js/category.js')
+@vite('resources/js/scope.js')
 @vite('resources/js/dataGenerator.js')
 @vite('resources/css/sidepanel.css')
 @vite('resources/css/container.css')
 @vite('resources/css/map.css')
+@vite('resources/css/scope.css')
     
     <script>
         <?php require_once("js/container.js");?>
@@ -36,41 +40,11 @@
         <?php require_once("js/commentbar.js");?>
         <?php require_once("js/category.js");?>
         <?php require_once("js/dataGenerator.js");?>
+        <?php require_once("js/scope.js");?>
     </script>
     <!-- <script src="resources/js/map.js"></script> -->
     <script>
-        function saveGrade() {
-            
-            let latitude = 59.334591;
-            let longitude = 18.063240;
-            
-            // console.log("E", e);
-            // console.log($(e));
-            // console.log($(e).parent().find('.feedback'));
-            
-            //const data = $(e).parent().find('.feedback').val();
-            // const data = {"grade": 0.7};
-            const label = 67; //$(e).parent().find('.feedback').val();
-            const id = "123"; //$(e).parent().find('.feedback').data('id');
-
-            // $(e).parent().find('.hideCommentBox').click();
-
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]')  //.attr('content')
-                }
-            });
-
-            $.ajax({
-                type: 'POST',
-                url: "/save-grade",
-                data: {
-                    data: data,
-                    label: label,
-                    id: id
-                     },
-            });
-        }
+        const FAKEDATA = false;
         
 
         let body = "body"; 
@@ -78,15 +52,24 @@
         const commentInput = {!! json_encode($comments) !!};
         const categoryInput = {!! json_encode($categories) !!};
         const subcategoryInput = {!! json_encode($subcategories) !!};
+        const gradeInput = {!! json_encode($grades) !!};
+        const subgradeInput = {!! json_encode($subgrades) !!};
+
+        console.log(subcategoryInput);
         
-        let subcats = subcategoryInput.map(s => new Subcategory(s.id, s.name, s.category_id));
+        let subcats = subcategoryInput.map(s => new Subcategory(s.id, s.name, s.category));
         let categories = categoryInput.map(c => new Category(c.id, c.name, 
                                                              c.description, 
                                                              subcats.filter(e=>e.parent_id==c.id),
                                                              c.color
                                                             ));
+        
+
         let obs = [];
-        let comments = [
+
+        if (FAKEDATA == true){
+            categories.forEach((cat, c) => {obs = obs.concat(ObservationGenerator.generate(15, cat, 2));});
+            commentInput = [
             `Love the Greenery! This neighborhoods abundance of trees,
             parks, and green spaces makes it a breath of fresh air. Perfect 
             for morning jogs or picnics!`,
@@ -100,20 +83,23 @@
             Say goodbye to traffic woes.`,
             `Playgrounds for all ages, multilingual signage, 
             and accessibility—everyone feels welcome here.`
-        ];
-
-        for (let c=0; c<categories.length; c++){
-            obs = obs.concat(ObservationGenerator.make(10, categories[c].name, 2));
+            ];
+            SubcatAssigner.generate(obs, subcats);
+            CommentAssigner.generate(obs, commentInput);
         }
 
-        SubcatAssigner.make(obs, subcats);
-        CommentAssigner.make(obs, comments);
+        else{
+            obs = ObservationGenerator.make(placeInput, gradeInput);
+            SubcatAssigner.make(obs, subgradeInput);
+            CommentAssigner.make(obs, commentInput);
+        }
 
         let m = new MapPanel(body);
-        let c = new CategoryPanel(body, 
-                    (category, lower, upper)=>{m.reload(category, lower, upper)}, 
-                    (category, lower, upper)=>{m.reload(category, lower, upper)},
-                );
+        let c = new CategoryPanel(body);
+        let scope = new Scope(body);
+        CategoryPanel.activation = (category, lower, upper)=>{
+            
+            m.reload(category, lower, upper)};
 
         let commentPanel = new CommentPanel(body);
 
@@ -125,10 +111,13 @@
         m.initiate();
         commentPanel.initiate();
 
+        console.log(obs);
+        console.log(categories);
+
         m.load(categories, obs);
         c.load(categories);  // ["Accessibility", "Noise", "Safety", "Weather Resistance", "Amenities"]
-        commentPanel.load(comments);
-        // saveGrade();
+        commentPanel.load(commentInput);
+        scope.initiate();
         
         setTimeout(()=>{m.reload(obs)}, 0);
     </script>

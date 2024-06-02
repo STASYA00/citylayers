@@ -50,12 +50,12 @@ CREATE TABLE `subtags` (
   FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `categories`(`name`, `description`, `color`) VALUES ('Beauty','Reflects harmony of the environment.', 'C4B5F0'), 
-('Sound', 'Refers to the noise emitted from various sources in an urban environment.', 'B1CDEF'), 
-('Movement', 'Flow of vehicles and people within the city.', '5DB3B5'), 
-('Protection', 'All about keeping our cities safe and sound, from guarding against crime to shielding us from environmental challenges.', '3ACE8E'), 
-('Climate comfort', 'Balancing the heat, the breeze, and the shade to keep us comfortable outdoors.', 'A1F7B9;
-'),('Activities', 'Actions and behaviors associated with cities or densely populated areas.', 'FFE7A4') ;
+INSERT INTO `categories`(`name`, `description`, `color`) VALUES ('Beauty','Reflects how visually appealing and attractive a place is.', 'C4B5F0'), 
+('Sound', 'Refers to the pleasantness of noises in a certain place.', 'B1CDEF'), 
+('Movement', 'Shows how easy and convenient it is to move around an area, whether you are walking, cycling, or using a wheelchair.', '5DB3B5'), 
+('Protection', 'Indicates how safe and protected a place is from traffic and other urban hazards.', '3ACE8E'), 
+('Climate comfort', 'Reflects how comfortable the climate feels in an area, considering heat, rain cover, wind shelter and more.', 'A1F7B9;
+'),('Activities', 'Represent the usability of a place for the citizens.', 'FFE7A4') ;
 
 INSERT INTO `subcategories`(`name`, `subcategory`, `category`) VALUES ('Buildings',  'Architecture & sights',  1 ),
             ('Landmarks',  'Architecture & sights', 1 ),

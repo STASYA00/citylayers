@@ -8,46 +8,17 @@
         <div class="tabs">
             
                 <!-- tabs content  -->
-                <div class="wrap">
-                    <div id="wrap">
-                        <section>One</section>
-                        <section>Beautiful</section>
-                        <section>Full-Page</section>
-                        <section>Slideshow</section>
+                <div class="landing">
+                    <div id="landing_id">
+                        <img src="images/logo_2.svg" class="logo"></img>
+                    </div>
+                    <div class="landingtext">
+                        <div>Welcome to City Layers!</div>
+                        <div>You are invited to share your thoughts on your experience of the city!</div>
                     </div>
                 </div>
-            </div>
             
-        <!-- <script>
-            document.addEventListener("DOMContentLoaded", function() {
-            var wrap = document.getElementById('wrap');
-            var fps = new FullPageScroll(wrap);
-            var indicator = document.createElement('div');
-            indicator.id = 'indicator';
-            var slideIndicators = [];
-            fps.slides.forEach(function(slide, index){
-                var slideIndicator = document.createElement('div');
-                slideIndicator.onclick = function() {
-                fps.goToSlide(index);
-                }
-                if (index === fps.currentSlide) {
-                slideIndicator.className = "active";
-                }
-                indicator.appendChild(slideIndicator);
-                slideIndicators.push(slideIndicator);
-            });
-            document.body.appendChild(indicator);
-            fps.onslide = function() {
-                slideIndicators.forEach(function(slideIndicator, index) {
-                if (index === fps.currentSlide) {
-                    slideIndicator.className = "active";
-                } else {
-                    slideIndicator.className = "";
-                }
-                });
-            }
-            });
-        </script> -->
+            
         <div class="buttonfooter">
 
             <div class="buttoncontainer" x-show="tab=='1'">
@@ -65,6 +36,7 @@
 
 
 
+            </div>
             </div>
 
 

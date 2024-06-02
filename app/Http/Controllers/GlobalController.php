@@ -86,6 +86,18 @@ class GlobalController extends Controller
         return $places;
     }
 
+    static function grades()
+    {
+        $grades = PlaceGrade::all();
+        return $grades;
+    }
+
+    static function subgrades()
+    {
+        $subgrades = PlaceSubgrade::all();
+        return $subgrades;
+    }
+
     static function categories()
     {
         $categories = Category::all();
@@ -350,10 +362,18 @@ class GlobalController extends Controller
 
         PlaceImage::create(
             [
-                'place_id' => $request->id ?? 0,
-                'image' => $request->image_name ?? 'korv.png',
+                'place_id' => $request->id,
+                'image' => $request->image_name,
             ]
         );
+        if ($request->hasFile('image')) {
+            $request->validate([
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif',
+            ]);
+            $request->image->storeAs('public/uploads/', $request->image_name);
+
+        }
+        // $request->image->storeAs('public/uploads/', $request->image_name ?? 'korv.png');
         return response()->json([
             'status' => 'success'
 

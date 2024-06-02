@@ -253,6 +253,7 @@
             url: `/${url}`,
             data: d,
             processData: false,
+            contentType: false,
             success: function (data) {
                 if (callback!=undefined){
                     callback(data);
@@ -268,6 +269,8 @@
 
     function submitData(place_data) {
 
+        
+
         place_data["id"] = uuidv4();
 
         $.ajaxSetup({
@@ -276,50 +279,44 @@
             }
         });
 
-        let d = {
-                longitude: place_data["longitude"],
-                latitude: place_data["latitude"]
-            };
-
+        const d = new FormData();
+        d.set("longitude", place_data["longitude"].toString());
+        d.set("latitude", place_data["latitude"].toString());
 
         sendRequest(d, "save-place", (data)=>{place_data["id"] = data["id"]}).then(
             
             r => {
-                d = {
-                    comment: place_data["comment"],
-                    id: place_data["id"]
-                };
-                if (d.comment!=undefined && d.comment!=null &&d.comment!=""){
+                d.set("comment", place_data["comment"].toString());
+                d.set("id", place_data["id"].toString());
+                
+                if (place_data["comment"]!=undefined && place_data["comment"]!=null && place_data["comment"]!=""){
                     sendRequest(d, "save-comment");
 
                 }
                 
-                d.image = place_data["image"];
-                console.log(place_data["image"]);
-                d.image_name = `${uuidv4()}.${d.image.name.split('.').pop()}`;
-                console.log(d);
+                d.set("image_name", `${uuidv4()}.${place_data["image"].name.split('.').pop()}`);
+                d.set("image", place_data["image"]);
+                
                 sendRequest(d, "save-image");
-
-
-                // if (d.image!=undefined && d.image!=null &&d.image!=""){
-                //     sendRequest(d, "save-image");
-                // }
                 
                 place_data["categories"].forEach((indata, i)=>{
-                    let k = {
-                        category_id: indata["id"],
-                        grade: indata["grade"],
-                        place_id: place_data["id"],
-                    };
-                    if (k.grade!=undefined){
+                    
+                    
+                    if (indata["grade"]!=undefined){
+                        let k = new FormData();
+                        k.set("category_id", indata["id"].toString());
+                        k.set("grade", indata["grade"].toString());
+                        k.set("place_id", place_data["id"].toString());
                         sendRequest(k, "save-grade");
-                    }
-                    indata.tags.forEach((tag)=>{
-                        k.subcategory_id = tag;
-                        console.log(k);
-                        sendRequest(k, "save-subgrade");
+                    
+                        indata.tags.forEach((tag)=>{
+                            k.set("subcategory_id", tag.toString());
+                            
+                            sendRequest(k, "save-subgrade");
+                        
                     }
                 );
+            }
                 });
             
             }

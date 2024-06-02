@@ -1,0 +1,8 @@
+
+.scope{
+    width: 50px;
+    position: absolute;
+    left: 60%;
+    top: 48%;
+    z-index: 120;
+}
