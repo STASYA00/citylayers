@@ -32,7 +32,14 @@
 @vite('resources/css/sidepanel.css')
 @vite('resources/css/container.css')
 @vite('resources/css/map.css')
+
+<div class="main-map">
+    <div class="left-container"></div>
+    <div class="right-container"></div>
+</div>
+
 @vite('resources/css/scope.css')
+
     
     <script>
         <?php require_once("js/container.js");?>
@@ -47,7 +54,8 @@
         const FAKEDATA = false;
         
 
-        let body = "body"; 
+        let rightContainer = "right-container"; 
+        let leftContainer = "left-container"; 
         const placeInput = {!! json_encode($places) !!};
         const commentInput = {!! json_encode($comments) !!};
         const categoryInput = {!! json_encode($categories) !!};
@@ -94,14 +102,19 @@
             CommentAssigner.make(obs, commentInput);
         }
 
-        let m = new MapPanel(body);
-        let c = new CategoryPanel(body);
-        let scope = new Scope(body);
+
+        let m = new MapPanel(rightContainer);
+        let c = new CategoryPanel(leftContainer);
+        let scope = new Scope(rightContainer);
+        let commentPanel = new CommentPanel(rightContainer);
+        let aboutLabel = new AboutLabel(rightContainer);
+        let aboutPanel = new AboutPanel(rightContainer);
+        let topTagPanel = new TopTagPanel(rightContainer);
+
         CategoryPanel.activation = (category, lower, upper)=>{
             
             m.reload(category, lower, upper)};
 
-        let commentPanel = new CommentPanel(body);
 
         CategoryPanel.markertoggle = (subcat, on)=>{m.reloadMarkers(subcat, on)};
         MapPanel.toggleComment = (i, on)=>{CommentPanel.focusComment(i, on)};
@@ -110,13 +123,22 @@
         c.initiate();
         m.initiate();
         commentPanel.initiate();
+        topTagPanel.initiate();
+        aboutLabel.initiate();
+        aboutPanel.initiate();
+
 
         console.log(obs);
         console.log(categories);
 
         m.load(categories, obs);
         c.load(categories);  // ["Accessibility", "Noise", "Safety", "Weather Resistance", "Amenities"]
+
         commentPanel.load(commentInput);
+        topTagPanel.load();
+        aboutLabel.load();
+        aboutPanel.load();
+
         scope.initiate();
         
         setTimeout(()=>{m.reload(obs)}, 0);

@@ -10,6 +10,7 @@
     font-weight: 400;
     font-style: normal;
   }
+
 * {
     margin: 0;
     padding: 0;
@@ -1038,8 +1039,13 @@ img {
 /* AUREL APP CSS STARTS HERE */
 
 :root {
+    --primary-color: #FFF;
     --secondary-color: #014751;
     --tertiary-color: #DFE6E9;
+    --margin-1: 12px;
+    --margin-2: 24px;
+    --margin-3: 36px;
+    --margin-4: 48px;
 }
 
 h1 {
@@ -1061,11 +1067,8 @@ p {
     margin-bottom: 20px;
 }
 
-span {
-    font-size: 14px;
-    font-weight: 400;
-    margin-bottom: 8px;
-    opacity: 0.6;
+hr{
+    border-color: var(--secondary-color);
 }
 
 .main-wrapper {
@@ -1093,8 +1096,8 @@ span {
 
 .primary-button {
     text-transform: uppercase;
-    width: calc(100vw - 48px);
-    max-width: 400px;
+    width: calc(100vw - var(--margin-4));
+    max-width: calc(400px - var(--margin-2));
     height: 50px;
     border-radius: 10px;
     font-size: 14px;
@@ -1126,12 +1129,26 @@ span {
     cursor: pointer;
 }
 
-.tag div{
-    padding: 4px 16px;
+.tag input:disabled{
+    cursor: auto;
+}
+
+.tag .tag-element{
+    padding: 4px 12px;
+    font-size: 12px;
     display: flex;
+    align-items: center;
 }
 
 .tag label{
     font-size:14px;
     text-transform: capitalize;
+}
+
+.simple-drop-shadow{
+    box-shadow: 0px 3px 2px 1px rgba(58, 72, 76, 20%);
+}
+
+input[type=range]::-moz-range-progress{
+    background-color: transparent;
 }

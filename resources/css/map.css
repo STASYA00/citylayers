@@ -1,3 +1,15 @@
+.main-map{
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.right-container{
+    position: relative;
+    flex: auto;
+    height: 100%;
+}
 
 .mappanel{
     position: relative;

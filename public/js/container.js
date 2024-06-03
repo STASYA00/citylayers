@@ -11,7 +11,7 @@ const CLASSNAMES = {
     SLIDER_LABEL_CONTAINER: "sliderlabelcontainer",
     SLIDER_LABEL: "sliderlabel",
     TAG_CONTAINER: "tagcontainer",
-    SUBCATEGORY_TAG: "subcategorytag",
+    SUBCATEGORY_TAG: "tag",
 
     CATEGORYPANEL_HEADER: "categorypanelheader",
     CATEGORYPANEL_LABEL: "categorypanellabel",
@@ -30,16 +30,17 @@ const CLASSNAMES = {
     ABOUT_PANEL: "aboutpanel",
     ABOUTPANEL_CLOSE: "aboutpanelclose",
     ABOUT_DESCRIPTION: "aboutdescription",
+    ABOUT_TEXT: "abouttext",
 
-    COMMENTPANEL : "commentpanel",
-    COMMENTCONTAINER : "commentcontainer",
-    COMMENTPANE : "commentpane",
-    COMMENTSYMBOL : "commentsymbol",
-    COMMENTTEXT : "commenttext",
-    COMMENTPANEL_CLOSE : "commentpanelclose",
-    COMMENTSEARCH : "commentsearch",
-    SELECTCOMMENT : "selected",
-    
+    COMMENTPANEL: "commentpanel",
+    COMMENTCONTAINER: "commentcontainer",
+    COMMENTPANE: "commentpane",
+    COMMENTSYMBOL: "commentsymbol",
+    COMMENTTEXT: "commenttext",
+    COMMENTPANEL_CLOSE: "commentpanelclose",
+    COMMENTSEARCH: "commentsearch",
+    SELECTCOMMENT: "selected",
+
 }
 
 const SLIDER_IDS = {
@@ -48,15 +49,15 @@ const SLIDER_IDS = {
 
 }
 
-class CElement{
-    constructor(parent, id){
+class CElement {
+    constructor(parent, id) {
         this.id = id;
         this.name = CLASSNAMES.CATEGORY_CONTAINER;
         this.parent = parent;
         this.elements = []
     }
 
-    getElement(){
+    getElement() {
         // let elements = document.getElementsByClassName(this.name);
         // if (elements.length > 0){
         //     return elements[0];
@@ -65,12 +66,12 @@ class CElement{
         // return this.initiate();
     }
 
-    getParent(){
+    getParent() {
         let element = document.getElementById(this.parent);
         return element;
     }
 
-    
+
 
     initiate() {
         let panel = document.createElement("div");
@@ -79,17 +80,18 @@ class CElement{
         this.getParent().appendChild(panel);
     }
 
-    load(){
-        for (let e=0; e<this.elements.length; e++){
+    load() {
+        for (let e = 0; e < this.elements.length; e++) {
             let element = new this.elements[e](this.make_id(), this.id);
             element.initiate();
             element.load();
         }
     }
-    make_id(){
+    make_id() {
         return `${this.name}_${this.id}`
     }
 }
+
 
 
 class CategoryPanel extends CElement{
@@ -101,48 +103,50 @@ class CategoryPanel extends CElement{
         this.name = CLASSNAMES.CATEGORY_PANEL;
         this.parent = parent ? parent : "body";
         this.id = "id";
-        this.elements = [Logo, CategoryPanelHeader, TopTagPanel, AboutLabel, AboutPanel, PinButton];
+        this.elements = [Logo, CategoryPanelHeader, PinButton];
     }
 
     load(categories) {
-        this.elements.forEach(el =>{
+        this.elements.forEach(el => {
             let element = new el(this.make_id(), "main");
             element.initiate();
             element.load();
         });
-        categories.forEach(category =>{
+        categories.forEach(category => {
             this.addCategory(category);
         });
     }
 
-    addCategory(category){
+
+    addCategory(category) {
         let div = new CategoryElement(this.make_id(), category);
+
         div.initiate();
         div.load();
     }
 
-    getElement(){
+    getElement() {
         let elements = document.getElementsByClassName(this.name);
-        if (elements.length > 0){
+        if (elements.length > 0) {
             return elements[0];
         }
         return this.initiate();
     }
 
-    getParent(){
+    getParent() {
         let elements = document.getElementsByClassName(this.parent);
-        if (elements.length>0){
+        if (elements.length > 0) {
             return elements[0];
         }
     }
 
-    initiate(){
+    initiate() {
         let panel = document.createElement("div");
         panel.setAttribute('class', this.name);
         panel.setAttribute("id", this.make_id());
         this.getParent().appendChild(panel);
         return panel;
-    }    
+    }
 }
 
 /*
@@ -154,8 +158,8 @@ class CategoryPanel extends CElement{
 
 */
 
-class CategoryPanelHeader extends CElement{
-    constructor(parent, id){
+class CategoryPanelHeader extends CElement {
+    constructor(parent, id) {
         super(parent);
         this.id = id;
         this.name = CLASSNAMES.CATEGORYPANEL_HEADER;
@@ -163,8 +167,8 @@ class CategoryPanelHeader extends CElement{
         this.elements = [CategoryPanelLabel, CategoryPanelDescr];
     }
 
-    load(){
-        for (let e=0; e<this.elements.length; e++){
+    load() {
+        for (let e = 0; e < this.elements.length; e++) {
             let element = new this.elements[e](this.make_id(), this.id);
             element.initiate();
         }
@@ -172,8 +176,8 @@ class CategoryPanelHeader extends CElement{
 }
 
 
-class Logo extends CElement{
-    constructor(parent, category){
+class Logo extends CElement {
+    constructor(parent, category) {
         super(parent, category);
         this.name = "logo";
         this.content = "images/logo_2.svg"; // U+02715
@@ -192,8 +196,8 @@ class Logo extends CElement{
     }
 }
 
-class PinButton extends CElement{
-    constructor(parent, category){
+class PinButton extends CElement {
+    constructor(parent, category) {
         super(parent, category);
         this.name = "pinButton";
         this.content = "Add a pin";
@@ -202,7 +206,7 @@ class PinButton extends CElement{
     initiate() {
         var element = document.createElement("button");
         element.innerHTML = this.content;
-        element.setAttribute('class', ""+ this.name + " primary-button");
+        element.setAttribute('class', "" + this.name + " primary-button");
         element.setAttribute("id", this.make_id());
         this.getParent().appendChild(element);
         element.addEventListener("click", () => {
@@ -211,8 +215,8 @@ class PinButton extends CElement{
     }
 }
 
-class CategoryPanelLabel extends CElement{
-    constructor(parent, id){
+class CategoryPanelLabel extends CElement {
+    constructor(parent, id) {
         super(parent);
         this.id = id;
         this.name = CLASSNAMES.CATEGORYPANEL_LABEL;
@@ -228,8 +232,8 @@ class CategoryPanelLabel extends CElement{
     }
 }
 
-class CategoryPanelDescr extends CElement{
-    constructor(parent, id){
+class CategoryPanelDescr extends CElement {
+    constructor(parent, id) {
         super(parent);
         this.id = id;
         this.name = CLASSNAMES.CATEGORYPANEL_DESCR;
@@ -263,28 +267,29 @@ class CategoryElement extends CElement{
         this.content = category
         this.name = CLASSNAMES.CATEGORY_CONTAINER;
         this.parent = parent ? parent : CLASSNAMES.CATEGORY_PANEL;
-        this.elements = [CategoryHeader, 
-                         DoubleSlider, 
-                         SliderLabelContainer, 
-                         SubcategoryTagContainer,
-                         CategorySidePanel,
-                         
-                        ]
+        this.elements = [CategoryHeader,
+            DoubleSlider,
+            SliderLabelContainer,
+            SubcategoryTagContainer,
+            CategorySidePanel
+        ]
     }
-    getParent(){
+    getParent() {
         let element = document.getElementById(this.parent);
         return element;
     }
 
-    load(){
-        for (let e=0; e<this.elements.length; e++){
+    load() {
+        for (let e = 0; e < this.elements.length; e++) {
             let element = 0;
 
-            switch(this.elements[e]){
+            switch (this.elements[e]) {
                 case (CategorySidePanel):
-                    element = new this.elements[e](this.make_id(), 
-                                                   this.content);
+                    element = new this.elements[e](this.make_id(),
+                        this.content);
+                    element.parent = "right-container";
                     break;
+
                 case (CategoryHeader): 
                     element = new this.elements[e](this.make_id(), 
                                     this.id, this.content);
@@ -294,10 +299,10 @@ class CategoryElement extends CElement{
                                     this.id, this.content);
                     break;
                 default:
-                    element = new this.elements[e](this.make_id(), 
-                                    this.id, this.content.subcategories);
+                    element = new this.elements[e](this.make_id(),
+                        this.id, this.content.subcategories);
             }
-            
+
             element.initiate();
             element.load();
         }
@@ -307,13 +312,15 @@ class CategoryElement extends CElement{
         let panel = document.createElement("div");
         panel.setAttribute('class', this.name);
         panel.setAttribute("id", this.make_id());
-        
+
         this.getParent().appendChild(panel);
     }
 }
 
+
 class CategoryHeader extends CElement{
     constructor(parent, id, category){
+
         super(parent);
         this.id = id;
         this.name = CLASSNAMES.CATEGORY_HEADER;
@@ -323,16 +330,20 @@ class CategoryHeader extends CElement{
             CategoryLabel, CategorySwitch];
     }
 
+
     load(){
         for (let e=0; e<this.elements.length; e++){
             let element = new this.elements[e](this.make_id(), this.id, this.category);
+
             element.initiate();
         }
     }
 }
 
+
 class CategoryLabel extends CElement{
     constructor(parent, id){
+
         super(parent);
         this.id = id;
         this.name = CLASSNAMES.CATEGORY_HEADER_TITLE;
@@ -349,6 +360,7 @@ class CategoryLabel extends CElement{
 
 class CategorySwitch extends CElement{
     constructor(parent, id, category){
+
         super(parent);
         this.id = id;
         this.name = CLASSNAMES.CATEGORY_SWITCH;
@@ -356,7 +368,7 @@ class CategorySwitch extends CElement{
         this.parent = parent; //CLASSNAMES.CATEGORY_HEADER;
     }
 
-    static isActive(category){
+    static isActive(category) {
         let d = document.getElementById(`categoryswitch_${category}`);
         return d.children[0].checked;
     }
@@ -368,18 +380,21 @@ class CategorySwitch extends CElement{
         this.getParent().appendChild(element);
         let e1 = document.createElement("input");
         e1.setAttribute("type", "checkbox");
+
         e1.onchange = ()=>{
             CategoryPanel.activation(this.category, 
                             CategorySwitch.isActive(this.id) ? DoubleSlider.getCurrentValue(this.id).min : 0, 
                             CategorySwitch.isActive(this.id) ? DoubleSlider.getCurrentValue(this.id).max : 0);
             DoubleSlider.activate(this.id, CategorySwitch.isActive(this.id));
+
         }
         let e2 = document.createElement("span");
         element.appendChild(e1);
         element.appendChild(e2);
-        
+
     }
 }
+
 
 class CategoryInfo extends CElement{
     constructor(parent, category){
@@ -402,12 +417,14 @@ class CategoryInfo extends CElement{
 
 class DoubleSlider extends CElement{
     constructor(parent, id, category){
+
         super(parent);
         this.name = CLASSNAMES.CATEGORY_SLIDER_CONTAINER;
         this.parent = parent; //CLASSNAMES.CATEGORY_CONTAINER;
         this.category = category;
         this.id = id;
     }
+
 
     static activate(category, value){
         let id = `categoryslider_${category}`;
@@ -418,11 +435,13 @@ class DoubleSlider extends CElement{
     }
 
     load(){
+
         let s1 = new Slider(this.make_id(), SLIDER_IDS.LOW);
         s1.initiate();
 
         let s2 = new Slider(this.make_id(), SLIDER_IDS.HIGH);
         s2.initiate();
+
 
         s1.limit(() => {s1.controlSlider(s2, true); 
             CategoryPanel.activation(this.category, 
@@ -444,58 +463,58 @@ class DoubleSlider extends CElement{
         panel.setAttribute("id", this.make_id());
         this.getParent().appendChild(panel);
     }
-    
+
     static getParsed(currentFrom, currentTo) {
-      const from = parseInt(currentFrom.value, 10);
-      const to = parseInt(currentTo.value, 10);
-      return [from, to];
+        const from = parseInt(currentFrom.value, 10);
+        const to = parseInt(currentTo.value, 10);
+        return [from, to];
     }
 
-    static getCurrentValue(category){
+    static getCurrentValue(category) {
         let d = document.getElementById(`categoryslider_${category}`)
-        return {"min": d.children[0].value, "max": d.children[1].value};
+        return { "min": d.children[0].value, "max": d.children[1].value };
     }
-    
+
     fillSlider(from, to, sliderColor, rangeColor, controlSlider) {
-        const rangeDistance = to.max-to.min;
+        const rangeDistance = to.max - to.min;
         const fromPosition = from.value - to.min;
         const toPosition = to.value - to.min;
         controlSlider.style.background = `linear-gradient(
           to right,
           ${sliderColor} 0%,
-          ${sliderColor} ${(fromPosition)/(rangeDistance)*100}%,
-          ${rangeColor} ${((fromPosition)/(rangeDistance))*100}%,
-          ${rangeColor} ${(toPosition)/(rangeDistance)*100}%, 
-          ${sliderColor} ${(toPosition)/(rangeDistance)*100}%, 
+          ${sliderColor} ${(fromPosition) / (rangeDistance) * 100}%,
+          ${rangeColor} ${((fromPosition) / (rangeDistance)) * 100}%,
+          ${rangeColor} ${(toPosition) / (rangeDistance) * 100}%, 
+          ${sliderColor} ${(toPosition) / (rangeDistance) * 100}%, 
           ${sliderColor} 100%)`;
     }
-    
+
     setToggleAccessible(currentTarget) {
-      const toSlider = document.querySelector('#toSlider');
-      if (Number(currentTarget.value) <= 0 ) {
-        toSlider.style.zIndex = 2;
-      } else {
-        toSlider.style.zIndex = 0;
-      }
+        const toSlider = document.querySelector('#toSlider');
+        if (Number(currentTarget.value) <= 0) {
+            toSlider.style.zIndex = 2;
+        } else {
+            toSlider.style.zIndex = 0;
+        }
     }
 }
 
-class Slider extends CElement{
-    constructor(parent, id){
+class Slider extends CElement {
+    constructor(parent, id) {
         super(parent);
         this.name = CLASSNAMES.SLIDER;
         this.parent = parent; //CLASSNAMES.CATEGORY_SLIDER_CONTAINER;
         this.id = id;
     }
 
-    checkLimit(from, to){
-        if (from > to){
+    checkLimit(from, to) {
+        if (from > to) {
             return false;
         }
         return true;
     }
 
-    getElement(){
+    getElement() {
         return document.getElementById(this.make_id());
     }
 
@@ -505,13 +524,13 @@ class Slider extends CElement{
     }
 
     controlSlider(other, is_start) {
-        const [from, to] = is_start? DoubleSlider.getParsed(this.getElement(), other.getElement()):
-        DoubleSlider.getParsed(other.getElement(), this.getElement());
-        
+        const [from, to] = is_start ? DoubleSlider.getParsed(this.getElement(), other.getElement()) :
+            DoubleSlider.getParsed(other.getElement(), this.getElement());
+
         //   fillSlider(fromSlider, toSlider, '#C6C6C6', '#25daa5', toSlider);
-        
-        if (!this.checkLimit(from, to) ){
-            if (is_start==true){
+
+        if (!this.checkLimit(from, to)) {
+            if (is_start == true) {
                 this.setValue(to);
             }
             else {
@@ -520,7 +539,7 @@ class Slider extends CElement{
         }
     }
 
-    initiate(){
+    initiate() {
         let slider = document.createElement("input");
         slider.setAttribute("type", "range");
         slider.setAttribute("min", "0");
@@ -531,27 +550,27 @@ class Slider extends CElement{
         this.getParent().appendChild(slider);
     }
 
-    limit(f){
-        
+    limit(f) {
+
         this.getElement().oninput = f;
     }
 
-    make_id(){
+    make_id() {
         return `${this.name}_${this.parent}_${this.id}`
     }
 
-    getValue(){
+    getValue() {
         return this.getElement().value;
     }
 
-    setValue(value){
+    setValue(value) {
         this.getElement().value = value;
     }
 
 }
 
-class SliderLabelContainer extends CElement{
-    constructor(parent, id){
+class SliderLabelContainer extends CElement {
+    constructor(parent, id) {
         super(parent);
         this.id = id;
         this.name = CLASSNAMES.SLIDER_LABEL_CONTAINER;
@@ -560,16 +579,16 @@ class SliderLabelContainer extends CElement{
         this.labels = ["Low", "High"];
     }
 
-    load(){
-        for (let e=0; e<this.elements.length; e++){
+    load() {
+        for (let e = 0; e < this.elements.length; e++) {
             let element = new this.elements[e](this.make_id(), this.labels[e]);
             element.initiate();
         }
     }
 }
 
-class SliderLabel extends CElement{
-    constructor(parent, id){
+class SliderLabel extends CElement {
+    constructor(parent, id) {
         super(parent);
         this.id = id;
         this.name = CLASSNAMES.SLIDER_LABEL;
@@ -584,87 +603,86 @@ class SliderLabel extends CElement{
     }
 }
 
-class SubcategoryTagContainer extends CElement{
+class SubcategoryTagContainer extends CElement {
     static cname = CLASSNAMES.TAG_CONTAINER
-    constructor(parent, id){
+    constructor(parent, id) {
         super(parent, id);
         this.name = CLASSNAMES.TAG_CONTAINER;
         this.parent = parent; //CLASSNAMES.CATEGORY_CONTAINER;
     }
 
-    load(labels){
-        if (labels==undefined){
+    load(labels) {
+        if (labels == undefined) {
             labels = [];
         }
-        labels.forEach(label=>{
+        labels.forEach(label => {
             let element = new SubcategoryTag(this.make_id(), label);
             element.initiate();
         });
     }
 
-    static getByCategory(category){
+    static getByCategory(category) {
         return document.getElementById(`${this.cname}_${category}`)
     }
 
-    static addLabel(category, label, togglable){
-        togglable= false;
+    static addLabel(category, label, togglable) {
+        togglable = false;
         let element = new SubcategoryTag(`${this.cname}_${category}`, label);
         element.initiate(togglable);
 
     }
 }
 
-class SubcategoryTag extends CElement{
-    constructor(parent, tag){
+class SubcategoryTag extends CElement {
+    constructor(parent, tag) {
         super(parent, tag.name);
-        if (tag.name==undefined){
+        if (tag.name == undefined) {
             this.id = tag;
         }
         this.name = CLASSNAMES.SUBCATEGORY_TAG;
         this.parent = parent; //CLASSNAMES.TAG_CONTAINER;
     }
 
-    toggle(){
+    toggle() {
         let _cname = this.getParent().parentElement.parentElement.className;
         let _id = this.getParent().parentElement.parentElement.id;
         let category = _id.replace(`${_cname}_`, "");
         let new_id = `${this.name}_${this.id}`;
 
         let container = SubcategoryTagContainer.getByCategory(category);
-        let existing_ids = Array.from(container.children).map(el=>el.id);
-        
-        if (existing_ids.includes(new_id)){
+        let existing_ids = Array.from(container.children).map(el => el.id);
+
+        if (existing_ids.includes(new_id)) {
             document.getElementById(new_id).remove();
         }
-        else{
+        else {
             SubcategoryTagContainer.addLabel(category, this.id, true);
-        }        
+        }
         CategoryPanel.markertoggle(this.id, !existing_ids.includes(new_id));
-        
     }
 
     initiate(togglable) {
-        togglable = togglable==undefined ? true: togglable;
-
-        let element = document.createElement("label");
-        element.setAttribute('class', this.name);
+        togglable = togglable == undefined ? true : togglable;
+        let element = document.createElement("div");
+        element.setAttribute('class', CLASSNAMES.SUBCATEGORY_TAG);
         element.setAttribute("id", this.make_id());
         this.getParent().appendChild(element);
         let e1 = document.createElement("input");
         e1.setAttribute("type", "checkbox");
+        let e2 = document.createElement("div");
+        e2.setAttribute("class", "tag-element");
+        let label = document.createElement("label");
+        label.innerHTML = this.id;
+        e2.appendChild(label);
+        element.appendChild(e1);
+        element.appendChild(e2);
 
-        if (togglable==true){
-            e1.onclick = ()=>{this.toggle();};
+        if (togglable == true) {
+            e1.onclick = () => { this.toggle(); }
         }
-        else{
+        else {
             e1.setAttribute("disabled", "true");
         }
-
-        element.appendChild(e1);
-        let e2 = document.createElement("span");
-        e2.innerHTML = this.id;
-        element.appendChild(e2);
-        
     }
 }
 
@@ -679,67 +697,73 @@ class SubcategoryTag extends CElement{
 
 */
 
-class CategorySidePanel extends CElement{
-    constructor(parent, category){
+class CategorySidePanel extends CElement {
+    constructor(parent, category) {
         super(parent, category.id);
         this.id = category.name;
-        this.parent = "body";
+        this.parent = parent ? parent : "body";
         this.name = CLASSNAMES.CATEGORY_SIDE_PANEL;
         this.content = category;
-        
+
         this.elements = [CategorySidePanelCloseButton,
-                         CategoryDescription,
-                         CategorySidePanelTagContainer
+            CategoryDescription,
+            CategorySidePanelTagContainer
         ];
     }
 
-    getParent(){
+    getParent() {
         let elements = document.getElementsByClassName(this.parent);
-        if (elements.length>0){
+        if (elements.length > 0) {
             return elements[0];
         }
     }
 
-    load(){
-        for (let e=0; e<this.elements.length; e++){
+    load() {
+        for (let e = 0; e < this.elements.length; e++) {
             let element = new this.elements[e](this.make_id(), this.content);
             element.initiate();
             element.load();
         }
-        
+
         this.getElement().style.display = "none";
     }
 
-    static toggleSide(category){
+    static toggleSide(category) {
         let sidePanel = document.getElementById(`${CLASSNAMES.CATEGORY_SIDE_PANEL}_${category}`);
-        if (sidePanel.style.display==="none"){
+        let container = document.getElementById(`${CLASSNAMES.CATEGORY_CONTAINER}_${category}`);
+        if (sidePanel.style.display === "none") {
             this.hideAll();
         }
+        container.classList.toggle("simple-drop-shadow");
         sidePanel.style.display = sidePanel.style.display === "none" ? "flex" : "none";
     }
 
-    static hideAll(){
+    static hideAll() {
         let panels = document.getElementsByClassName(CLASSNAMES.CATEGORY_SIDE_PANEL);
+        let containers = document.getElementsByClassName(CLASSNAMES.CATEGORY_CONTAINER);
         Array.from(panels).forEach(panel => {
-            panel.style.display = "none";
         })
+        for (let i = 0; i < panels.length; i++) {
+            panels[i].style.display = "none";
+            containers[i].classList.remove("simple-drop-shadow");            
+        }
     }
 }
 
-class CategorySidePanelTagContainer extends CElement{
-    constructor(parent, category){
+class CategorySidePanelTagContainer extends CElement {
+    constructor(parent, category) {
         super(parent, category.id);
         this.name = CLASSNAMES.CATEGORY_SIDE_TAG_CONTAINER;
         this.content = category;
         // this.parent = parent; //CLASSNAMES.CATEGORY_CONTAINER;
         this.elements = [
-                         HorizontalDivider,
-                         CategorySidePanelTagTitle, 
-                         CategorySidePanelTagContainerS];
+            HorizontalDivider,
+            CategorySidePanelTagTitle,
+            CategorySidePanelTagContainerS];
     }
 
-    load(){
-        for (let e=0; e<this.elements.length; e++){
+    load() {
+        for (let e = 0; e < this.elements.length; e++) {
             let element = new this.elements[e](this.make_id(), this.content);
             element.initiate();
             element.load();
@@ -747,15 +771,15 @@ class CategorySidePanelTagContainer extends CElement{
     }
 }
 
-class CategoryDescription extends CElement{
-    constructor(parent, category){
+class CategoryDescription extends CElement {
+    constructor(parent, category) {
         super(parent, category.id);
         this.name = CLASSNAMES.CATEGORY_DESCRIPTION;
         this.content = category.description;
     }
 
-    load(){ }
-    
+    load() { }
+
     initiate() {
         let element = document.createElement("div");
         element.setAttribute('class', this.name);
@@ -765,8 +789,8 @@ class CategoryDescription extends CElement{
     }
 }
 
-class CategorySidePanelCloseButton extends CElement{
-    constructor(parent, category){
+class CategorySidePanelCloseButton extends CElement {
+    constructor(parent, category) {
         super(parent, category.name);
         this.name = CLASSNAMES.SIDEPANEL_CLOSE;
         this.content = "✕"; // U+02715
@@ -777,16 +801,16 @@ class CategorySidePanelCloseButton extends CElement{
         element.setAttribute('class', this.name);
         element.setAttribute("id", this.make_id());
         element.innerHTML = this.content;
-        element.onclick = ()=>{CategorySidePanel.toggleSide(this.id);};
+        element.onclick = () => { CategorySidePanel.toggleSide(this.id); };
         this.getParent().appendChild(element);
     }
 }
 
-class CategorySidePanelTagTitle extends CElement{
-    constructor(parent, category){
+class CategorySidePanelTagTitle extends CElement {
+    constructor(parent, category) {
         super(parent, category.name);
         this.name = CLASSNAMES.CATEGORY_SIDE_TAG_CONTAINER_TITLE;
-        this.content = "Display tags"; // U+022C1  // keyboard_arrow_down 
+        this.content = "Filter by tags"; // U+022C1  // keyboard_arrow_down 
         // https://materialui.co/icon/keyboard-arrow-down
         // <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
     }
@@ -795,19 +819,19 @@ class CategorySidePanelTagTitle extends CElement{
         let element = document.createElement("button");
         element.setAttribute('class', this.name);
         element.setAttribute("id", this.make_id());
-        element.onclick = ()=>{CategorySidePanel.toggleSide(this.id);};
+        element.onclick = () => { CategorySidePanel.toggleSide(this.id); };
         element.innerHTML = this.content;
         // element.style.display = "none";
         this.getParent().appendChild(element);
     }
 }
 
-class HorizontalDivider extends CElement{
-    constructor(parent, category){
+class HorizontalDivider extends CElement {
+    constructor(parent, category) {
         super(parent, category.id);
     }
 
-    load(){}
+    load() { }
 
     initiate() {
         let element = document.createElement("hr");
@@ -815,8 +839,8 @@ class HorizontalDivider extends CElement{
     }
 }
 
-class CategorySidePanelTagContainerS extends CElement{
-    constructor(parent, category){
+class CategorySidePanelTagContainerS extends CElement {
+    constructor(parent, category) {
         super(parent, category.name);
         this.name = CLASSNAMES.CATEGORY_SIDE_TAG_CONTAINER_S;
         this.content = category;
@@ -824,33 +848,33 @@ class CategorySidePanelTagContainerS extends CElement{
         this.elements = [CategoryLabel, CategorySwitch];
     }
 
-    load(){
-        this.content.subcategories.forEach(subcat=>{
+    load() {
+        this.content.subcategories.forEach(subcat => {
             let element = new SubcategoryTag(this.make_id(), subcat);
             element.initiate();
         });
     }
 }
 
-class TopTagPanel extends CElement{
-    constructor(parent){
+class TopTagPanel extends CElement {
+    constructor(parent) {
         super(parent);
         this.id = "geocodingpanelid";
-        this.parent = "body";
+        this.parent = parent ? parent : "body";
         this.name = CLASSNAMES.GEOCODONG_PANEL;
         this.content = "";
-        
+
         this.elements = [];
     }
 
-    getParent(){
+    getParent() {
         let elements = document.getElementsByClassName(this.parent);
-        if (elements.length>0){
+        if (elements.length > 0) {
             return elements[0];
         }
     }
 
-    static getUrl(lat, lon){
+    static getUrl(lat, lon) {
         console.log(lat, lon);
         return `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=jsonv2&zoom=12`
     }
@@ -863,17 +887,17 @@ class TopTagPanel extends CElement{
         this.getParent().appendChild(element);
     }
 
-    load(){
-        if (navigator){
-            if (navigator.geolocation){
+    load() {
+        if (navigator) {
+            if (navigator.geolocation) {
                 return navigator.geolocation.getCurrentPosition(this._call);
             }
         }
         console.log("Geoposition undefined");
     }
 
-    _call(geo){
-        
+    _call(geo) {
+
         let url = TopTagPanel.getUrl(geo.coords.latitude, geo.coords.longitude);
         console.log(url);
         // fetch(url, )
@@ -883,7 +907,7 @@ class TopTagPanel extends CElement{
             headers: { 'Content-Type': 'application/json' },
         }).then(result => {
             if (result.status == 200) {
-                return result.json().then(res=>{
+                return result.json().then(res => {
                     document.getElementsByClassName(CLASSNAMES.GEOCODONG_PANEL)[0].innerHTML = GeocodeParser.run(res);
                     return res;
                 });
@@ -902,14 +926,14 @@ class TopTagPanel extends CElement{
     }
 }
 
-class GeocodeParser{
+class GeocodeParser {
 
-    static run(response){
+    static run(response) {
         let res = response["address"];
-        if ("city" in res){
+        if ("city" in res) {
             return `${res["country"]}, ${res["city"]}`;
         }
-        else if ("town" in res){
+        else if ("town" in res) {
             return `${res["country"]}, ${res["town"]}`;
         }
         else {
@@ -918,20 +942,20 @@ class GeocodeParser{
     }
 }
 
-class AboutLabel extends CElement{
-    constructor(parent){
+class AboutLabel extends CElement {
+    constructor(parent) {
         super(parent);
         this.id = "aboutlabelid";
-        this.parent = "body";
+        this.parent = parent ? parent : "body";
         this.name = CLASSNAMES.ABOUT_LABEL;
         this.content = "about";
-        
+
         this.elements = [];
     }
 
-    getParent(){
+    getParent() {
         let elements = document.getElementsByClassName(this.parent);
-        if (elements.length>0){
+        if (elements.length > 0) {
             return elements[0];
         }
     }
@@ -941,21 +965,21 @@ class AboutLabel extends CElement{
         element.setAttribute('class', this.name);
         element.setAttribute("id", this.make_id());
         element.innerHTML = this.content; //emoji.emojify(this.content);
-        element.onclick = (e)=>{
+        element.onclick = (e) => {
             console.log(e);
-            
+
             AboutPanel.toggle();
-                    
-            
+
+
         };
         this.getParent().appendChild(element);
     }
 
-    load(){
+    load() {
     }
 
-    _call(geo){
-        
+    _call(geo) {
+
         let url = TopTagPanel.getUrl(geo.coords.latitude, geo.coords.longitude);
         console.log(url);
         // fetch(url, )
@@ -965,7 +989,7 @@ class AboutLabel extends CElement{
             headers: { 'Content-Type': 'application/json' },
         }).then(result => {
             if (result.status == 200) {
-                return result.json().then(res=>{
+                return result.json().then(res => {
                     document.getElementsByClassName(CLASSNAMES.GEOCODONG_PANEL)[0].innerHTML = GeocodeParser.run(res);
                     return res;
                 });
@@ -984,45 +1008,45 @@ class AboutLabel extends CElement{
     }
 }
 
-class AboutPanel extends CElement{
-    constructor(parent){
+class AboutPanel extends CElement {
+    constructor(parent) {
         super(parent);
         this.id = "id";
-        this.parent = "body";
+        this.parent = parent ? parent : "body";
         this.name = CLASSNAMES.ABOUT_PANEL;
-        
+
         this.elements = [AboutPanelCloseButton,
-                         AboutDescription,
-                         AboutLogo,
-                         AboutText
+            AboutDescription,
+            AboutLogo,
+            AboutText
         ];
     }
 
-    getParent(){
+    getParent() {
         let elements = document.getElementsByClassName(this.parent);
-        if (elements.length>0){
+        if (elements.length > 0) {
             return elements[0];
         }
     }
 
-    load(){
-        for (let e=0; e<this.elements.length; e++){
+    load() {
+        for (let e = 0; e < this.elements.length; e++) {
             let element = new this.elements[e](this.make_id());
             element.initiate();
             element.load();
         }
-        
+
         this.getElement().style.display = "none";
     }
 
-    static toggle(){
+    static toggle() {
         let panel = document.getElementById(`${CLASSNAMES.ABOUT_PANEL}_id`);
         panel.style.display = panel.style.display === "none" ? "flex" : "none";
     }
 }
 
-class AboutPanelCloseButton extends CElement{
-    constructor(parent){
+class AboutPanelCloseButton extends CElement {
+    constructor(parent) {
         super(parent);
         this.id = "aboutid";
         this.name = CLASSNAMES.SIDEPANEL_CLOSE;
@@ -1034,20 +1058,20 @@ class AboutPanelCloseButton extends CElement{
         element.setAttribute('class', this.name);
         element.setAttribute("id", this.make_id());
         element.innerHTML = this.content;
-        element.onclick = ()=>{AboutPanel.toggle();};
+        element.onclick = () => { AboutPanel.toggle(); };
         this.getParent().appendChild(element);
     }
 }
 
-class AboutDescription extends CElement{
-    constructor(parent){
+class AboutDescription extends CElement {
+    constructor(parent) {
         super(parent);
         this.name = CLASSNAMES.ABOUT_DESCRIPTION;
         this.content = `City layers is a city-making app that empowers citizens to shape the changes they want to see in their cities!`;
     }
 
-    load(){ }
-    
+    load() { }
+
     initiate() {
         let element = document.createElement("div");
         element.setAttribute('class', this.name);
@@ -1057,10 +1081,10 @@ class AboutDescription extends CElement{
     }
 }
 
-class AboutText extends CElement{
-    constructor(parent){
+class AboutText extends CElement {
+    constructor(parent) {
         super(parent);
-        this.name = CLASSNAMES.ABOUT_DESCRIPTION;
+        this.name = CLASSNAMES.ABOUT_TEXT;
         this.content = `City Layers embody the motto “act local to go global” 
         by relying on citizen mapping as a holistic and inclusive city-making 
         practice that aims to tackle the contemporary spatial, social and 
@@ -1072,8 +1096,8 @@ class AboutText extends CElement{
         collectively generated, managed and cared for. `
     }
 
-    load(){ }
-    
+    load() { }
+
     initiate() {
         let element = document.createElement("div");
         element.setAttribute('class', this.name);
@@ -1083,8 +1107,8 @@ class AboutText extends CElement{
     }
 }
 
-class AboutLogo extends CElement{
-    constructor(parent, category){
+class AboutLogo extends CElement {
+    constructor(parent, category) {
         super(parent, category);
         this.name = "aboutlogo";
         this.content = "images/about.svg"; // U+02715
