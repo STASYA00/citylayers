@@ -23,7 +23,7 @@ class Category{
         this.name = name? name : " ";
         this.description = description? description : "";
         this.subcategories = subcategories? subcategories : [];
-        this.color = color? color : "";
+        this.color = color? color.substring(0,6) : "";
     }
 }
 
