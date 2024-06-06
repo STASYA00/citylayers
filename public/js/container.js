@@ -1,6 +1,9 @@
 // import * as emoji from 'node-emoji';
 
 const CLASSNAMES = {
+    LOGO : "logo",
+    CLOSE: "closebutton",
+
     CATEGORY_PANEL: "categorypanel",
     CATEGORY_CONTAINER: "categorycontainer",
     CATEGORY_SLIDER_CONTAINER: "categoryslider",
@@ -23,12 +26,12 @@ const CLASSNAMES = {
     CATEGORY_SIDE_TAG_CONTAINER_TITLE: "categorysidetagcontainertitle",
     CATEGORY_SIDE_TAG_CONTAINER_S: "categorysidetagcontainersmall",
     CATEGORY_SIDE_TAG: "categorysidetag",
-    SIDEPANEL_CLOSE: "sidepanelclose",
+    // SIDEPANEL_CLOSE: "sidepanelclose",
 
     GEOCODONG_PANEL: "geopanel",
     ABOUT_LABEL: "aboutlabel",
     ABOUT_PANEL: "aboutpanel",
-    ABOUTPANEL_CLOSE: "aboutpanelclose",
+    // ABOUTPANEL_CLOSE: "aboutpanelclose",
     ABOUT_DESCRIPTION: "aboutdescription",
     ABOUT_TEXT: "abouttext",
 
@@ -51,7 +54,7 @@ const SLIDER_IDS = {
 
 class CElement {
     constructor(parent, id) {
-        this.id = id;
+        this.id = id ? id : "id";
         this.name = CLASSNAMES.CATEGORY_CONTAINER;
         this.parent = parent;
         this.elements = []
@@ -97,6 +100,7 @@ class CElement {
 class CategoryPanel extends CElement{
     markertoggle = ()=>{console.log("No action assigned")}; // callback to toggle markers
     activation = ()=>{}; // callback to activate observations' categories or to filter observations
+    getCoords = ()=>{}; // callback to get current coordinates
 
     constructor(parent){
         super(parent, "id");
@@ -179,7 +183,7 @@ class CategoryPanelHeader extends CElement {
 class Logo extends CElement {
     constructor(parent, category) {
         super(parent, category);
-        this.name = "logo";
+        this.name = CLASSNAMES.LOGO;
         this.content = "images/logo_2.svg"; // U+02715
     }
 
@@ -210,7 +214,9 @@ class PinButton extends CElement {
         element.setAttribute("id", this.make_id());
         this.getParent().appendChild(element);
         element.addEventListener("click", () => {
-            window.location.href = "/add-pin";
+            console.log(CategoryPanel.getCoords());
+            let coords = CategoryPanel.getCoords();
+            window.location.href = `/pin?lat=${coords.lat}&lng=${coords.lng}`;
         });
     }
 }
@@ -264,7 +270,7 @@ class CategoryPanelDescr extends CElement {
 class CategoryElement extends CElement{
     constructor(parent, category){
         super(parent, category.name);
-        this.content = category
+        this.content = category;
         this.name = CLASSNAMES.CATEGORY_CONTAINER;
         this.parent = parent ? parent : CLASSNAMES.CATEGORY_PANEL;
         this.elements = [CategoryHeader,
@@ -295,6 +301,10 @@ class CategoryElement extends CElement{
                                     this.id, this.content);
                     break;
                 case (DoubleSlider):
+                    element = new this.elements[e](this.make_id(), 
+                                    this.id, this.content);
+                    break;
+                case (SliderLabelContainer):
                     element = new this.elements[e](this.make_id(), 
                                     this.id, this.content);
                     break;
@@ -342,11 +352,11 @@ class CategoryHeader extends CElement{
 
 
 class CategoryLabel extends CElement{
-    constructor(parent, id){
+    constructor(parent, id, name){
 
         super(parent);
         this.id = id;
-        this.name = CLASSNAMES.CATEGORY_HEADER_TITLE;
+        this.name = name? name :CLASSNAMES.CATEGORY_HEADER_TITLE;
         this.parent = parent; //CLASSNAMES.CATEGORY_HEADER;
     }
     initiate() {
@@ -409,7 +419,7 @@ class CategoryInfo extends CElement{
         element.innerHTML = this.content;
         element.setAttribute('class', this.name);
         element.onclick = ()=>{
-             CategorySidePanel.toggleSide(this.id);            
+             CategorySidePanel.toggle(this.id);            
         };
         this.getParent().appendChild(element);
     }
@@ -570,13 +580,13 @@ class Slider extends CElement {
 }
 
 class SliderLabelContainer extends CElement {
-    constructor(parent, id) {
+    constructor(parent, id, category) {
         super(parent);
         this.id = id;
         this.name = CLASSNAMES.SLIDER_LABEL_CONTAINER;
         this.parent = parent; //CLASSNAMES.CATEGORY_CONTAINER;
         this.elements = [SliderLabel, SliderLabel];
-        this.labels = ["Low", "High"];
+        this.labels = [category.low, category.high];
     }
 
     load() {
@@ -705,10 +715,12 @@ class CategorySidePanel extends CElement {
         this.name = CLASSNAMES.CATEGORY_SIDE_PANEL;
         this.content = category;
 
-        this.elements = [CategorySidePanelCloseButton,
+        this.elements = [CloseButton,
             CategoryDescription,
             CategorySidePanelTagContainer
         ];
+        
+        this.args = [() => { CategorySidePanel.toggle(this.id); }]
     }
 
     getParent() {
@@ -720,7 +732,7 @@ class CategorySidePanel extends CElement {
 
     load() {
         for (let e = 0; e < this.elements.length; e++) {
-            let element = new this.elements[e](this.make_id(), this.content);
+            let element = new this.elements[e](this.make_id(), this.content, e<this.args.length?this.args[e]:undefined);
             element.initiate();
             element.load();
         }
@@ -728,7 +740,7 @@ class CategorySidePanel extends CElement {
         this.getElement().style.display = "none";
     }
 
-    static toggleSide(category) {
+    static toggle(category) {
         let sidePanel = document.getElementById(`${CLASSNAMES.CATEGORY_SIDE_PANEL}_${category}`);
         let container = document.getElementById(`${CLASSNAMES.CATEGORY_CONTAINER}_${category}`);
         if (sidePanel.style.display === "none") {
@@ -789,11 +801,12 @@ class CategoryDescription extends CElement {
     }
 }
 
-class CategorySidePanelCloseButton extends CElement {
-    constructor(parent, category) {
-        super(parent, category.name);
-        this.name = CLASSNAMES.SIDEPANEL_CLOSE;
+class CloseButton extends CElement {
+    constructor(parent, category, onclick) {
+        super(parent, category ? category.name : "id");
+        this.name = CLASSNAMES.CLOSE;
         this.content = "✕"; // U+02715
+        this.onclick = onclick ? onclick : () => { CategorySidePanel.toggle(this.id) };
     }
 
     initiate() {
@@ -801,7 +814,7 @@ class CategorySidePanelCloseButton extends CElement {
         element.setAttribute('class', this.name);
         element.setAttribute("id", this.make_id());
         element.innerHTML = this.content;
-        element.onclick = () => { CategorySidePanel.toggleSide(this.id); };
+        element.onclick = this.onclick;
         this.getParent().appendChild(element);
     }
 }
@@ -819,7 +832,7 @@ class CategorySidePanelTagTitle extends CElement {
         let element = document.createElement("button");
         element.setAttribute('class', this.name);
         element.setAttribute("id", this.make_id());
-        element.onclick = () => { CategorySidePanel.toggleSide(this.id); };
+        element.onclick = () => { CategorySidePanel.toggle(this.id); };
         element.innerHTML = this.content;
         // element.style.display = "none";
         this.getParent().appendChild(element);
@@ -1015,11 +1028,12 @@ class AboutPanel extends CElement {
         this.parent = parent ? parent : "body";
         this.name = CLASSNAMES.ABOUT_PANEL;
 
-        this.elements = [AboutPanelCloseButton,
+        this.elements = [CloseButton,
             AboutDescription,
             AboutLogo,
             AboutText
         ];
+        this.args = [() => { AboutPanel.toggle(); }]
     }
 
     getParent() {
@@ -1031,7 +1045,7 @@ class AboutPanel extends CElement {
 
     load() {
         for (let e = 0; e < this.elements.length; e++) {
-            let element = new this.elements[e](this.make_id());
+            let element = new this.elements[e](this.make_id(), undefined, e<this.args.length?this.args[e]:undefined);
             element.initiate();
             element.load();
         }
@@ -1045,23 +1059,21 @@ class AboutPanel extends CElement {
     }
 }
 
-class AboutPanelCloseButton extends CElement {
-    constructor(parent) {
-        super(parent);
-        this.id = "aboutid";
-        this.name = CLASSNAMES.SIDEPANEL_CLOSE;
-        this.content = "✕"; // U+02715
-    }
+// class AboutPanelCloseButton extends CloseButton {
+//     constructor(parent) {
+//         super(parent);
+//         this.id = "aboutid";
+//     }
 
-    initiate() {
-        let element = document.createElement("button");
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        element.innerHTML = this.content;
-        element.onclick = () => { AboutPanel.toggle(); };
-        this.getParent().appendChild(element);
-    }
-}
+//     initiate() {
+//         let element = document.createElement("button");
+//         element.setAttribute('class', this.name);
+//         element.setAttribute("id", this.make_id());
+//         element.innerHTML = this.content;
+//         element.onclick = () => { AboutPanel.toggle(); };
+//         this.getParent().appendChild(element);
+//     }
+// }
 
 class AboutDescription extends CElement {
     constructor(parent) {

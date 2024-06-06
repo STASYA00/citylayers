@@ -57,6 +57,11 @@ class MapPanel{
     activate(id, on){
         this.children[0].activateMarker(id, on);
     }
+    getCoords(){
+        console.log(this.children[0].getCoords());
+
+        return this.children[0].getCoords();
+    }
 
     getElement(){
         let elements = document.getElementsByClassName(this.name);
@@ -84,13 +89,13 @@ class MapPanel{
     make_id(){
         return `${this.name}_${this.id}`
     }
+
 }
 
 const TAG_ICONS = {
     NORMAL : 'images/tag_icon.png',
     SELECTED : 'images/tag_selected.svg'
 }
-
 
 class CityMap extends MapPanel{
     
@@ -130,6 +135,11 @@ class CityMap extends MapPanel{
         //                 category.name));
 
         return _map
+    }
+
+    getCoords(){
+        
+        return this._map.getCenter();
     }
 
     reload(category, lower, upper){
@@ -186,8 +196,7 @@ class CityMap extends MapPanel{
     }
 
     activateMarker(id, on){
-        
-        let _places = this.places.filter(c=>c.pt.id==id);
+        let _places = this.places.filter(c=>c.pt.id.toString()==id.toString());
         if (_places.length==0) {return;}
         let m = this.addMarker(_places[0].pt.lat, _places[0].pt.lng, _places[0].pt.id, _places[0].subcat); 
         let _icon_path = on == true ? TAG_ICONS.SELECTED : TAG_ICONS.NORMAL
@@ -289,7 +298,6 @@ class CityMap extends MapPanel{
         map.addLayer( L.GridLayer.debugCoords() );
     }
 }
-
 
 function deg2rad(angle){
     return Math.PI * angle / 180;

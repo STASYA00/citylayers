@@ -1041,7 +1041,8 @@ img {
 :root {
     --primary-color: #FFF;
     --secondary-color: #014751;
-    --tertiary-color: #DFE6E9;
+    --tertiary-color:  #DFE6E9;
+    --q-color: #92aaaf;
     --margin-1: 12px;
     --margin-2: 24px;
     --margin-3: 36px;
@@ -1076,7 +1077,27 @@ hr{
 }
 
 .main-wrapper section {
-    margin-top: 98px;
+    margin-top: 30%;
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    flex-wrap: wrap;
+}
+
+@media only screen and (min-width: 600px) {
+    .main-wrapper section {
+        margin-top: 20%;
+        margin: 20%;
+    }
+}
+
+@media only screen and (min-width: 900px) {
+    .main-wrapper section {
+        margin-top: 7%;
+    }
 }
 
 .header{
@@ -1085,7 +1106,7 @@ hr{
     top: 0;
     left: 0;
     background-color: var(--tertiary-color);
-    padding: 12px 24px;
+    padding: 20px 24px;
     display: flex;
     justify-content: space-between;
 }
@@ -1117,6 +1138,7 @@ hr{
     border: 1px solid var(--secondary-color);
     border-radius: 20px;
     overflow: hidden;
+    height: 30px;
 }
 
 .tag input{
@@ -1138,6 +1160,13 @@ hr{
     font-size: 12px;
     display: flex;
     align-items: center;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    line-height: 120%;
+    border-radius: inherit;
 }
 
 .tag label{
@@ -1151,4 +1180,35 @@ hr{
 
 input[type=range]::-moz-range-progress{
     background-color: transparent;
+}
+
+.tags-container {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+
+@media only screen and (max-width: 772px) {
+    .tag {
+        display: inline-block;
+        position: relative;
+        border: 1px solid var(--secondary-color);
+        border-radius: 20px;
+        overflow: visible;
+        height: 30px;
+        width: fit-content;
+    }
+    .tags-container {
+        margin-top: 20px;
+        display: flex;
+        gap: 10px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+    
 }

@@ -140,3 +140,26 @@ INSERT INTO `questions`(`category_id`, `question`) VALUES
     DROP COLUMN description,
     ADD longitude DECIMAL,
     ADD latitude DECIMAL
+
+
+
+INSERT INTO `pages` (`id`, `title`, `content`, `created_at`, `updated_at`, `formatting`, `link`) 
+VALUES (NULL, 'Team', 'Lovro Koncar-Gamulin', NULL, NULL, '1', 'https://at.linkedin.com/in/lovro-koncar-gamulin-a46b37266'),
+(NULL, 'Team', 'research lead', NULL, NULL, '0', ''),
+(NULL, 'Team', 'Peter Mörtenböck', NULL, NULL, '1', 'https://www.gold.ac.uk/visual-cultures/p-mortenbock/'),
+(NULL, 'Team', 'project director of “platFORMed city” (base project of “City Layers: Citizen Mapping as a Practice of City-Making”)', NULL, NULL, '0', ''),
+(NULL, 'Team', 'Angelos Chronis', NULL, NULL, '1', 'https://iaac.net/dt-team/angelos-chronis/'),
+(NULL, 'Team', 'technical implementation lead', NULL, NULL, '0', ''),
+(NULL, 'Team', 'Androniki Pappa', NULL, NULL, '1', 'https://iaac.net/dt-team/androniki-pappa/6'),
+(NULL, 'Team', 'researcher', NULL, NULL, '0', ''),
+(NULL, 'Team', 'Stasja Fedorova', NULL, NULL, '1', 'https://www.linkedin.com/in/stasja-fedorova/'),
+(NULL, 'Team', 'technical implementation', NULL, NULL, '0', ''),
+(NULL, 'Team', 'Aurel Richard', NULL, NULL, '1', 'https://iaac.net/dt-team/aurel-richard/'),
+(NULL, 'Team', 'UI / UX + technical implementation', NULL, NULL, '0', ''),
+(NULL, 'Team', 'Carmen Lael Hines', NULL, NULL, '1', 'https://at.linkedin.com/in/carmen-lael-hines-4b84139b'),
+(NULL, 'Team', 'researcher and outreach expert', NULL, NULL, '0', ''),
+(NULL, 'Team', 'Bilal Alame', NULL, NULL, '1', 'https://archive-2020.biennial.ge/artist/bilal-alame/100'),
+(NULL, 'Team', 'research assistant', NULL, NULL, '0', ''),
+(NULL, 'Team', 'Contact', NULL, NULL, '1', ''),
+(NULL, 'Team', 'info@citylayers.org', NULL, NULL, '0', 'mailto:info@citylayers.org')
+;

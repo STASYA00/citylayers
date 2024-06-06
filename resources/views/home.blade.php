@@ -69,7 +69,7 @@
         let categories = categoryInput.map(c => new Category(c.id, c.name, 
                                                              c.description, 
                                                              subcats.filter(e=>e.parent_id==c.id),
-                                                             c.color
+                                                             c.color, c.low, c.high
                                                             ));
         
 
@@ -117,7 +117,8 @@
 
 
         CategoryPanel.markertoggle = (subcat, on)=>{m.reloadMarkers(subcat, on)};
-        MapPanel.toggleComment = (i, on)=>{CommentPanel.focusComment(i, on)};
+        CategoryPanel.getCoords = ()=>{return m.getCoords();};
+        MapPanel.toggleComment = (i, on)=>{ CommentPanel.focusComment(i, on)};
         CommentPanel.toggleMarker = (id, on)=>{m.activate(id, on)}
         
         c.initiate();
@@ -141,7 +142,7 @@
 
         scope.initiate();
         
-        setTimeout(()=>{m.reload(obs)}, 0);
+        // setTimeout(()=>{m.reload(obs)}, 0);
     </script>
 
 

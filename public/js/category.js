@@ -18,12 +18,16 @@ class CategoryLoader{
 
 
 class Category{
-    constructor(id, name, description, subcategories, color){
+    constructor(id, name, description, 
+                subcategories, 
+                color, low, high){
         this.id = id;
         this.name = name? name : " ";
         this.description = description? description : "";
         this.subcategories = subcategories? subcategories : [];
         this.color = color? color : "";
+        this.low = low ? low : "Low";
+        this.high = high ? high : "High";
     }
 }
 

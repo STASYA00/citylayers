@@ -5,7 +5,7 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 
-class Category extends Model
+class Page extends Model
 {
     use CrudTrait;
 
@@ -15,11 +15,11 @@ class Category extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'categories';
+    protected $table = 'pages';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
-    protected $fillable = ['name', 'description', "color", "low", "high"];
+    protected $fillable = ['title', 'content', 'formatting'];
     // protected $hidden = [];
     // protected $dates = [];
 

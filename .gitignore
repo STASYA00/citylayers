@@ -17,3 +17,7 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+*.mp4
+storage/app/*
+storage/app/
+*.pdf

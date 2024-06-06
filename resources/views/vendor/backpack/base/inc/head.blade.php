@@ -5,7 +5,7 @@
     <script src="https://kit.fontawesome.com/59ecaaffaa.js" crossorigin="anonymous"></script>
 
     @if (config('backpack.base.meta_robots_content'))<meta name="robots" content="{{ config('backpack.base.meta_robots_content', 'noindex, nofollow') }}"> @endif
-    <link rel="shortcut icon" href=".././img/favicon.png" type="image/x-icon" />
+    <link rel="shortcut icon" href=".././images/favicon.ico" type="image/x-icon" />
     <meta name="csrf-token" content="{{ csrf_token() }}" /> {{-- Encrypted CSRF token for Laravel, in order for Ajax requests to work --}}
     <title>{{ isset($title) ? $title.' :: '.config('backpack.base.project_name') : config('backpack.base.project_name') }}</title>
     @vite('resources/css/app.css')

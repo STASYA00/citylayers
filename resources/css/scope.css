@@ -2,7 +2,8 @@
 .scope{
     width: 50px;
     position: absolute;
-    left: 60%;
-    top: 48%;
+    left: 50%;
+    transform: translate(-25px, -25px);
+    top: 50%;
     z-index: 120;
 }

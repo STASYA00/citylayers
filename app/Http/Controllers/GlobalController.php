@@ -14,6 +14,7 @@ use App\Models\PlaceSubgrade;
 use App\Models\Category;
 use App\Models\Subcategory;
 use App\Models\Question;
+use App\Models\Page;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -114,6 +115,12 @@ class GlobalController extends Controller
     {
         $questions = Question::all();
         return $questions;
+    }
+
+    static function pages()
+    {
+        $pages = Page::all();
+        return $pages;
     }
 
     

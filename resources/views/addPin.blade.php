@@ -13,6 +13,11 @@
 
 @section('main')
 @vite('resources/css/dataCollection.css')
+<?php 
+$lat = $_GET['lat'] ?? null; 
+$lng = $_GET['lng'] ?? null; 
+?> 
+
 
 <div class="main-wrapper" id="main-container" x-data>
     <div class="header">
@@ -25,7 +30,7 @@
         <button x-cloak x-show="$store.data.step.current == $store.data.step.length" class="back-button"
             @click="$store.data.prevStep()"> back </button>
     </div>
-    <template x-if="$store.data.step.current == 0 || $store.data.step.current == $store.data.step.length">
+    <template x-if="$store.data.step.current == 0">
         <section>
             <h1>What do you want to pin to the map?</h1>
             <p>Begin by adding a photo of the place you want to share. Then, follow a few steps to 
@@ -34,6 +39,31 @@
             <button class="primary-button" x-bind::disabled="!$store.data.allowedLocation"
                 @click="$store.data.step.current == 0 ? $store.data.nextStep() : $store.data.submit()"
                 >Let's get started!</button>
+                <div>
+                    <label for="img-uploader">
+                        <div class="img-container">
+                            <input id="img-uploader" @change="$store.data.setImage(event)" type="file"
+                                accept=".jpg, .png">
+                            <img id="img-preview" x-bind:src="$store.data.image_src">
+                            <div class="img-text" x-show="!$store.data.place_data['img']">
+                                <div>+</div> Add a picture
+                            </div>
+                        </div>
+                        <div class="img-text" x-cloak x-show="$store.data.place_data['img']">
+                            <div>+</div> Retake picture
+                        </div>
+                    </label>
+                    <span class="skip-span" @click="$store.data.nextStep()" x-show="!$store.data.place_data['img']">or skip</span>
+                </div>
+        </section>
+    </template>
+    <template x-if="$store.data.step.current == $store.data.step.length">
+        <section>
+            <h1>Is there anything else about this place that you particularly liked or disliked?</h1>
+            <p>🖍 Feel free to share any additional observations, opinions and reflections.</p>
+            <button class="primary-button" x-bind::disabled="!$store.data.allowedLocation"
+                @click="$store.data.step.current == 0 ? $store.data.nextStep() : $store.data.submit()"
+                >Submit</button>
             <template x-if="$store.data.step.current == 0">
                 <div>
                     <label for="img-uploader">
@@ -49,7 +79,7 @@
                             <div>+</div> Retake picture
                         </div>
                     </label>
-                    <span class="skip-span" x-show="!$store.data.place_data['img']">or skip</span>
+                    <span class="skip-span" @click="$store.data.nextStep()" x-show="!$store.data.place_data['img']">or skip</span>
                 </div>
             </template>
             <template x-if="$store.data.step.current == $store.data.step.length">
@@ -66,11 +96,10 @@
                     x-bind:value="$store.data.place_data['categories'].filter(c=>c.id==$store.data.step.current)[0].grade"
                     @change="$store.data.setGrade($store.data.step.current,event.target.value)" />
                 <div class="ranges-container">
-                    <span>Low</span>
-                    <span>High</span>
+                    <span x-html="$store.data.copy_data.filter(c=>c.id==$store.data.step.current)[0].low"></span>
+                    <span x-html="$store.data.copy_data.filter(c=>c.id==$store.data.step.current)[0].high"></span>
                 </div>
-            </div>
-            <div x-cloak x-show="$store.data.place_data['categories'].filter(c=>c.id==$store.data.step.current)[0].grade">
+                <div x-cloak x-show="$store.data.place_data['categories'].filter(c=>c.id==$store.data.step.current)[0].grade">
                 <h2 class="subquestion" x-html="$store.data.copy_data.filter(c=>c.id==$store.data.step.current)[0].questions[1].question"></h2>
                 <span>Select one or more tags below</span>
                 <div class="tags-container">
@@ -86,6 +115,8 @@
                     </template>
                 </div>
             </div>
+            </div>
+            
             <footer>
                 <div class="steps"></div>
                 <hr>
@@ -110,9 +141,8 @@
     const subcats = {!! json_encode($subcategories) !!};
     const questions = {!! json_encode($questions) !!};
 
-    console.log(questions);
-    console.log(cats);
-    console.log(subcats);
+    const lat = {!! json_encode($lat) !!};
+    const lng = {!! json_encode($lng) !!};
 
     let categoryData = cats.map((cat, i)=>{
         return { id: cat["id"], 
@@ -124,13 +154,13 @@
             id: cat["id"],
             name: cat["name"],
             description: cat["description"],
+            low: cat["low"],
+            high: cat["high"],
             color: cat["color"],
             tags: subcats.filter(s => s.category==cat["id"]),
             questions: questions.filter(q => q.category_id==cat["id"])
         }
     });
-
-    console.log(pageContent);
 
     document.addEventListener('alpine:init', () => {
 
@@ -140,11 +170,11 @@
                 length: cats.length + 1,
             },
 
-            allowedLocation: false,
+            allowedLocation: true,
             place_data: {
                 id: null,
-                latitude: null,
-                longitude: null,
+                latitude: lat,
+                longitude: lng,
                 categories: categoryData,
                 img: null,
                 comment: null,
@@ -226,8 +256,8 @@
             
         });
 
-
-        if (navigator && navigator.geolocation) {
+        if (lat==null && lng==null){
+            if (navigator && navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 function success(pos) {
                     Alpine.store('data').setLocation(pos)
@@ -239,6 +269,9 @@
                 }
             );
         }
+
+        }
+        
     });
 
     function uuidv4() {
@@ -258,10 +291,10 @@
                 if (callback!=undefined){
                     callback(data);
                 }
-                //window.location.href = '/add-pin/post-success';
+                window.location.href = '/add-pin/post-success';
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                //window.location.href = '/add-pin/post-error';
+                window.location.href = '/add-pin/post-error';
             }
         });
 

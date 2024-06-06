@@ -38,22 +38,26 @@ Route::controller(GlobalController::class)->group(function () {
 
     Route::post('/place/grade-test', 'grade')->name('grade');
     
-
     Route::get('delete', 'delete')->name('delete');
     
     Route::get('impressum', function () {
         return view('impressum');
     });
+    Route::get('dataprivacyandprotection', function () {
+        return view('impressum');
+    });
+    Route::get('accessibility', function () {
+        return view('impressum');
+    });
+    Route::get('team', function () {
+        return view('impressum');
+    });
 
 });
-
-
 
 Route::get('explore', function () {
     return view('home');
 });
-
-
 
 Route::get('contact', function () {
     return view('contact');
@@ -62,6 +66,7 @@ Route::get('contact', function () {
 
 Route::get('categories', [GlobalController::class, 'categories']);
 Route::get('questions', [GlobalController::class, 'questions']);
+Route::get('pages', [GlobalController::class, 'pages']);
 Route::get('places', [GlobalController::class, 'places']);
 Route::get('comments', [GlobalController::class, 'comments']);
 // Route::get('category/{category_id?}', [GlobalController::class, 'categories'])->array_filter();
@@ -70,7 +75,8 @@ Route::get('subcategories', [GlobalController::class, 'subcategories']);
 Route::get('subcategories/{category_id?}', [GlobalController::class, 'subcategories'])->where('category_id', 'category_id');
 Route::get('subcategory/{subcategory_id?}', [GlobalController::class, 'subcategories'])->where('subcategory_id', 'subcategory_id');
 
-Route::get('add-pin', function () {return view('addPin');});
+Route::get('add-pin', function () {
+    return view('addPin', [1]);});
 Route::get('pin', function () {return view('addPin');});
 Route::get('add-pin/post-success', function () {return view('postSuccess');});
 Route::get('add-pin/post-error', function () {return view('postError');});
