@@ -130,7 +130,7 @@
   display: flex;
   flex-direction: column;
   background-color: var(--primary-color);
-  color: var(--q-color);
+  color: var(--secondary-color);
   padding: 12px 24px;
   border-radius: 10px;
 }
@@ -215,7 +215,7 @@ input[type=range]::-webkit-slider-thumb {
   } 
 
   input[type="range"]:disabled::-webkit-slider-thumb {
-    background-color: var(--q-color);
+    background-color: var(--secondary-color);
     cursor: not-allowed;
   }
 
@@ -262,7 +262,7 @@ input[type="range"].startSlider {
 }
   
   input[type="range"]:disabled{
-    background-color: var(--q-color);
+    background-color: var(--secondary-color);
     cursor: not-allowed;
   }
 
@@ -329,11 +329,11 @@ input[type="range"].startSlider {
 
   .categoryheader:has(> .categoryswitch input:checked) {
     /* Category title when active */
-    color: var(--q-color);
+    color: var(--secondary-color);
   }
 
   .sliderlabelcontainer:has(~ .categoryheader:has(> .categoryswitch input:checked)){
-    color: var(--q-color);
+    color: var(--secondary-color);
     cursor: not-allowed;
 
   }
@@ -477,6 +477,7 @@ input[type="range"].startSlider {
 
 .tag input:disabled + .tag-element>label{
   color: var(--secondary-color);
+  cursor: not-allowed;
 }
 
 .pinButton {
