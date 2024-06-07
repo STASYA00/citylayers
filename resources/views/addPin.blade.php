@@ -291,7 +291,7 @@ $lng = $_GET['lng'] ?? null;
                 if (callback!=undefined){
                     callback(data);
                 }
-                window.location.href = '/add-pin/post-success';
+                // window.location.href = '/add-pin/post-success';
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 window.location.href = '/add-pin/post-error';
@@ -354,6 +354,7 @@ $lng = $_GET['lng'] ?? null;
             
             }
         );
+        window.location.href = '/add-pin/post-success';
         
 
         

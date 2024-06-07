@@ -2,12 +2,11 @@ const LEGAL_CLASSNAMES = {
     PANEL : "legalpanel",
     HEADER : "legalheader",
     BODY : "legalbody",
+    LEGALBODYCONTENT: "legalbodycontent",
     CLOSE : "closebutton",
     TITLE : "legaltitle",
     TEXT : "legaltext",
     TEXT_F : "legaltextframed"
-
-
 }
 
 class LegalPanel extends CElement{
@@ -64,15 +63,14 @@ class LegalHeader extends CElement{
     }
 }
 
-
 class LegalBody extends CElement{
     constructor(parent, name, content){
         super(parent);
         this.name = name? name : LEGAL_CLASSNAMES.BODY;
         this.content = content;
-        this.elements = [LegalText, ...content.map(e=> LegalText)]; 
-        this.classes = [LEGAL_CLASSNAMES.TITLE, ...content.map(e=> e.formatting==1 ? LEGAL_CLASSNAMES.TEXT_F : LEGAL_CLASSNAMES.TEXT)]
-        this.args = [content[0].title, ...content.map(e=> e.content)];
+        this.elements = [LegalText, LegalBodyContent]; 
+        this.classes = [LEGAL_CLASSNAMES.TITLE, LEGAL_CLASSNAMES.LEGALBODYCONTENT]
+        this.args = [content[0].title, content];
     }
 
     initiate() {
@@ -84,8 +82,44 @@ class LegalBody extends CElement{
 
     load() {
         for (let e = 0; e < this.elements.length; e++) {
+
+            
             let element = new this.elements[e](this.make_id(), 
-                                    this.classes[e], e < this.args.length ? this.args[e] : undefined);
+                                    this.classes[e], 
+                                    e < this.args.length ? this.args[e] : undefined
+                                );
+            element.initiate();
+            element.load();
+        }
+    }
+}
+
+class LegalBodyContent extends CElement{
+    constructor(parent, name, content){
+        super(parent);
+        this.name = name? name : LEGAL_CLASSNAMES.BODY;
+        this.content = content;
+        console.log(content);
+        this.elements = [...content.map(e=> (e.link!=undefined && e.link!=null && e.link!="") ? LegalLinkText : LegalText)]; 
+        this.classes = [ ...content.map(e=> e.formatting==1 ? LEGAL_CLASSNAMES.TEXT_F : LEGAL_CLASSNAMES.TEXT)]
+        this.args = [...content.map(e=> e.content)];
+    }
+
+    initiate() {
+        let suffix = location.href.endsWith("dataprivacyandprotection") || location.href.endsWith("accessibility") ? " onecol" : ""
+        let element = document.createElement("div");
+        element.setAttribute('class', this.name + suffix);
+        element.setAttribute("id", this.make_id());
+        this.getParent().appendChild(element);
+    }
+
+    load() {
+        for (let e = 0; e < this.elements.length; e++) {
+            console.log(this.elements[e]);
+            let element = new this.elements[e](this.make_id(), 
+                                    this.classes[e], e < this.args.length ? this.args[e] : undefined,
+                                    this.content[e]!=undefined ? this.content[e].link : undefined
+                                );
             element.initiate();
         }
     }
@@ -106,5 +140,28 @@ class LegalText extends CElement {
         element.innerHTML = this.content; //emoji.emojify(this.content);
         this.getParent().appendChild(element);
     }
+}
 
+class LegalLinkText extends CElement {
+    constructor(parent, name, content, link) {
+        super(parent);
+        
+        this.name = name ? name : LEGAL_CLASSNAMES.TEXT;
+        this.content = content ? content.replaceAll("\\n", "<br>") : "";
+        this.link = link ? link : "/";
+    }
+    load() { }
+
+    initiate() {
+        let el = document.createElement("a");
+        el.href = this.link;
+        this.getParent().appendChild(el);
+        
+        let element = document.createElement("div");
+        element.setAttribute('class', this.name);
+        element.setAttribute("id", this.make_id());
+        element.innerHTML = this.content;
+        el.appendChild(element);
+        
+    }
 }

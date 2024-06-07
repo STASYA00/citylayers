@@ -97,15 +97,22 @@
   flex-wrap: nowrap;
   background-color: var(--tertiary-color);
   color: var(--secondary-color);
-  width: 38vw;
+  
   min-width: 300px;
-  max-width: 350px;
+  
   height: 100vh;
   padding: 12px;
   row-gap: var(--margin-1);
   font-size: 12px;
   overflow-y: scroll;
   padding-bottom: 100px;
+}
+
+@media only screen and (min-width: 772px) {
+  .categorypanel {
+    max-width: 350px;
+    width: 38vw;
+  }
 }
 
 .categorypanelheader {
@@ -123,7 +130,7 @@
   display: flex;
   flex-direction: column;
   background-color: var(--primary-color);
-  color: var(--tertiary-color);
+  color: var(--q-color);
   padding: 12px 24px;
   border-radius: 10px;
 }
@@ -199,16 +206,17 @@ input[type=range]::-webkit-slider-thumb {
 
   
 
-  input[type=range]::-webkit-slider-thumb:disabled {
+  /* input[type=range]::-webkit-slider-thumb:disabled {
     background: #C4B5F0;
-  } 
+  }  */
 
   input[type=range]::-webkit-slider-thumb:hover {
     background: #C4B5F0;
   } 
 
   input[type="range"]:disabled::-webkit-slider-thumb {
-    background-color: var(--tertiary-color);
+    background-color: var(--q-color);
+    cursor: not-allowed;
   }
 
 
@@ -254,7 +262,8 @@ input[type="range"].startSlider {
 }
   
   input[type="range"]:disabled{
-    background-color: var(--tertiary-color);
+    background-color: var(--q-color);
+    cursor: not-allowed;
   }
 
 
@@ -289,8 +298,8 @@ input[type="range"].startSlider {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: var(--tertiary-color);
-    border-color: var(--tertiary-color); 
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color); 
     border-width: 2px;
     border-radius: 50%;
     box-sizing: border-box;
@@ -305,7 +314,7 @@ input[type="range"].startSlider {
     width: 7px;
     left: 1px;
     bottom: 1px;
-    background-color: var(--main-bg-color);
+    background-color: var(--primary-color);
     -webkit-transition: .4s;
     transition: .4s;
   }
@@ -315,16 +324,18 @@ input[type="range"].startSlider {
     border-color: var(--secondary-color);
     border-width: 2px;
     box-sizing: border-box;
-    background-color: var(--main-bg-color);
+    background-color: var(--primary-color);
   }
 
   .categoryheader:has(> .categoryswitch input:checked) {
     /* Category title when active */
-    color: var(--secondary-color);
+    color: var(--q-color);
   }
 
   .sliderlabelcontainer:has(~ .categoryheader:has(> .categoryswitch input:checked)){
-    color: var(--secondary-color);
+    color: var(--q-color);
+    cursor: not-allowed;
+
   }
   
   /* input:focus + span {
@@ -388,7 +399,7 @@ input[type="range"].startSlider {
   right: 0;
   bottom: 0;
   background-color: var(--primary-color);
-  border:solid 1px var(--tertiary-color);
+  border:solid 1px var(--secondary-color);
   border-radius: 50%;
   -webkit-transition: all .3s ease-in-out;
   transition: all .3s ease-in-out;
