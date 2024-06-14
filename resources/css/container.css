@@ -130,7 +130,7 @@
   display: flex;
   flex-direction: column;
   background-color: var(--primary-color);
-  color: var(--secondary-color);
+  color: var(--tertiary-color);
   padding: 12px 24px;
   border-radius: 10px;
 }
@@ -214,10 +214,7 @@ input[type=range]::-webkit-slider-thumb {
     background: #C4B5F0;
   } 
 
-  input[type="range"]:disabled::-webkit-slider-thumb {
-    background-color: var(--secondary-color);
-    cursor: not-allowed;
-  }
+  
 
 
 input[type=range]::-moz-range-thumb{
@@ -229,6 +226,42 @@ input[type=range]::-moz-range-thumb{
   border-radius: 50%;
   cursor: pointer;
   z-index: 1;
+}
+
+
+.categorypanel div:nth-child(1 of div.categorycontainer) > .categoryslider > input[type=range]::-webkit-slider-thumb{
+  background-color: var(--category1);
+}
+
+.categorypanel div:nth-child(2 of div.categorycontainer) > .categoryslider > input[type=range]::-webkit-slider-thumb{
+  background-color: var(--category2);
+}
+
+.categorypanel div:nth-child(3 of div.categorycontainer) > .categoryslider > input[type=range]::-webkit-slider-thumb{
+  background-color: var(--category3);
+}
+
+.categorypanel div:nth-child(4 of div.categorycontainer) > .categoryslider > input[type=range]::-webkit-slider-thumb{
+  background-color: var(--category4);
+}
+
+.categorypanel div:nth-child(5 of div.categorycontainer) > .categoryslider > input[type=range]::-webkit-slider-thumb{
+  background-color: var(--category5);
+}
+
+.categorypanel div:nth-child(6 of div.categorycontainer) > .categoryslider > input[type=range]::-webkit-slider-thumb{
+  background-color: var(--category6);
+}
+
+.categorypanel div:nth-child(n of div.categorycontainer) > .categoryslider > input[type=range]:disabled::-webkit-slider-thumb{
+  background-color: var(--tertiary-color);
+  cursor: not-allowed;
+}
+
+
+input[type="range"]:disabled::-webkit-slider-thumb {
+  background-color: var(--tertiary-color);
+  cursor: not-allowed;
 }
 
 input[type=range].startSlider::-webkit-slider-thumb{
@@ -262,7 +295,7 @@ input[type="range"].startSlider {
 }
   
   input[type="range"]:disabled{
-    background-color: var(--secondary-color);
+    background-color: var(--tertiary-color);
     cursor: not-allowed;
   }
 
@@ -333,7 +366,7 @@ input[type="range"].startSlider {
   }
 
   .sliderlabelcontainer:has(~ .categoryheader:has(> .categoryswitch input:checked)){
-    color: var(--secondary-color);
+    color: var(--tertiary-color);
     cursor: not-allowed;
 
   }
@@ -412,7 +445,7 @@ input[type="range"].startSlider {
   width: 11px;
   left: 1px;
   bottom: 1px;
-  background-color: var(--secondary-color);
+  background-color: var(--tertiary-color);
   -webkit-transition: all .3s ease-in-out;
   transition: all .3s ease-in-out;
 }

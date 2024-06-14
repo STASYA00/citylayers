@@ -116,8 +116,9 @@ class CategoryPanel extends CElement{
             element.initiate();
             element.load();
         });
-        categories.forEach(category => {
+        categories.forEach((category, c) => {
             this.addCategory(category);
+            document.body.style.setProperty(`--category${c+1}`, `#${category.color}`);
         });
     }
 
@@ -273,7 +274,8 @@ class CategoryElement extends CElement{
         this.content = category;
         this.name = CLASSNAMES.CATEGORY_CONTAINER;
         this.parent = parent ? parent : CLASSNAMES.CATEGORY_PANEL;
-        this.elements = [CategoryHeader,
+        this.elements = [
+            CategoryHeader,
             DoubleSlider,
             SliderLabelContainer,
             SubcategoryTagContainer,
@@ -407,11 +409,12 @@ class CategorySwitch extends CElement{
 
 
 class CategoryInfo extends CElement{
-    constructor(parent, category){
-        super(parent, category);
+    constructor(parent, id, category){
+        super(parent, id);
         this.name = "material-symbols-outlined";
         this.content = "info"; 
-        this.id = category;
+        this.id = id;
+        this.category = category;
     }
 
     initiate() {
@@ -419,7 +422,7 @@ class CategoryInfo extends CElement{
         element.innerHTML = this.content;
         element.setAttribute('class', this.name);
         element.onclick = ()=>{
-             CategorySidePanel.toggle(this.id);            
+             CategorySidePanel.toggle(this.category);            
         };
         this.getParent().appendChild(element);
     }
@@ -720,7 +723,7 @@ class CategorySidePanel extends CElement {
             CategorySidePanelTagContainer
         ];
         
-        this.args = [() => { CategorySidePanel.toggle(this.id); }]
+        this.args = [() => { CategorySidePanel.toggle(category); }]
     }
 
     getParent() {
@@ -741,13 +744,15 @@ class CategorySidePanel extends CElement {
     }
 
     static toggle(category) {
-        let sidePanel = document.getElementById(`${CLASSNAMES.CATEGORY_SIDE_PANEL}_${category}`);
-        let container = document.getElementById(`${CLASSNAMES.CATEGORY_CONTAINER}_${category}`);
+        let sidePanel = document.getElementById(`${CLASSNAMES.CATEGORY_SIDE_PANEL}_${category.name}`);
+        let container = document.getElementById(`${CLASSNAMES.CATEGORY_CONTAINER}_${category.name}`);
         if (sidePanel.style.display === "none") {
             this.hideAll();
         }
         container.classList.toggle("simple-drop-shadow");
         sidePanel.style.display = sidePanel.style.display === "none" ? "flex" : "none";
+        document.body.style.setProperty(`--side-panel-color`, `#${category.color}`);
+        console.log(document.body.style.getPropertyValue("--side-panel-color"));
     }
 
     static hideAll() {
@@ -806,7 +811,7 @@ class CloseButton extends CElement {
         super(parent, category ? category.name : "id");
         this.name = CLASSNAMES.CLOSE;
         this.content = "✕"; // U+02715
-        this.onclick = onclick ? onclick : () => { CategorySidePanel.toggle(this.id) };
+        this.onclick = onclick ? onclick : () => { CategorySidePanel.toggle(category) };
     }
 
     initiate() {
@@ -822,6 +827,7 @@ class CloseButton extends CElement {
 class CategorySidePanelTagTitle extends CElement {
     constructor(parent, category) {
         super(parent, category.name);
+        this.category = category;
         this.name = CLASSNAMES.CATEGORY_SIDE_TAG_CONTAINER_TITLE;
         this.content = "Filter by tags"; // U+022C1  // keyboard_arrow_down 
         // https://materialui.co/icon/keyboard-arrow-down
@@ -832,7 +838,7 @@ class CategorySidePanelTagTitle extends CElement {
         let element = document.createElement("button");
         element.setAttribute('class', this.name);
         element.setAttribute("id", this.make_id());
-        element.onclick = () => { CategorySidePanel.toggle(this.id); };
+        element.onclick = () => { CategorySidePanel.toggle(this.category); };
         element.innerHTML = this.content;
         // element.style.display = "none";
         this.getParent().appendChild(element);

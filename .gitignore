@@ -21,3 +21,7 @@ yarn-error.log
 storage/app/*
 storage/app/
 *.pdf
+.readme.md
+README_DEUTSCH.md
+history.md
+citylayers.conf.md

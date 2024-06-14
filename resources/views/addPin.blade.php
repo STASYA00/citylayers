@@ -13,6 +13,7 @@
 
 @section('main')
 @vite('resources/css/dataCollection.css')
+@vite('resources/css/app.css')
 <?php 
 $lat = $_GET['lat'] ?? null; 
 $lng = $_GET['lng'] ?? null; 
@@ -92,7 +93,7 @@ $lng = $_GET['lng'] ?? null;
         <section>
             <div class="question-container">
                 <h1 class="question" x-html="$store.data.copy_data.filter(c=>c.id==$store.data.step.current)[0].questions[0].question"></h1>
-                <input type="range" id="slider" class="range-slider" name="slider" min="0" max="100" data-thumb-color="#ff0000"
+                <input type="range" id="slider" class="range-slider" name="slider" min="0" max="100" 
                     x-bind:value="$store.data.place_data['categories'].filter(c=>c.id==$store.data.step.current)[0].grade"
                     @change="$store.data.setGrade($store.data.step.current,event.target.value)" />
                 <div class="ranges-container">
