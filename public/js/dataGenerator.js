@@ -115,7 +115,7 @@ class ObservationGenerator{
                                                       parseFloat(pt["longitude"]), 
                                                       pt["id"]));
         // grades = grades.map(g => GradeGenerator.grade(parseInt(g["category_id"]), parseInt(g["grade"])));
-        console.log(grades);
+        
         return pts.map(pt => this._observation(pt, grades.filter(g => g.place_id==pt.id).map(g=>
             GradeGenerator.grade(parseInt(g["category_id"]), parseInt(g["grade"]))
         )
@@ -175,7 +175,7 @@ class SubcatAssigner{
     static make(observations, subcategories){
         observations.forEach(ob => {
             ob[this.subcatKey] = [];
-            ob[this.subcatKey] = subcategories.filter(s => s.place_id==ob.id);
+            ob[this.subcatKey] = subcategories.filter(s => ob["grades"].map(g=>g.id).includes(s.grade_id));
         });
     }
 }

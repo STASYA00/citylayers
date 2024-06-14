@@ -17,7 +17,6 @@
 
     <script>
         const pageInput = {!! json_encode($pages) !!};
-        console.log(pageInput);
         const url = location.href.split("/");
         const endpoint = url[url.length-1];
         

@@ -72,6 +72,7 @@
                                                              c.color, c.low, c.high
                                                             ));
         
+        
 
         let obs = [];
 
@@ -129,8 +130,8 @@
         aboutPanel.initiate();
 
 
-        console.log(obs);
-        console.log(categories);
+        // console.log(obs);
+        // console.log(categories);
 
         m.load(categories, obs);
         c.load(categories);  // ["Accessibility", "Noise", "Safety", "Weather Resistance", "Amenities"]

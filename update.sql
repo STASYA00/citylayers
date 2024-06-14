@@ -1,165 +1,221 @@
-DROP TABLE IF EXISTS `categories`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `categories` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `description` longtext DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- DROP TABLE IF EXISTS `categories`;
+-- /*!40101 SET @saved_cs_client     = @@character_set_client */;
+-- /*!40101 SET character_set_client = utf8 */;
+-- CREATE TABLE `categories` (
+--   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+--   `name` varchar(255) DEFAULT NULL,
+--   `description` longtext DEFAULT NULL,
+--   `color` varchar(255) DEFAULT NULL,
+--   `low` varchar(255) DEFAULT NULL,
+--   `high` varchar(255) DEFAULT NULL,
+--   PRIMARY KEY (`id`)
+-- ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `subcategories`;
-CREATE TABLE `subcategories` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `category_id` bigint(20) unsigned NOT NULL,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- DROP TABLE IF EXISTS `subcategories`;
+-- CREATE TABLE `subcategories` (
+--   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+--   `name` varchar(255) DEFAULT NULL,
+--   `subcategory` varchar(255) DEFAULT NULL,
+--   `category` bigint(20) unsigned NOT NULL,
+--   PRIMARY KEY (`id`),
+--   FOREIGN KEY (`category`) REFERENCES `categories` (`id`) ON DELETE CASCADE
+-- ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `grades`;
-CREATE TABLE `grades` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `value` decimal(4,3) DEFAULT 0.000,
-  `lat` decimal(8,6) DEFAULT 0.000000,
-  `lon` decimal(9,6) DEFAULT 0.000000,
-  `category_id` bigint(20) unsigned NOT NULL,
-  `user_id` bigint(20) unsigned NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- DROP TABLE IF EXISTS `places`;
+-- CREATE TABLE `places` (
+--   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+--   `latitude` decimal(8,6) DEFAULT 0.000000,
+--   `longitude` decimal(9,6) DEFAULT 0.000000,
+--   PRIMARY KEY (`id`)
+-- ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `subtags`;
-CREATE TABLE `subtags` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `grade_id` bigint(20) unsigned NOT NULL,
-  `lat` decimal(8,6) DEFAULT 0.000000,
-  `lon` decimal(9,6) DEFAULT 0.000000,
-  `category_id` bigint(20) unsigned NOT NULL,
-  `user_id` bigint(20) unsigned NOT NULL,
-  `subcategory_id` bigint(20) unsigned NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`grade_id`) REFERENCES `grades` (`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`subcategory_id`) REFERENCES `subcategories` (`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- DROP TABLE IF EXISTS `place_grades`;
+-- CREATE TABLE `place_grades` (
+--   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+--   `place_id` bigint(20) unsigned NOT NULL,
+--   `grade` decimal(4,3) DEFAULT 0.000,
+--   `category_id` bigint(20) unsigned NOT NULL,
+--   `created_at` timestamp NULL DEFAULT NULL,
+--   `updated_at` timestamp NULL DEFAULT NULL,
+--   PRIMARY KEY (`id`),
+--   FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE,
+--   FOREIGN KEY (`place_id`) REFERENCES `places` (`id`) ON DELETE CASCADE
+-- ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `categories`(`name`, `description`, `color`) VALUES ('Beauty','Reflects how visually appealing and attractive a place is.', 'C4B5F0'), 
-('Sound', 'Refers to the pleasantness of noises in a certain place.', 'B1CDEF'), 
-('Movement', 'Shows how easy and convenient it is to move around an area, whether you are walking, cycling, or using a wheelchair.', '5DB3B5'), 
-('Protection', 'Indicates how safe and protected a place is from traffic and other urban hazards.', '3ACE8E'), 
-('Climate comfort', 'Reflects how comfortable the climate feels in an area, considering heat, rain cover, wind shelter and more.', 'A1F7B9;
-'),('Activities', 'Represent the usability of a place for the citizens.', 'FFE7A4') ;
+-- DROP TABLE IF EXISTS `place_subgrades`;
+-- CREATE TABLE `place_subgrades` (
+--   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+--   `grade_id` bigint(20) unsigned NOT NULL,
+--   `subcategory_id` bigint(20) unsigned NOT NULL,
+--   `created_at` timestamp NULL DEFAULT NULL,
+--   `updated_at` timestamp NULL DEFAULT NULL,
+--   PRIMARY KEY (`id`),
+--   FOREIGN KEY (`grade_id`) REFERENCES `place_grades` (`id`) ON DELETE CASCADE,
+--   FOREIGN KEY (`subcategory_id`) REFERENCES `subcategories` (`id`) ON DELETE CASCADE
+-- ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `subcategories`(`name`, `subcategory`, `category`) VALUES ('Buildings',  'Architecture & sights',  1 ),
-            ('Landmarks',  'Architecture & sights', 1 ),
-            ('Colours',  'Architecture & sights', 1 ),
-            ('Street Art',  'Architecture & sights', 1 ),
-            ('Trees',  'Nature', 1 ),
-            ('Plants',  'Nature', 1 ),
-            ('Gardens',  'Nature', 1 ),
-            ('Water',  'Nature', 1 ),
-            ('Cleanliness',  'Care', 1 ),
-            ('Smell',  'Care', 1 ),
+-- INSERT INTO `categories`(`name`, `description`, `color`, `low`, `high`) 
+-- VALUES ('Beauty','Reflects how visually appealing and attractive a place is.', 'C4B5F0', 'unattractive', 'beautiful'), 
+-- ('Sound', 'Refers to the pleasantness of noises in a certain place.', 'B1CDEF', 'unpleasant', 'pleasant'), 
+-- ('Movement', 'Shows how easy and convenient it is to move around an area, whether you are walking, cycling, or using a wheelchair.', '5DB3B5', 'poor', 'excellent'), 
+-- ('Protection', 'Indicates how safe and protected a place is from traffic and other urban hazards.', '3ACE8E', 'inadequate', 'adequate'), 
+-- ('Climate comfort', 'Reflects how comfortable the climate feels in an area, considering heat, rain cover, wind shelter and more.', 'A1F7B9', 'uncomfortable', 'comfortable'),
+-- ('Activities', 'Represent the usability of a place for the citizens.', 'FFE7A4', 'limited', 'abundant') ;
 
-            ('Water',  'Nature', 2 ),
-            ('Wind',  'Nature', 2 ),
-            ('Animals',  'Nature', 2 ),
-            ('Voices',  'Human sounds', 2 ),
-            ('Crowds',  'Human sounds', 2 ),
-            ('Children',  'Human sounds', 2 ),
-            ('Music',  'City noises', 2),
-            ('Traffic',  'City noises', 2),
-            ('Construction',  'City noises', 2),
+-- INSERT INTO `subcategories`(`name`, `subcategory`, `category`) VALUES ('Buildings',  'Architecture & sights',  1 ),
+--             ('Landmarks',  'Architecture & sights', 1 ),
+--             ('Colours',  'Architecture & sights', 1 ),
+--             ('Street Art',  'Architecture & sights', 1 ),
+--             ('Trees',  'Nature', 1 ),
+--             ('Plants',  'Nature', 1 ),
+--             ('Gardens',  'Nature', 1 ),
+--             ('Water',  'Nature', 1 ),
+--             ('Cleanliness',  'Care', 1 ),
+--             ('Smell',  'Care', 1 ),
 
-            ('Walking', 'Accessibility',  3),
-            ('Cycling',  'Accessibility', 3 ),
-            ('Wheelchair access',  'Accessibility', 3),
-            ('Benches',  'Comfort', 3 ),
-            ('Stairs',  'Comfort', 3),
-            ('Sidewalks',  'Comfort', 3 ),
-            ('Crosswalks',  'Connectivity', 3),
-            ('Public transport',  'Connectivity', 3),
-            ('Wayfinding',  'Connectivity', 3),
+--             ('Water',  'Nature', 2 ),
+--             ('Wind',  'Nature', 2 ),
+--             ('Animals',  'Nature', 2 ),
+--             ('Voices',  'Human sounds', 2 ),
+--             ('Crowds',  'Human sounds', 2 ),
+--             ('Children',  'Human sounds', 2 ),
+--             ('Music',  'City noises', 2),
+--             ('Traffic',  'City noises', 2),
+--             ('Construction',  'City noises', 2),
 
-            ('Cars',  'Protection from traffic',  4 ),
-            ('Visibility',  'Protection from traffic', 4 ),
-            ('Traffic signs',  'Protection from traffic',4 ),
-            ('Children safety', 'People safety',  4),
-            ('Animal safety',  'People safety', 4),
-            ('Lighting',  'People safety', 4),
-            ('Pavement quality',  'Quality of roads & buildings', 4 ),
-            ('Road condition',  'Quality of roads & buildings', 4 ),
-            ('Building condition',  'Quality of roads & buildings', 4 ),
+--             ('Walking', 'Accessibility',  3),
+--             ('Cycling',  'Accessibility', 3 ),
+--             ('Wheelchair access',  'Accessibility', 3),
+--             ('Benches',  'Comfort', 3 ),
+--             ('Stairs',  'Comfort', 3),
+--             ('Sidewalks',  'Comfort', 3 ),
+--             ('Crosswalks',  'Connectivity', 3),
+--             ('Public transport',  'Connectivity', 3),
+--             ('Wayfinding',  'Connectivity', 3),
 
-            ('Heat',  'Weather',5),
-            ('Humidity',  'Weather', 5),
-            ('Airflow',  'Weather', 5 ),
-            ('Shade',  'Climate protection', 5),
-            ('Rain cover',  'Climate protection', 5),
-            ('Wind shelter',  'Climate protection', 5),
+--             ('Cars',  'Protection from traffic',  4 ),
+--             ('Visibility',  'Protection from traffic', 4 ),
+--             ('Traffic signs',  'Protection from traffic',4 ),
+--             ('Children safety', 'People safety',  4),
+--             ('Animal safety',  'People safety', 4),
+--             ('Lighting',  'People safety', 4),
+--             ('Pavement quality',  'Quality of roads & buildings', 4 ),
+--             ('Road condition',  'Quality of roads & buildings', 4 ),
+--             ('Building condition',  'Quality of roads & buildings', 4 ),
 
-            ('Sports',  'Everyday activities', 6),
-            ('Shopping',  'Everyday activities', 6),
-            ('Food',  'Everyday activities', 6 ),
-            ('Dog parks', 'Social activities',  6),
-            ('Playground',  'Social activities', 6 ),
-            ('Relaxation',  'Social activities',6),
-            ('Friends meetup', 'Social activities', 6),
-            ('Coffee',  'Social activities', 6 ),
-            ('Toilet', 'Essential needs', 6 ),
-            ('Drinking water', 'Essential needs',  6 );
+--             ('Heat',  'Weather',5),
+--             ('Humidity',  'Weather', 5),
+--             ('Airflow',  'Weather', 5 ),
+--             ('Shade',  'Climate protection', 5),
+--             ('Rain cover',  'Climate protection', 5),
+--             ('Wind shelter',  'Climate protection', 5),
 
+--             ('Sports',  'Everyday activities', 6),
+--             ('Shopping',  'Everyday activities', 6),
+--             ('Food',  'Everyday activities', 6 ),
+--             ('Dog parks', 'Social activities',  6),
+--             ('Playground',  'Social activities', 6 ),
+--             ('Relaxation',  'Social activities',6),
+--             ('Friends meetup', 'Social activities', 6),
+--             ('Coffee',  'Social activities', 6 ),
+--             ('Toilet', 'Essential needs', 6 ),
+--             ('Drinking water', 'Essential needs',  6 );
 
+-- DROP TABLE IF EXISTS `questions`;
+-- CREATE TABLE `questions` (
+--   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+--   `category_id` bigint(20) unsigned DEFAULT NULL,
+--   `question` longtext DEFAULT NULL,
+--   PRIMARY KEY (`id`)
+-- ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-
-INSERT INTO `questions`(`category_id`, `question`) VALUES 
-(1, 'How would you rate the beauty of this space?' ),
-(1, 'Which features of beauty are you rating?' ),
-(2, 'What do you think of the sounds around you?' ),
-(2, 'Which sounds are you rating?' ),
-(3, 'How would you rate the movement around this place?' ),
-(3, 'Which aspects of movement are you rating?' ),
-(4, 'How would you rate the protection in this place?' ),
-(4, 'Which types of protection are you rating?' ),
-(5, 'How comfortable do you find the climate here?' ),
-(5, 'Which types of climate (protection) are you rating?' ),
-(6, 'How enjoyable are the available activities in this area?' ),
-(6, 'Which activities are you rating?' );
-
- ALTER TABLE `places`
-	DROP COLUMN name,
-	DROP COLUMN image,
-	DROP COLUMN parent_id,
-    DROP COLUMN description,
-    ADD longitude DECIMAL,
-    ADD latitude DECIMAL
-
+-- DROP TABLE IF EXISTS `comments`;
+-- CREATE TABLE `comments` (
+--   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+--   `place_id` bigint(20) unsigned NOT NULL,
+--   `comment` longtext DEFAULT NULL,
+--   `created_at` timestamp NULL DEFAULT NULL,
+--   `updated_at` timestamp NULL DEFAULT NULL,
+--   PRIMARY KEY (`id`),
+--   FOREIGN KEY (`place_id`) REFERENCES `places` (`id`) ON DELETE CASCADE
+-- ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
-INSERT INTO `pages` (`id`, `title`, `content`, `created_at`, `updated_at`, `formatting`, `link`) 
-VALUES (NULL, 'Team', 'Lovro Koncar-Gamulin', NULL, NULL, '1', 'https://at.linkedin.com/in/lovro-koncar-gamulin-a46b37266'),
-(NULL, 'Team', 'research lead', NULL, NULL, '0', ''),
-(NULL, 'Team', 'Peter Mörtenböck', NULL, NULL, '1', 'https://www.gold.ac.uk/visual-cultures/p-mortenbock/'),
-(NULL, 'Team', 'project director of “platFORMed city” (base project of “City Layers: Citizen Mapping as a Practice of City-Making”)', NULL, NULL, '0', ''),
-(NULL, 'Team', 'Angelos Chronis', NULL, NULL, '1', 'https://iaac.net/dt-team/angelos-chronis/'),
-(NULL, 'Team', 'technical implementation lead', NULL, NULL, '0', ''),
-(NULL, 'Team', 'Androniki Pappa', NULL, NULL, '1', 'https://iaac.net/dt-team/androniki-pappa/6'),
-(NULL, 'Team', 'researcher', NULL, NULL, '0', ''),
-(NULL, 'Team', 'Stasja Fedorova', NULL, NULL, '1', 'https://www.linkedin.com/in/stasja-fedorova/'),
-(NULL, 'Team', 'technical implementation', NULL, NULL, '0', ''),
-(NULL, 'Team', 'Aurel Richard', NULL, NULL, '1', 'https://iaac.net/dt-team/aurel-richard/'),
-(NULL, 'Team', 'UI / UX + technical implementation', NULL, NULL, '0', ''),
-(NULL, 'Team', 'Carmen Lael Hines', NULL, NULL, '1', 'https://at.linkedin.com/in/carmen-lael-hines-4b84139b'),
-(NULL, 'Team', 'researcher and outreach expert', NULL, NULL, '0', ''),
-(NULL, 'Team', 'Bilal Alame', NULL, NULL, '1', 'https://archive-2020.biennial.ge/artist/bilal-alame/100'),
-(NULL, 'Team', 'research assistant', NULL, NULL, '0', ''),
-(NULL, 'Team', 'Contact', NULL, NULL, '1', ''),
-(NULL, 'Team', 'info@citylayers.org', NULL, NULL, '0', 'mailto:info@citylayers.org')
-;
+
+-- INSERT INTO `questions`(`category_id`, `question`) VALUES 
+-- (1, 'How would you rate the beauty of this space?' ),
+-- (1, 'Which features of beauty are you rating?' ),
+-- (2, 'What do you think of the sounds around you?' ),
+-- (2, 'Which sounds are you rating?' ),
+-- (3, 'How would you rate the movement around this place?' ),
+-- (3, 'Which aspects of movement are you rating?' ),
+-- (4, 'How would you rate the protection in this place?' ),
+-- (4, 'Which types of protection are you rating?' ),
+-- (5, 'How comfortable do you find the climate here?' ),
+-- (5, 'Which types of climate (protection) are you rating?' ),
+-- (6, 'How enjoyable are the available activities in this area?' ),
+-- (6, 'Which activities are you rating?' );
+
+--  ALTER TABLE `places`
+-- 	DROP COLUMN name,
+-- 	DROP COLUMN image,
+-- 	DROP COLUMN parent_id,
+--     DROP COLUMN description,
+--     ADD longitude DECIMAL,
+--     ADD latitude DECIMAL
+
+-- DROP TABLE IF EXISTS `images`;
+-- CREATE TABLE `images` (
+--   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+--   `place_id` bigint(20) unsigned NOT NULL,
+--   `image` longtext DEFAULT NULL,
+--   `created_at` timestamp NULL DEFAULT NULL,
+--   `updated_at` timestamp NULL DEFAULT NULL,
+--   PRIMARY KEY (`id`),
+--   FOREIGN KEY (`place_id`) REFERENCES `places` (`id`) ON DELETE CASCADE
+-- ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- delete from pages where 1=1;
+-- ALTER TABLE pages ADD formatting SMALLINT(255);
+-- ALTER TABLE pages ADD link LONGTEXT;
+-- INSERT INTO `pages` (`id`, `title`, `content`, `created_at`, `updated_at`, `formatting`, `link`) 
+-- VALUES (NULL, 'Team', 'Lovro Koncar-Gamulin', NULL, NULL, '1', 'https://at.linkedin.com/in/lovro-koncar-gamulin-a46b37266'),
+-- (NULL, 'Team', 'research lead', NULL, NULL, '0', ''),
+-- (NULL, 'Team', 'Peter Mörtenböck', NULL, NULL, '1', 'https://www.gold.ac.uk/visual-cultures/p-mortenbock/'),
+-- (NULL, 'Team', 'project director of “platFORMed city” (base project of “City Layers: Citizen Mapping as a Practice of City-Making”)', NULL, NULL, '0', ''),
+-- (NULL, 'Team', 'Angelos Chronis', NULL, NULL, '1', 'https://iaac.net/dt-team/angelos-chronis/'),
+-- (NULL, 'Team', 'technical implementation lead', NULL, NULL, '0', ''),
+-- (NULL, 'Team', 'Androniki Pappa', NULL, NULL, '1', 'https://iaac.net/dt-team/androniki-pappa/6'),
+-- (NULL, 'Team', 'researcher', NULL, NULL, '0', ''),
+-- (NULL, 'Team', 'Stasja Fedorova', NULL, NULL, '1', 'https://www.linkedin.com/in/stasja-fedorova/'),
+-- (NULL, 'Team', 'technical implementation', NULL, NULL, '0', ''),
+-- (NULL, 'Team', 'Aurel Richard', NULL, NULL, '1', 'https://iaac.net/dt-team/aurel-richard/'),
+-- (NULL, 'Team', 'UI / UX + technical implementation', NULL, NULL, '0', ''),
+-- (NULL, 'Team', 'Carmen Lael Hines', NULL, NULL, '1', 'https://at.linkedin.com/in/carmen-lael-hines-4b84139b'),
+-- (NULL, 'Team', 'researcher and outreach expert', NULL, NULL, '0', ''),
+-- (NULL, 'Team', 'Bilal Alame', NULL, NULL, '1', 'https://archive-2020.biennial.ge/artist/bilal-alame/100'),
+-- (NULL, 'Team', 'research assistant', NULL, NULL, '0', ''),
+-- (NULL, 'Team', 'Contact', NULL, NULL, '1', ''),
+-- (NULL, 'Team', 'info@citylayers.org', NULL, NULL, '0', 'mailto:info@citylayers.org')
+-- ;
+
+-- INSERT INTO `pages` (`id`, `title`, `content`, `created_at`, `updated_at`, `formatting`, `link`) 
+-- VALUES 
+-- (NULL, 'Data privacy and protection', "City Layers is committed to protecting your privacy.\nHere's how we handle your data:", NULL, NULL, '1', ''),
+-- (NULL, 'Data privacy and protection', 'No Personal Information', NULL, NULL, '1', ''),
+-- (NULL, 'Data privacy and protection', 'Reliance on TU Wien Data Protection Declaration', NULL, NULL, '1', 'https://www.tuwien.at/index.php?eID=dumpFile&t=f&f=209199&token=98a42a707abe5707d503069ba24f24a6ce9fee84#:~:text=We%20will%20not%20transfer%20your,legally%20obliged%20to%20disclose%20data'),
+-- (NULL, 'Data privacy and protection', 'No cookies or tracking', NULL, NULL, '1', ''),
+-- (NULL, 'Data privacy and protection', 'Contact us', NULL, NULL, '1', 'mailto:lovro.koncar-gamulin@tuwien.ac.at'),
+-- (NULL, 'Data privacy and protection', "We don't collect or process any personal information from users.", NULL, NULL, '0', ''),
+-- (NULL, 'Data privacy and protection', "We follow TU Wien's data protection guidelines.", NULL, NULL, '0', ''),
+-- (NULL, 'Data privacy and protection', "Our web app doesn't use cookies or tracking technologies.", NULL, NULL, '0', ''),
+-- (NULL, 'Data privacy and protection', 'Email lovro.koncar-gamulin@tuwien.ac.at for any further questions.', NULL, NULL, '0', ''),
+-- (NULL, 'Accessibility', 'City Layers make every effort to make our website accessible in accordance with the Web Accessibility Act ("Web-Zugänglichkeits-Gesetz" - WZG). This declaration on Accessibility applies to the website and the corresponding web app, hosted on a TU.it server and connected to the central TUW TYPO3 system.', NULL, NULL, '0', ''),
+-- (NULL, 'Accessibility', 'To fulfil the requirements of the Web-Zugänglichkeits-Gesetz (WZG) and the Web Content Accessibility Guidelines (WCAG) 2.1, level AA we have implemented various accessibility features, including:', NULL, NULL, '0', ''),
+-- (NULL, 'Accessibility', 'A fully responsive design that works on all devices', NULL, NULL, '1', ''),
+-- (NULL, 'Accessibility', 'Clear and consistent headings, labels, and instructions', NULL, NULL, '1', ''),
+-- (NULL, 'Accessibility', 'High color contrast to make text and images easier to read', NULL, NULL, '1', ''),
+-- (NULL, 'Accessibility', 'If you notice any barriers that prevent you from using our website, please let us know by e-mail. We will check your request and contact you as soon as possible.\nPlease send all messages and suggestions to lovro.koncar-gamulin@tuwien.ac.at', NULL, NULL, '0', '');
+
+
+-- (NULL, 'Impressum', 'DEPARTMENT OF VISUAL CULTURE (E264-03)\nINSTITUTE OF ART AND DESIGN\nTU Wien\n\nKarlsplatz 13/264-03, 1040 Vienna\n+43 1 58801-26403\nvisualculture@tuwien.ac.at', NULL, NULL, '0', ''),
