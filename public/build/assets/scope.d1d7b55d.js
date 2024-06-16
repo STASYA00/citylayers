@@ -1,0 +1,1 @@
+class s extends CElement{constructor(e){super(e),this.name="scope",this.content="images/scope.svg"}getParent(){let e=document.getElementsByClassName(this.parent);if(e.length>0)return e[0]}initiate(){var e=document.createElement("img");e.src=this.content,e.setAttribute("class",this.name),e.setAttribute("id",this.make_id()),this.getParent().appendChild(e)}}

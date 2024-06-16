@@ -15,24 +15,24 @@
 @extends('layouts.app')
 @vite('resources/css/app.css')
 @vite('resources/js/app.js')
-<!-- @vite('resources/css/commentbar.css')
+@vite('resources/css/commentbar.css')
 @vite('resources/css/sidepanel.css')
 @vite('resources/css/map.css')
 @vite('resources/js/map.js')
 @vite('resources/js/citymap.js')
 @vite('resources/js/category.js')
-@vite('resources/js/dataGenerator.js') -->
+@vite('resources/js/dataGenerator.js')
 
 @section('main')
-<!-- @vite('resources/js/container.js') -->
-<!-- @vite('resources/js/citymap.js') -->
-<!-- @vite('resources/js/commentbar.js') -->
-<!-- @vite('resources/js/category.js')
+@vite('resources/js/container.js')
+@vite('resources/js/citymap.js')
+@vite('resources/js/commentbar.js')
+@vite('resources/js/category.js')
 @vite('resources/js/scope.js')
 @vite('resources/js/dataGenerator.js')
 @vite('resources/css/sidepanel.css')
 @vite('resources/css/container.css')
-@vite('resources/css/map.css') -->
+@vite('resources/css/map.css')
 
 <div class="main-map">
     <div class="left-container"></div>

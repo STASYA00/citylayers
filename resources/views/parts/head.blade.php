@@ -77,10 +77,12 @@
 <script src="https://unpkg.com/leaflet@1.9.1/dist/leaflet.js"
     integrity="sha256-NDI0K41gVbWqfkkaHj15IzU7PtMoelkzyKp8TOaFQ3s=" crossorigin=""></script>
 <title>CityLayers</title>
-@vite('resources/css/app.css')
-@vite('resources/js/map.js')
-@vite('resources/js/citymap.js')
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 <meta name="csrf-token" id="csrf-token" content="{{ csrf_token() }}">
+
+@vite('resources/css/app.css')
+@vite('resources/js/app.js')
+
 <script>
     myToken = <?php echo json_encode(['csrfToken' => csrf_token()]); ?>
 </script>

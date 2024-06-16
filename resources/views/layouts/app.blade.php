@@ -5,6 +5,7 @@
     @include('parts.head')
     @livewireStyles
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <link rel='stylesheet' href="https://unpkg.com/swiper@6.8.4/swiper-bundle.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
@@ -26,8 +27,6 @@
     </main>
 
     @vite('resources/js/app.js')
-    @vite('resources/js/map.js')
-    @vite('resources/js/citymap.js')
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     @livewireScripts
     @stack('scripts')
