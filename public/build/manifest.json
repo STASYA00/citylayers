@@ -1,11 +1,119 @@
 {
+  "resources/js/tabs.js": {
+    "file": "assets/tabs.19e59af3.js",
+    "src": "resources/js/tabs.js",
+    "isEntry": true
+  },
+  "resources/js/settings.js": {
+    "file": "assets/settings.3e44d45c.js",
+    "src": "resources/js/settings.js",
+    "isEntry": true
+  },
+  "resources/js/scope.js": {
+    "file": "assets/scope.d1d7b55d.js",
+    "src": "resources/js/scope.js",
+    "isEntry": true
+  },
+  "resources/js/map.js": {
+    "file": "assets/map.b7fb48e5.js",
+    "src": "resources/js/map.js",
+    "isEntry": true
+  },
+  "resources/js/legal.js": {
+    "file": "assets/legal.dd9768ec.js",
+    "src": "resources/js/legal.js",
+    "isEntry": true
+  },
+  "resources/js/dataGenerator.js": {
+    "file": "assets/dataGenerator.ce4af9b8.js",
+    "src": "resources/js/dataGenerator.js",
+    "isEntry": true
+  },
+  "resources/js/dataCollectionCopy.js": {
+    "file": "assets/dataCollectionCopy.f83d43f8.js",
+    "src": "resources/js/dataCollectionCopy.js",
+    "isEntry": true
+  },
+  "resources/js/container.js": {
+    "file": "assets/container.617e638c.js",
+    "src": "resources/js/container.js",
+    "isEntry": true
+  },
+  "resources/js/commentbar.js": {
+    "file": "assets/commentbar.89a2f915.js",
+    "src": "resources/js/commentbar.js",
+    "isEntry": true
+  },
+  "resources/js/citymap.js": {
+    "file": "assets/citymap.e0b98dd0.js",
+    "src": "resources/js/citymap.js",
+    "isEntry": true
+  },
+  "resources/js/category.js": {
+    "file": "assets/category.a1e456bf.js",
+    "src": "resources/js/category.js",
+    "isEntry": true
+  },
+  "resources/js/bootstrap.js": {
+    "file": "assets/bootstrap.de1572c1.js",
+    "src": "resources/js/bootstrap.js",
+    "isEntry": true
+  },
   "resources/js/app.js": {
-    "file": "assets/app.ccb835fd.js",
+    "file": "assets/app.19f98df8.js",
     "src": "resources/js/app.js",
+    "isEntry": true,
+    "imports": [
+      "resources/js/bootstrap.js"
+    ]
+  },
+  "resources/css/sidepanel.css": {
+    "file": "assets/sidepanel.67aa8ce1.css",
+    "src": "resources/css/sidepanel.css",
+    "isEntry": true
+  },
+  "resources/css/main.css": {
+    "file": "assets/main.e8914042.css",
+    "src": "resources/css/main.css",
+    "isEntry": true
+  },
+  "resources/css/dataCollection.css": {
+    "file": "assets/dataCollection.99c736ca.css",
+    "src": "resources/css/dataCollection.css",
+    "isEntry": true
+  },
+  "resources/css/legal.css": {
+    "file": "assets/legal.5b042e5d.css",
+    "src": "resources/css/legal.css",
+    "isEntry": true
+  },
+  "resources/css/container.css": {
+    "file": "assets/container.6a52f2b4.css",
+    "src": "resources/css/container.css",
+    "isEntry": true
+  },
+  "resources/css/landing.css": {
+    "file": "assets/landing.b989600b.css",
+    "src": "resources/css/landing.css",
+    "isEntry": true
+  },
+  "resources/css/map.css": {
+    "file": "assets/map.5632b7d9.css",
+    "src": "resources/css/map.css",
+    "isEntry": true
+  },
+  "resources/css/commentbar.css": {
+    "file": "assets/commentbar.6c010c43.css",
+    "src": "resources/css/commentbar.css",
+    "isEntry": true
+  },
+  "resources/css/scope.css": {
+    "file": "assets/scope.fc0edcf5.css",
+    "src": "resources/css/scope.css",
     "isEntry": true
   },
   "resources/css/app.css": {
-    "file": "assets/app.42d09933.css",
+    "file": "assets/app.7053cb75.css",
     "src": "resources/css/app.css",
     "isEntry": true
   }
