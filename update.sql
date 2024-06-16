@@ -26,6 +26,8 @@
 --   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 --   `latitude` decimal(8,6) DEFAULT 0.000000,
 --   `longitude` decimal(9,6) DEFAULT 0.000000,
+--   `created_at` timestamp NULL DEFAULT NULL,
+--   `updated_at` timestamp NULL DEFAULT NULL,
 --   PRIMARY KEY (`id`)
 -- ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -33,7 +35,7 @@
 -- CREATE TABLE `place_grades` (
 --   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 --   `place_id` bigint(20) unsigned NOT NULL,
---   `grade` decimal(4,3) DEFAULT 0.000,
+--   `grade` integer DEFAULT 0,
 --   `category_id` bigint(20) unsigned NOT NULL,
 --   `created_at` timestamp NULL DEFAULT NULL,
 --   `updated_at` timestamp NULL DEFAULT NULL,
@@ -46,11 +48,11 @@
 -- CREATE TABLE `place_subgrades` (
 --   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 --   `grade_id` bigint(20) unsigned NOT NULL,
+--   `category_id` bigint(20) unsigned NOT NULL,
 --   `subcategory_id` bigint(20) unsigned NOT NULL,
 --   `created_at` timestamp NULL DEFAULT NULL,
 --   `updated_at` timestamp NULL DEFAULT NULL,
 --   PRIMARY KEY (`id`),
---   FOREIGN KEY (`grade_id`) REFERENCES `place_grades` (`id`) ON DELETE CASCADE,
 --   FOREIGN KEY (`subcategory_id`) REFERENCES `subcategories` (`id`) ON DELETE CASCADE
 -- ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -140,7 +142,7 @@
 --   FOREIGN KEY (`place_id`) REFERENCES `places` (`id`) ON DELETE CASCADE
 -- ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-
+INSERT INTO `places`(`longitude`, `latitude`) VALUES (18.056, 59.3247);
 
 -- INSERT INTO `questions`(`category_id`, `question`) VALUES 
 -- (1, 'How would you rate the beauty of this space?' ),

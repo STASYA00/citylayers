@@ -13,7 +13,7 @@
 
 @section('main')
 
-@vite('resources/css/app.css')
+@vite('resources/css/dataCollection.css')
 <?php 
 $lat = $_GET['lat'] ?? null; 
 $lng = $_GET['lng'] ?? null; 
@@ -245,10 +245,8 @@ $lng = $_GET['lng'] ?? null;
 
         Alpine.effect(() => {
             const step = Alpine.store('data').step.current;
-            console.log("STEP", step);
-            if (step<pageContent.length && step>0){
+            if (step<=pageContent.length && step>0){
                 const thumbColor = pageContent.filter(c =>c.id==step)[0].color ? `#${pageContent.filter(c =>c.id==step)[0].color}` : '';
-                console.log(thumbColor);
                 mainContainer.style.setProperty('--thumb-color', thumbColor);
                 mainContainer.style.setProperty('--step-current', step);
                 mainContainer.style.setProperty('--step-length', Alpine.store('data').step.length);
@@ -320,20 +318,22 @@ $lng = $_GET['lng'] ?? null;
         sendRequest(d, "save-place", (data)=>{place_data["id"] = data["id"]}).then(
             
             r => {
-                d.set("comment", place_data["comment"].toString());
+                console.log(r);
+                
                 d.set("id", place_data["id"].toString());
                 
                 if (place_data["comment"]!=undefined && place_data["comment"]!=null && place_data["comment"]!=""){
+                    d.set("comment", place_data["comment"].toString());
                     sendRequest(d, "save-comment");
 
                 }
-                
-                d.set("image_name", `${uuidv4()}.${place_data["image"].name.split('.').pop()}`);
-                d.set("image", place_data["image"]);
-                
-                sendRequest(d, "save-image");
-                
-                place_data["categories"].forEach((indata, i)=>{
+                if (place_data["image"]!=undefined && place_data["image"]!=null && place_data["image"]!=""){
+                    d.set("image_name", `${uuidv4()}.${place_data["image"].name.split('.').pop()}`);
+                    d.set("image", place_data["image"]);
+                    sendRequest(d, "save-image");
+                }
+                if (place_data["categories"].filter(c=>c["grade"]!=undefined).length>0){
+                    place_data["categories"].forEach((indata, i)=>{
                     
                     
                     if (indata["grade"]!=undefined){
@@ -341,17 +341,24 @@ $lng = $_GET['lng'] ?? null;
                         k.set("category_id", indata["id"].toString());
                         k.set("grade", indata["grade"].toString());
                         k.set("place_id", place_data["id"].toString());
-                        sendRequest(k, "save-grade");
+                        sendRequest(k, "save-grade", (data)=>{place_data["grade_id"] = data["id"]}).then(
+                            r=>{
                     
                         indata.tags.forEach((tag)=>{
+                            k.set("grade_id", place_data["grade_id"].toString());
                             k.set("subcategory_id", tag.toString());
-                            
                             sendRequest(k, "save-subgrade");
                         
+                            }
+                        );
+                    });
                     }
-                );
-            }
                 });
+
+                }
+                
+                
+                
             
             }
         );

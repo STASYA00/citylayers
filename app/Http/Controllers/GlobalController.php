@@ -338,7 +338,7 @@ class GlobalController extends Controller
 
     public function saveGrade(Request $request)
     {
-        PlaceGrade::create(
+        $val = PlaceGrade::create(
             [
                 'place_id' => $request->place_id ,
                 'category_id' => $request->category_id,
@@ -346,8 +346,8 @@ class GlobalController extends Controller
             ]
         );
         return response()->json([
-            'status' => 'success'
-
+            'status' => 'success',
+            'id' => $val->id
         ]);
     }
 
@@ -406,9 +406,9 @@ class GlobalController extends Controller
     {
         PlaceSubgrade::create(
             [
-                'place_id' => $request->place_id ?? 0,
-                'category_id' => $request->category_id ?? 1,
-                'subcategory_id' => $request->subcategory_id ?? 23,
+                'grade_id' => $request->grade_id,
+                'category_id' => $request->category_id,
+                'subcategory_id' => $request->subcategory_id,
             ]
         );
         return response()->json([

@@ -33,14 +33,12 @@
 @vite('resources/css/sidepanel.css')
 @vite('resources/css/container.css')
 @vite('resources/css/map.css')
+@vite('resources/css/scope.css')
 
 <div class="main-map">
     <div class="left-container"></div>
     <div class="right-container"></div>
 </div>
-
-
-    
     <script>
         <?php require_once("js/container.js");?>
         <?php require_once("js/citymap.js");?>
@@ -62,8 +60,6 @@
         const subcategoryInput = {!! json_encode($subcategories) !!};
         const gradeInput = {!! json_encode($grades) !!};
         const subgradeInput = {!! json_encode($subgrades) !!};
-
-        console.log(subcategoryInput);
         
         let subcats = subcategoryInput.map(s => new Subcategory(s.id, s.name, s.category));
         let categories = categoryInput.map(c => new Category(c.id, c.name, 

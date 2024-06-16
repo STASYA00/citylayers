@@ -13,7 +13,7 @@ class PlaceSubgrade extends Model
     use CrudTrait;
     use HasFactory;
     protected $fillable = [
-        'place_id', 
+        'grade_id', 
         'category_id',
         'subcategory_id'];
 }

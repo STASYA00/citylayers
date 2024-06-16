@@ -1,27 +1,41 @@
 
+class Randomizer{
 
+    static randomToRange(lower, upper){
+        return lower + (Math.random() * (upper - lower));
+    }
+
+    static randomFromArray(arr){
+        return arr[Math.floor(this.randomToRange(0, arr.length-1))];
+    }
+
+    
+
+}
 class GradeGenerator{
     static goodLower = 0.7;
     static goodUpper = 1.0;
     static badLower = 0.0;
     static badUpper = 0.30;
+
+    static catKey = "category_id";
+    static gradeKey = "grade";
     
-    static randomToRange(num, lower, upper){
-        return lower + (num * (upper - lower));
+    static grade(category, value){
+        let d = new Object();
+        d[this.catKey] = category;
+        d[this.gradeKey] = parseInt(value);
+        return d;
     }
 
-    static _grade(){
-        return Math.random();
+    static goodGrade(category){
+        return this.grade(category, Randomizer.randomToRange(this.goodLower, this.goodUpper) * 100);
     }
-
-    static goodGrade(){
-        return this.randomToRange(this._grade(), this.goodLower, this.goodUpper) * 100;
+    static badGrade(category){
+        return this.grade(category, Randomizer.randomToRange(this.badLower, this.badUpper) * 100);
     }
-    static badGrade(){
-        return this.randomToRange(this._grade(), this.badLower, this.badUpper) * 100;
-    }
-    static anyGrade(){
-        return this.randomToRange(this._grade(), this.badLower, this.goodUpper) * 100;
+    static anyGrade(category){
+        return this.grade(category, Randomizer.randomToRange(this.badLower, this.goodUpper) * 100);
     }
 }
 
@@ -34,35 +48,42 @@ class DataGenerator{
     static lng_range = 0.08;
     
 
-    static latKey = "lat"
-    static lngKey = "lng"
+    static latKey = "lat";
+    static lngKey = "lng";
+    static idKey = "id";
 
     // stab data for stockholm Södermalm
 
-    static _pointFromCoords(lat, lng){
+    static make(lat, lng, id){
         // function that generates a point in a standard format for this class
         // given coordinates
         let p = {};
         p[this.latKey] = lat;
         p[this.lngKey] = lng;
+        p[this.idKey] = id;
         return p;
     }
 
     static placePoint(point){
+        
         // point is expected as {"lat": Math.random(), "lng": Math.random}
-        return this._pointFromCoords(
+        return this.make(
             this.lat + point[this.latKey] * this.lat_range,
-            this.lng + point[this.lngKey] * this.lng_range
+            this.lng + point[this.lngKey] * this.lng_range,
+            point[this.idKey]
         )
     }
 
-    static generatePoint(){
-        return this.placePoint(this._pointFromCoords(Math.random(), Math.random()));
+    static generatePoint(id){
+        id = id==undefined ? 0 : id;
+        return this.placePoint(this.make(Math.random(), Math.random(), id));
     }
     
-    static make(amount){
+    static generate(amount){
         return Array.from({length: amount}, 
-            (x) => this.generatePoint());
+            (v, i) => {
+                return this.generatePoint(i)
+        });
     }
 }
 
@@ -74,31 +95,87 @@ class OPINIONS{
 
 class ObservationGenerator{
 
+    static idKey = "id";
     static ptKey = "pt";
     static gradeKey = "grade";
-    static catKey = "category";
 
-    static _observation(pt, category, grade){
+    static _observation(pt, grades){
         // function that generates an observation in a standard format for this class
         // given coordinates and grade
+        
         let p = {};
         p[this.ptKey] = pt;
-        p[this.gradeKey] = grade;
-        p[this.catKey] = category;
+        p[this.idKey] = pt.id;
+        p[this.gradeKey] = grades;
         return p;
+    }
+
+    static make(places, grades){
+        let pts = places.map(pt => DataGenerator.make(parseFloat(pt["latitude"]), 
+                                                      parseFloat(pt["longitude"]), 
+                                                      pt["id"]));
+        // grades = grades.map(g => GradeGenerator.grade(parseInt(g["category_id"]), parseInt(g["grade"])));
+        
+        return pts.map(pt => this._observation(pt, grades.filter(g => g.place_id==pt.id).map(g=>
+            GradeGenerator.grade(parseInt(g["category_id"]), parseInt(g["grade"]))
+        )
+    ));
 
     }
 
-    static make(amount, category, opinion){
-        let pts = DataGenerator.make(amount);
+    static generate(amount, category, opinion){
+        let pts = DataGenerator.generate(amount);
+        
         if (opinion==OPINIONS.GOOD){
-            return pts.map(p=>this._observation(p, category, GradeGenerator.goodGrade()));
+            return pts.map(p=>this._observation(p, [GradeGenerator.goodGrade(category)]));
         }
         else if (opinion==OPINIONS.BAD){
-            return pts.map(p=>this._observation(p, category, GradeGenerator.badGrade()));
+            return pts.map(p=>this._observation(p, [GradeGenerator.badGrade(category)]));
         }
         else{
-            return pts.map(p=>this._observation(p, category, GradeGenerator.anyGrade()));
+            return pts.map(p=>this._observation(p, [GradeGenerator.anyGrade(category)]));
         }
+    }
+}
+
+
+class CommentAssigner{
+    static commentKey = "comment";
+
+    static generate(observations, comments){
+        observations.forEach(ob => {
+            ob[this.commentKey] = [];
+            if (Math.random() > 0.5){
+                ob[this.commentKey] = [Randomizer.randomFromArray(comments)];
+            }
+        });
+    }
+
+    static make(observations, comments){
+        observations.forEach(ob => {
+            ob[this.commentKey] = [];
+            ob[this.commentKey] = comments.filter(comment => comment.place_id==ob.id);
+            
+        });
+    }
+}
+
+class SubcatAssigner{
+    static subcatKey = "subcat";
+
+    static generate(observations, subcategories){
+        observations.forEach(ob => {
+            ob[this.subcatKey] = undefined;
+            if (Math.random() > 0.5){
+                ob[this.subcatKey] = [Randomizer.randomFromArray(subcategories)];
+            }
+        });
+    }
+
+    static make(observations, subcategories){
+        observations.forEach(ob => {
+            ob[this.subcatKey] = [];
+            ob[this.subcatKey] = subcategories.filter(s => ob["grade"].map(g=>g.id).includes(s.grade_id));
+        });
     }
 }
