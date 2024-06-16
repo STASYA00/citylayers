@@ -29,11 +29,6 @@
     "src": "resources/js/dataGenerator.js",
     "isEntry": true
   },
-  "resources/js/dataCollectionCopy.js": {
-    "file": "assets/dataCollectionCopy.f83d43f8.js",
-    "src": "resources/js/dataCollectionCopy.js",
-    "isEntry": true
-  },
   "resources/js/container.js": {
     "file": "assets/container.617e638c.js",
     "src": "resources/js/container.js",
@@ -67,14 +62,19 @@
       "resources/js/bootstrap.js"
     ]
   },
+  "resources/css/legal.css": {
+    "file": "assets/legal.5b042e5d.css",
+    "src": "resources/css/legal.css",
+    "isEntry": true
+  },
+  "resources/css/scope.css": {
+    "file": "assets/scope.fc0edcf5.css",
+    "src": "resources/css/scope.css",
+    "isEntry": true
+  },
   "resources/css/sidepanel.css": {
     "file": "assets/sidepanel.67aa8ce1.css",
     "src": "resources/css/sidepanel.css",
-    "isEntry": true
-  },
-  "resources/css/main.css": {
-    "file": "assets/main.e8914042.css",
-    "src": "resources/css/main.css",
     "isEntry": true
   },
   "resources/css/dataCollection.css": {
@@ -82,24 +82,9 @@
     "src": "resources/css/dataCollection.css",
     "isEntry": true
   },
-  "resources/css/legal.css": {
-    "file": "assets/legal.5b042e5d.css",
-    "src": "resources/css/legal.css",
-    "isEntry": true
-  },
   "resources/css/container.css": {
     "file": "assets/container.6a52f2b4.css",
     "src": "resources/css/container.css",
-    "isEntry": true
-  },
-  "resources/css/landing.css": {
-    "file": "assets/landing.b989600b.css",
-    "src": "resources/css/landing.css",
-    "isEntry": true
-  },
-  "resources/css/map.css": {
-    "file": "assets/map.5632b7d9.css",
-    "src": "resources/css/map.css",
     "isEntry": true
   },
   "resources/css/commentbar.css": {
@@ -107,9 +92,19 @@
     "src": "resources/css/commentbar.css",
     "isEntry": true
   },
-  "resources/css/scope.css": {
-    "file": "assets/scope.fc0edcf5.css",
-    "src": "resources/css/scope.css",
+  "resources/css/map.css": {
+    "file": "assets/map.5632b7d9.css",
+    "src": "resources/css/map.css",
+    "isEntry": true
+  },
+  "resources/css/main.css": {
+    "file": "assets/main.e8914042.css",
+    "src": "resources/css/main.css",
+    "isEntry": true
+  },
+  "resources/css/landing.css": {
+    "file": "assets/landing.b989600b.css",
+    "src": "resources/css/landing.css",
     "isEntry": true
   },
   "resources/css/app.css": {

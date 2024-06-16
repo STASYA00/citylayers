@@ -63,7 +63,7 @@
         const subcategoryInput = {!! json_encode($subcategories) !!};
         const gradeInput = {!! json_encode($grades) !!};
         const subgradeInput = {!! json_encode($subgrades) !!};
-        console.log(subgradeInput);
+        
         let subcats = subcategoryInput.map(s => new Subcategory(s.id, s.name, s.category));
         let categories = categoryInput.map(c => new Category(c.id, c.name, 
                                                              c.description, 
@@ -98,7 +98,6 @@
 
         else{
             obs = ObservationGenerator.make(placeInput, gradeInput);
-            console.log(obs);
             SubcatAssigner.make(obs, subgradeInput);
             CommentAssigner.make(obs, commentInput);
         }
@@ -112,9 +111,7 @@
         let aboutPanel = new AboutPanel(rightContainer);
         let topTagPanel = new TopTagPanel(rightContainer);
 
-        CategoryPanel.activation = (category, lower, upper)=>{
-            
-            m.reload(category, lower, upper)};
+        CategoryPanel.activation = (category, lower, upper)=>{m.reload(category, lower, upper)};
 
 
         CategoryPanel.markertoggle = (subcat, on)=>{m.reloadMarkers(subcat, on)};

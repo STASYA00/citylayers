@@ -650,6 +650,7 @@ class SubcategoryTag extends CElement {
         if (tag.name == undefined) {
             this.id = tag;
         }
+        this.subcat_id = tag.id;
         this.name = CLASSNAMES.SUBCATEGORY_TAG;
         this.parent = parent; //CLASSNAMES.TAG_CONTAINER;
     }
@@ -669,7 +670,7 @@ class SubcategoryTag extends CElement {
         else {
             SubcategoryTagContainer.addLabel(category, this.id, true);
         }
-        CategoryPanel.markertoggle(this.id, !existing_ids.includes(new_id));
+        CategoryPanel.markertoggle(this.subcat_id, !existing_ids.includes(new_id));
     }
 
     initiate(togglable) {

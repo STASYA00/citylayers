@@ -99,7 +99,7 @@ class CityMap extends MapPanel{
         this.name = MAP_CLASSNAMES.MAP;
         this.parent = parent;
         this.id = "id";
-        this.places = places; //ObservationGenerator.make(15, "Accessibility")
+        this.places = places;
         this.coords = this.places.map(c=>c["pt"]);
         this.categories = categories;
         this._map = this.initiate();
@@ -208,7 +208,7 @@ class CityMap extends MapPanel{
 
     addMarkers(subcategory){
         
-        let _places = this.places.filter(c=>c["subcat"]?.name==subcategory);
+        let _places = this.places.filter(c=>c["subcat"]?.id==subcategory);
         _places.forEach(place =>{
             this.addMarker(place.pt.lat, place.pt.lng, place.pt.id, subcategory);
         })
