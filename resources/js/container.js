@@ -1,5 +1,3 @@
-// import * as emoji from 'node-emoji';
-
 const CLASSNAMES = {
     LOGO : "logo",
     CLOSE: "closebutton",

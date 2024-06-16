@@ -1,4 +1,3 @@
-
 const CLASSNAMES = {
     CATEGORY_PANEL: "categorypanel",
     CATEGORY_CONTAINER: "categorycontainer"

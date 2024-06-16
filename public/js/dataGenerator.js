@@ -1,4 +1,3 @@
-
 class Randomizer{
 
     static randomToRange(lower, upper){
@@ -9,8 +8,6 @@ class Randomizer{
         return arr[Math.floor(this.randomToRange(0, arr.length-1))];
     }
 
-    
-
 }
 class GradeGenerator{
     static goodLower = 0.7;
@@ -20,11 +17,13 @@ class GradeGenerator{
 
     static catKey = "category_id";
     static gradeKey = "grade";
+    static idKey = "id";
     
-    static grade(category, value){
+    static grade(category, value, id){
         let d = new Object();
         d[this.catKey] = category;
         d[this.gradeKey] = parseInt(value);
+        d[this.idKey] = parseInt(id);
         return d;
     }
 
@@ -117,7 +116,7 @@ class ObservationGenerator{
         // grades = grades.map(g => GradeGenerator.grade(parseInt(g["category_id"]), parseInt(g["grade"])));
         
         return pts.map(pt => this._observation(pt, grades.filter(g => g.place_id==pt.id).map(g=>
-            GradeGenerator.grade(parseInt(g["category_id"]), parseInt(g["grade"]))
+            GradeGenerator.grade(parseInt(g["category_id"]), parseInt(g["grade"]), parseInt(g["id"]))
         )
     ));
 
@@ -175,7 +174,7 @@ class SubcatAssigner{
     static make(observations, subcategories){
         observations.forEach(ob => {
             ob[this.subcatKey] = [];
-            ob[this.subcatKey] = subcategories.filter(s => ob["grades"].map(g=>g.id).includes(s.grade_id));
+            ob[this.subcatKey] = subcategories.filter(s => ob[ObservationGenerator.gradeKey].map(g=>g.id).includes(s.grade_id));
         });
     }
 }

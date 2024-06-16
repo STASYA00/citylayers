@@ -1,4 +1,4 @@
 class Settings{
-    static debug = true;
+    static debug = false;
 }
 export default {Settings};

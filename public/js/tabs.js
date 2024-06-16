@@ -58,5 +58,5 @@ class TabPanel extends CElement{
             return panel;
         }    
     }
-}
+
 

@@ -1,6 +1,3 @@
-// import {Settings} from "./settings";
-
-
 class Settings{
     static debug = false;
 }
@@ -42,7 +39,6 @@ class MapPanel{
     load(categories, obs) {
         
         let citymap = new CityMap(this.make_id(), categories, obs);
-        // citymap.initiate();
         this.children.push(citymap);
     }
 
@@ -58,7 +54,6 @@ class MapPanel{
         this.children[0].activateMarker(id, on);
     }
     getCoords(){
-        console.log(this.children[0].getCoords());
 
         return this.children[0].getCoords();
     }

@@ -341,7 +341,7 @@ $lng = $_GET['lng'] ?? null;
                         k.set("category_id", indata["id"].toString());
                         k.set("grade", indata["grade"].toString());
                         k.set("place_id", place_data["id"].toString());
-                        sendRequest(k, "save-grade", (data)=>{place_data["grade_id"] = data["id"]}).then(
+                        sendRequest(k, "save-grade", (data_b)=>{place_data["grade_id"] = data_b["id"]}).then(
                             r=>{
                     
                         indata.tags.forEach((tag)=>{

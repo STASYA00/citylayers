@@ -13,26 +13,29 @@
 @endphp
 
 @extends('layouts.app')
-@vite('resources/css/app.css')
-@vite('resources/js/app.js')
+
+
 @vite('resources/css/commentbar.css')
+@vite('resources/js/commentbar.js')
+
+@vite('resources/css/container.css')
+@vite('resources/js/container.js')
+
 @vite('resources/css/sidepanel.css')
+
 @vite('resources/css/map.css')
 @vite('resources/js/map.js')
+
 @vite('resources/js/citymap.js')
 @vite('resources/js/category.js')
 
-@section('main')
-@vite('resources/js/container.js')
-@vite('resources/js/citymap.js')
-@vite('resources/js/commentbar.js')
-@vite('resources/js/category.js')
 @vite('resources/js/scope.js')
-@vite('resources/js/dataGenerator.js')
-@vite('resources/css/sidepanel.css')
-@vite('resources/css/container.css')
-@vite('resources/css/map.css')
 @vite('resources/css/scope.css')
+
+@section('main')
+
+
+
 
 <div class="main-map">
     <div class="left-container"></div>
@@ -46,6 +49,7 @@
         <?php require_once("js/dataGenerator.js");?>
         <?php require_once("js/scope.js");?>
     </script>
+    
     <!-- <script src="resources/js/map.js"></script> -->
     <script>
         const FAKEDATA = false;
