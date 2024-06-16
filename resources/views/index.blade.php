@@ -1,6 +1,5 @@
 @extends('layouts.app')
-@vite('resources/css/landing.css')
-@vite('resources/css/legal.css')
+@vite('resources/css/app.css')
 
 
 

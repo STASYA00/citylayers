@@ -12,7 +12,7 @@
 @extends('layouts.app')
 
 @section('main')
-@vite('resources/css/dataCollection.css')
+
 @vite('resources/css/app.css')
 <?php 
 $lat = $_GET['lat'] ?? null; 
