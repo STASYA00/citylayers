@@ -21,7 +21,6 @@
 @vite('resources/js/map.js')
 @vite('resources/js/citymap.js')
 @vite('resources/js/category.js')
-@vite('resources/js/dataGenerator.js')
 
 @section('main')
 @vite('resources/js/container.js')
@@ -60,7 +59,7 @@
         const subcategoryInput = {!! json_encode($subcategories) !!};
         const gradeInput = {!! json_encode($grades) !!};
         const subgradeInput = {!! json_encode($subgrades) !!};
-        
+        console.log(subgradeInput);
         let subcats = subcategoryInput.map(s => new Subcategory(s.id, s.name, s.category));
         let categories = categoryInput.map(c => new Category(c.id, c.name, 
                                                              c.description, 
@@ -95,6 +94,7 @@
 
         else{
             obs = ObservationGenerator.make(placeInput, gradeInput);
+            console.log(obs);
             SubcatAssigner.make(obs, subgradeInput);
             CommentAssigner.make(obs, commentInput);
         }
