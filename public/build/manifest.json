@@ -62,14 +62,14 @@
       "resources/js/bootstrap.js"
     ]
   },
-  "resources/css/legal.css": {
-    "file": "assets/legal.5b042e5d.css",
-    "src": "resources/css/legal.css",
-    "isEntry": true
-  },
   "resources/css/scope.css": {
     "file": "assets/scope.fc0edcf5.css",
     "src": "resources/css/scope.css",
+    "isEntry": true
+  },
+  "resources/css/map.css": {
+    "file": "assets/map.5632b7d9.css",
+    "src": "resources/css/map.css",
     "isEntry": true
   },
   "resources/css/sidepanel.css": {
@@ -77,13 +77,28 @@
     "src": "resources/css/sidepanel.css",
     "isEntry": true
   },
+  "resources/css/main.css": {
+    "file": "assets/main.e8914042.css",
+    "src": "resources/css/main.css",
+    "isEntry": true
+  },
+  "resources/css/slideshow.css": {
+    "file": "assets/slideshow.8a4490fc.css",
+    "src": "resources/css/slideshow.css",
+    "isEntry": true
+  },
+  "resources/css/landing.css": {
+    "file": "assets/landing.a1877943.css",
+    "src": "resources/css/landing.css",
+    "isEntry": true
+  },
   "resources/css/dataCollection.css": {
-    "file": "assets/dataCollection.99c736ca.css",
+    "file": "assets/dataCollection.cd6ff207.css",
     "src": "resources/css/dataCollection.css",
     "isEntry": true
   },
   "resources/css/container.css": {
-    "file": "assets/container.6a52f2b4.css",
+    "file": "assets/container.c0276c2d.css",
     "src": "resources/css/container.css",
     "isEntry": true
   },
@@ -92,23 +107,13 @@
     "src": "resources/css/commentbar.css",
     "isEntry": true
   },
-  "resources/css/map.css": {
-    "file": "assets/map.5632b7d9.css",
-    "src": "resources/css/map.css",
-    "isEntry": true
-  },
-  "resources/css/main.css": {
-    "file": "assets/main.e8914042.css",
-    "src": "resources/css/main.css",
-    "isEntry": true
-  },
-  "resources/css/landing.css": {
-    "file": "assets/landing.b989600b.css",
-    "src": "resources/css/landing.css",
+  "resources/css/legal.css": {
+    "file": "assets/legal.5b042e5d.css",
+    "src": "resources/css/legal.css",
     "isEntry": true
   },
   "resources/css/app.css": {
-    "file": "assets/app.7053cb75.css",
+    "file": "assets/app.71abe253.css",
     "src": "resources/css/app.css",
     "isEntry": true
   }
