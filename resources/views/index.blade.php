@@ -22,13 +22,13 @@
 
                         <!-- Full-width images with number and caption text -->
                         <div class="slides fade">
-                            <img src="/images/landing/0.png">
+                            <img src="/images/landing/0.svg">
                             <div class="text">Welcome to City Layers</div>
                             <div class="subtext">You are invited to share your thoughts on your experience of the city</div>
                         </div>
 
                         <div class="slides fade">
-                            <img src="/images/landing/1.png">
+                            <img src="/images/landing/1.svg">
                             <div class="text">Map it</div>
                             <div class="subtext">Pin your thoughts about a place by rating and adding tags</div>
                         </div>
