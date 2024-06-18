@@ -62,14 +62,14 @@
       "resources/js/bootstrap.js"
     ]
   },
-  "resources/css/dataCollection.css": {
-    "file": "assets/dataCollection.cd6ff207.css",
-    "src": "resources/css/dataCollection.css",
+  "resources/css/scope.css": {
+    "file": "assets/scope.fc0edcf5.css",
+    "src": "resources/css/scope.css",
     "isEntry": true
   },
-  "resources/css/container.css": {
-    "file": "assets/container.0c3454d8.css",
-    "src": "resources/css/container.css",
+  "resources/css/slideshow.css": {
+    "file": "assets/slideshow.0c156917.css",
+    "src": "resources/css/slideshow.css",
     "isEntry": true
   },
   "resources/css/commentbar.css": {
@@ -77,19 +77,9 @@
     "src": "resources/css/commentbar.css",
     "isEntry": true
   },
-  "resources/css/slideshow.css": {
-    "file": "assets/slideshow.ceec23cc.css",
-    "src": "resources/css/slideshow.css",
-    "isEntry": true
-  },
   "resources/css/legal.css": {
     "file": "assets/legal.aa024516.css",
     "src": "resources/css/legal.css",
-    "isEntry": true
-  },
-  "resources/css/map.css": {
-    "file": "assets/map.5632b7d9.css",
-    "src": "resources/css/map.css",
     "isEntry": true
   },
   "resources/css/main.css": {
@@ -97,9 +87,19 @@
     "src": "resources/css/main.css",
     "isEntry": true
   },
-  "resources/css/scope.css": {
-    "file": "assets/scope.fc0edcf5.css",
-    "src": "resources/css/scope.css",
+  "resources/css/map.css": {
+    "file": "assets/map.5632b7d9.css",
+    "src": "resources/css/map.css",
+    "isEntry": true
+  },
+  "resources/css/container.css": {
+    "file": "assets/container.0c3454d8.css",
+    "src": "resources/css/container.css",
+    "isEntry": true
+  },
+  "resources/css/dataCollection.css": {
+    "file": "assets/dataCollection.cd6ff207.css",
+    "src": "resources/css/dataCollection.css",
     "isEntry": true
   },
   "resources/css/landing.css": {
