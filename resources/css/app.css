@@ -54,6 +54,7 @@ img {
 }
 
 h1 {
+  padding-top: 10%;
   font-size: 28px;
   font-weight: 400;
   line-height: 1.3em;
@@ -88,7 +89,10 @@ hr{
 }
 
 .main-wrapper section {
-  margin-top: 98px;
+  margin-top: 10%;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
 }
 
 .header{
@@ -109,7 +113,7 @@ hr{
 .primary-button {
   text-transform: uppercase;
   width: calc(100vw - var(--margin-4));
-  max-width: calc(400px - var(--margin-2));
+  /* max-width: calc(400px - var(--margin-2)); */
   height: 50px;
   border-radius: 10px;
   font-size: 14px;
@@ -150,14 +154,14 @@ input[type=range]::-moz-range-progress{
 
 @media only screen and (min-width: 600px) and (max-width: 900px) {
     .main-wrapper section {
-        margin-top: 20%;
-        margin: 20%;
+        margin-top: 10%;
+        margin: 10%;
     }
 }
 
 @media only screen and (min-width: 900px) {
     .main-wrapper section {
-        margin-top: 7%;
+        margin-top: 5%;
     }
 }
 
@@ -208,7 +212,8 @@ input[type=range]::-moz-range-progress{
 .tags-container {
     margin-top: 20px;
     display: flex;
-    gap: 10px;
+    gap: 5px;
+    row-gap: 7px;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: flex-start;
@@ -224,14 +229,6 @@ input[type=range]::-moz-range-progress{
         overflow: visible;
         height: 30px;
         width: fit-content;
-    }
-    .tags-container {
-        margin-top: 20px;
-        display: flex;
-        gap: 10px;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: flex-start;
     }
     
 }

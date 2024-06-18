@@ -112,19 +112,19 @@ section:nth-child(4) {
 
 .buttoncontainer {
   display: flex;
-  flex-direction: row;
-  height: 50px;
-  justify-content: space-between;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
   box-sizing: border-box;
-  padding: 10px;
+  /* padding: 0; */
   -moz-column-gap: 40px;
-  column-gap: 20%;
+  column-gap: 40px;
+  row-gap: 10px;
   text-align: center;
   align-items: center;
-  padding-top: 20%;
 }
 
-@media only screen and (min-width: 900px) {
+@media only screen and (min-width: 768px) {
   
   .buttoncontainer{
       padding-top: 10%;
@@ -133,8 +133,6 @@ section:nth-child(4) {
   .landingtext{
     padding-top: 20%;
   }
-  
-  
 }
 
 .buttoncontainer > .primary-button {
