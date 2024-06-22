@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 
-
 use App\Models\Place;
 use App\Models\PlaceComment;
 use App\Models\PlaceGrade;
@@ -129,187 +128,6 @@ class GlobalController extends Controller
     //----------------------new code----------------------
 
 
-    
-
-    public function addMapPlace(Request $request, $id = null)
-    {
-
-        $postData = json_decode($request->place_data, true);
-        $postData = (object)$postData;
-        $returnData = $this->addNewPlaceData($postData);
-
-        if ($returnData == false) {
-            $response['status'] = 'error';
-            $response['msg'] = 'Place or observation already exist!';
-            return response()->json($response);
-        }
-        $postData = (object)array_merge((array)$postData, (array)$returnData);
-
-
-        //    dd($postData);
-
-        $userId = backpack_auth()->user()->id;
-        $response = ['status' => '', 'msg' => '', 'place_detail_id' => '', 'tab' => '', 'completed' => false];
-
-        if (isset($postData->place_detail_id) && $postData->place_detail_id != '') {
-            $place_detail = PlaceDetails::find($postData->place_detail_id);
-        } else {
-            $latitude = $postData->latitude;
-            $longitude = $postData->longitude;
-            $radius = 100; // Meters
-            $place_detail = PlaceDetails::selectRaw("*,
-                    ( 6371 * acos( cos( radians(?) )
-                    * cos( radians( latitude ) )
-                    * cos( radians( longitude ) - radians(?)) + sin( radians(?) )
-                    * sin( radians( latitude ) ) )) AS distance", [$latitude, $longitude, $latitude])
-                ->having("distance", "<", ($radius / 1000))
-                ->where('user_id', $userId)
-                ->first();
-        }
-
-
-
-
-        if (isset($place_detail)) {
-
-            $place_detail->update([
-                'user_id' =>  backpack_auth()->user()->id,
-                'place_description' =>  $postData->place_description ? $postData->place_description : NULL,
-                'obsevation_description' =>  $postData->observation_description ? $postData->observation_description : NULL,
-                // 'latitude' => $postData->latitude,
-                // 'longitude' => $postData->longitude,
-            ]);
-
-            if (isset($postData->update) && $postData->update == 'place') {
-                $place_detail->updatePlaces($place_detail, $postData);
-            } else if (isset($postData->update) && $postData->update == 'observation') {
-                $place_detail->updateObservations($place_detail, $postData);
-            } else {
-
-                dd('here');
-                // $place_detail->updateMethod($place_detail,$postData);
-            }
-
-
-            $response['status'] = 'success';
-            $response['msg'] = 'data updated successfully!';
-        } else {
-            $place_detail = PlaceDetails::create([
-                'user_id' =>  backpack_auth()->user()->id,
-                'place_description' =>  $postData->place_description ? $postData->place_description : NULL,
-                'obsevation_description' =>  $postData->observation_description ? $postData->observation_description : NULL,
-                'latitude' => $postData->latitude,
-                'longitude' => $postData->longitude,
-            ]);
-
-            if ($postData->place_id) {
-                PlaceDetailPlace::create([
-                    'place_detail_id' => $place_detail->id,
-                    'place_id' => $postData->place_id,
-                    'place_child_id' => $postData->child_place_id ? $postData->child_place_id : NULL,
-                ]);
-            }
-
-            if (isset($postData->observations) && is_array($postData->observations) && count($postData->observations) > 0) {
-                foreach ($postData->observations as $obsrv) {
-                    PlaceDetailObservation::create([
-                        'place_detail_id' => $place_detail->id,
-                        'observation_id' => $obsrv['observation_id'],
-                        'observation_child_id' => $obsrv['child_observation_id'] ? $obsrv['child_observation_id'] : NULL,
-                        'feeling_id' => $obsrv['feeling_id'],
-                    ]);
-                }
-            }
-
-
-
-            backpack_auth()->user()->incrementScore(1);
-            $response['status'] = 'success';
-            $response['msg'] = 'data added successfully!';
-        }
-
-        if ($request->hasFile('place_image')) {
-            $request->validate([
-                'place_image' => 'required|image|mimes:jpeg,png,jpg,gif',
-            ]);
-            $imageName = time() . '_place.' . $request->place_image->extension();
-            $request->place_image->storeAs('public/uploads/place/', $imageName);
-
-            $place_detail->update([
-                'place_image' =>  $imageName,
-            ]);
-        }
-
-        if ($request->hasFile('observation_image')) {
-            $request->validate([
-                'observation_image' => 'required|image|mimes:jpeg,png,jpg,gif',
-            ]);
-            $imageName = time() . '_observation.' . $request->observation_image->extension();
-            $request->observation_image->storeAs('public/uploads/observation/', $imageName);
-            $place_detail->update([
-                'obsevation_image' =>  $imageName,
-            ]);
-        }
-
-
-
-        $response['place_detail_id'] = $place_detail->id;
-
-
-        if ((isset($place_detail->placeDetail) && $place_detail->placeDetail->id) && (isset($place_detail->observationsDetail) &&  count($place_detail->observationsDetail)) > 0) {
-            $response['completed'] = true;
-        }
-
-        $response['tab'] = $postData->tab;
-
-        $response['place_id'] = $place_detail->placeDetail->place_id ?? null;
-
-        return response()->json($response);
-    }
-
-
-    public function addNewPlace(Request $request)
-    {
-
-
-
-        if ($request->place_name) {
-            $place = Place::create([
-                'name' => $request->place_name,
-                'user_id' => backpack_user()->id,
-            ]);
-        }
-
-        if ($request->observation_name) {
-            $observation = Observation::create([
-                'name' => $request->observation_name,
-                'user_id' => backpack_user()->id,
-            ]);
-        }
-
-
-        PlaceDetails::create([
-            'place_id' => $request->data->id ?? NULL,
-            'latitude' => $request->data->latitude,
-            'longitude' => $request->data->longitude,
-
-        ]);
-
-        if ($request->observation_name) {
-            return response()->json([
-                'status' => 'success',
-                'msg' => 'Observation added successfully, You can also add place for this place!',
-
-            ]);
-        } else {
-            return response()->json([
-                'status' => 'success',
-                'msg' => 'Place added successfully, You also add obervation for this place!',
-
-            ]);
-        }
-    }
-
 
 
 
@@ -324,7 +142,7 @@ class GlobalController extends Controller
    
     public function saveComment(Request $request)
     {
-        $val = PlaceComment::create(
+        PlaceComment::create(
             [
                 'place_id' => $request->id,
                 'comment' => $request->comment,
@@ -345,6 +163,11 @@ class GlobalController extends Controller
                 'grade' => $request->grade,
             ]
         );
+
+        $postData = json_decode($request, true);
+//        $postData['grade_id'] = $valp->id;
+        $postData = (object)$postData;
+        $this->saveSubgrades($request, $valp->id);
         return response()->json([
             'status' => 'success',
             'id' => $valp->id
@@ -400,17 +223,109 @@ class GlobalController extends Controller
             'id' => $val->id
 
         ]);
-    }
+    }   
+
+    public function saveObs(Request $request)
+    {
+        $val = Place::create(
+            [
+                'longitude' => $request->longitude,
+                'latitude' => $request->latitude,
+            ]
+        );
+        if (isset($request->comment) && $request->comment != ''){
+            PlaceComment::create(
+                [
+                    'place_id' => $val->id,
+                    'comment' => $request->comment,
+                ]
+            );
+        }
+        if (isset($request->image_name) && $request->image_name != ''){
+            
+            if ($request->hasFile('image')) {
+                $request->validate([
+                    'image' => 'required|image|mimes:jpeg,png,jpg,gif',
+                ]);
+                PlaceImage::create(
+                    [
+                        'place_id' => $val->id,
+                        'image' => $request->image_name,
+                    ]
+                );
+                $request->image->storeAs('public/uploads/', $request->image_name);
+    
+            }
+        }
+
+        if (isset($postData->observations)){
+            $postData = json_decode($request->observations, true);
+            if (is_array($postData) &&
+                    count($postData) > 0) {
+                foreach ($postData as $obsrv) {
+                    $ob = (object)$obsrv;
+                    $grade = PlaceGrade::create(
+                        [
+                            'place_id' => $val->id ,
+                            'category_id' => $ob->category_id,
+                            'grade' => $ob->grade,
+                        ]
+                    );
+                    if (isset($ob->subgrades) && is_array($ob->subgrades) &&
+                        count($ob->subgrades) > 0) {
+
+                            foreach ($ob->subgrades as $subgrade) {
+
+                                PlaceSubgrade::create(
+                                    [
+                                        'grade_id' => $grade->id,
+                                        'category_id' => $ob->category_id,
+                                        'subcategory_id' => $subgrade,
+                                    ]
+                                );
+                            }
+                        }
+                    }
+                }
+        }
+        
+
+        
+        return response()->json([
+            'status' => 'success',
+            'id' => $val->id
+
+        ]);
+    }   
+    
 
     public function saveSubgrade(Request $request)
     {
-        PlaceSubgrade::create(
+        $v = PlaceSubgrade::create(
             [
                 'grade_id' => $request->grade_id,
                 'category_id' => $request->category_id,
                 'subcategory_id' => $request->subcategory_id,
             ]
         );
+        return response()->json([
+            'status' => 'success',
+            'grade'=>$v->grade_id
+        ]);
+    }
+
+    public function saveSubgrades(Request $request, $grade_id)
+    {
+        parse_str($request->obs, $obs);
+        foreach ($obs as $x=>$ob) {                                                                                                                       PlaceSubgrade::create(
+                [
+                    'grade_id' => $grade_id,
+                    'category_id' => $request->category_id,
+                    'subcategory_id' => $ob,
+                ]
+            );
+        }
+
         return response()->json([
             'status' => 'success'
         ]);

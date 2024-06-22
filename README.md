@@ -13,7 +13,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/WebApp24/WebApp24">
+  <a href="https://github.com/citylayers/WebAppV2">
     <img src="resources/icons/logo.svg" alt="Logo" width="150" color="white">
     
   </a>
@@ -42,11 +42,11 @@
     </a>
     <br />
     <br />
-    <a href="https://citylayer.urbanitarian.com/">View Demo</a>
+    <a href="https://citylayers.visualculture.tuwien.ac.at/">View Demo</a>
     ·
-    <a href="https://github.com/WebApp24/WebApp24/issues">Report Bug</a>
+    <a href="https://github.com/citylayers/WebAppV2/issues">Report Bug</a>
     ·
-    <a href="https://github.com/WebApp24/WebApp24/issues">Request Feature</a>
+    <a href="https://github.com/citylayers/WebAppV2/issues">Request Feature</a>
   </p>
 </div>
 
@@ -61,6 +61,7 @@
       <ul>
       <li><a href="#intro">Intro</a></li>
         <li><a href="#built-with">Built With</a></li>
+        <li><a href="#project-files">Project Files</a></li>
       </ul>
     </li>
     <li>
@@ -68,6 +69,7 @@
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#usage">Usage</a></li>
+        <li><a href="#deployment">Usage</a></li>
       </ul>
     </li>
     <li><a href="#license">License</a></li>
@@ -99,10 +101,25 @@ Your browser does not support the video tag.
 
 
 <div>
-  <img src="assets/screen_1.jpg" width="500px"/>
-  <img src="assets/screen_2.jpg" width="500px"/>
-  <img src="assets/screen_3.jpg" width="500px"/>
-  <img src="assets/screen_4.jpg" width="500px"/>
+  <img src="assets/screen_1.jpg" width="300px"/>
+  <img src="assets/screen_2.jpg" width="300px"/>
+  <img src="assets/screen_3.jpg" width="300px"/>
+  <img src="assets/screen_4.jpg" width="300px"/>
+  <img src="assets/screen_5.jpg" width="300px"/>
+  <img src="assets/screen_6.jpg" width="300px"/>
+</div>
+
+<div>
+  <img src="assets/mobile_1.jpg" width="200px"/>
+  <img src="assets/mobile_2.jpg" width="200px"/>
+  <img src="assets/mobile_3.jpg" width="200px"/>
+  <img src="assets/mobile_4.jpg" width="200px"/>
+  <img src="assets/mobile_5.jpg" width="200px"/>
+  <img src="assets/mobile_6.jpg" width="200px"/>
+  <img src="assets/mobile_7.jpg" width="200px"/>
+  <img src="assets/mobile_8.jpg" width="200px"/>
+  <img src="assets/mobile_9.jpg" width="200px"/>
+  <img src="assets/mobile_10.jpg" width="200px"/>
 </div>
 
 
@@ -120,6 +137,15 @@ Your browser does not support the video tag.
 * [MySQL](https://www.mysql.com/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+### Project files
+
+
+* [Figma](https://www.figma.com/proto/7pCdh7710D7E8ICRyM4BIz/Citylayers-2.0?node-id=38-2&t=OnAxp7eI0m58Il73-1)
+* [Notion](https://www.notion.so/A-Mapping-categories-4afdf9ed04464508aa12dd3b22f6ae3e)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 
 
 
@@ -221,6 +247,13 @@ Refer to [API quickstart](./quickstart_api.md) when developing the frontend part
     npx vite
     ```
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+<!-- LICENSE -->
+## Deployment
+
+Check the [documentation](./deployment.md) for server deployment.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -257,16 +290,16 @@ Stasja - [@website](https://stasyafedorova.wixsite.com/designautomation) - [e-ma
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/WebApp24/WebApp24.svg?style=for-the-badge
-[contributors-url]: https://github.com/WebApp24/WebApp24/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/WebApp24/WebApp24.svg?style=for-the-badge
-[forks-url]: https://github.com/WebApp24/WebApp24/network/members
-[stars-shield]: https://img.shields.io/github/stars/WebApp24/WebApp24.svg?style=for-the-badge
-[stars-url]: https://github.com/WebApp24/WebApp24/stargazers
-[issues-shield]: https://img.shields.io/github/issues/WebApp24/WebApp24.svg?style=for-the-badge
-[issues-url]: https://github.com/WebApp24/WebApp24/issues
-[license-shield]: https://img.shields.io/github/license/WebApp24/WebApp24.svg?style=for-the-badge
-[license-url]: https://github.com/WebApp24/WebApp24/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/citylayers/WebAppV2.svg?style=for-the-badge
+[contributors-url]: https://github.com/citylayers/WebAppV2/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/citylayers/WebAppV2.svg?style=for-the-badge
+[forks-url]: https://github.com/citylayers/WebAppV2/network/members
+[stars-shield]: https://img.shields.io/github/stars/citylayers/WebAppV2.svg?style=for-the-badge
+[stars-url]: https://github.com/citylayers/WebAppV2/stargazers
+[issues-shield]: https://img.shields.io/github/issues/citylayers/WebAppV2.svg?style=for-the-badge
+[issues-url]: https://github.com/citylayers/WebAppV2/issues
+[license-shield]: https://img.shields.io/github/license/citylayers/WebAppV2.svg?style=for-the-badge
+[license-url]: https://github.com/citylayers/WebAppV2/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/stanislava-fedorova
 [product-screenshot]: assets/screenshot.png

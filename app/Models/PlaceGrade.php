@@ -15,5 +15,7 @@ class PlaceGrade extends Model
     protected $fillable = [
         'place_id', 
         'category_id',
-        'grade'];
+        'grade'
+    
+    ];
 }

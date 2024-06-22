@@ -315,53 +315,24 @@ $lng = $_GET['lng'] ?? null;
         d.set("longitude", place_data["longitude"].toString());
         d.set("latitude", place_data["latitude"].toString());
 
-        sendRequest(d, "save-place", (data)=>{place_data["id"] = data["id"]}).then(
-            
-            r => {
-                console.log(r);
-                
-                d.set("id", place_data["id"].toString());
-                
-                if (place_data["comment"]!=undefined && place_data["comment"]!=null && place_data["comment"]!=""){
-                    d.set("comment", place_data["comment"].toString());
-                    sendRequest(d, "save-comment");
+        if (place_data["comment"]!=undefined && place_data["comment"]!=null && place_data["comment"]!=""){
+            d.set("comment", place_data["comment"].toString());
+        }
 
-                }
-                if (place_data["image"]!=undefined && place_data["image"]!=null && place_data["image"]!=""){
-                    d.set("image_name", `${uuidv4()}.${place_data["image"].name.split('.').pop()}`);
-                    d.set("image", place_data["image"]);
-                    sendRequest(d, "save-image");
-                }
-                if (place_data["categories"].filter(c=>c["grade"]!=undefined).length>0){
-                    place_data["categories"].forEach((indata, i)=>{
-                    
-                    
-                    if (indata["grade"]!=undefined){
-                        let k = new FormData();
-                        k.set("category_id", indata["id"].toString());
-                        k.set("grade", indata["grade"].toString());
-                        k.set("place_id", place_data["id"].toString());
-                        sendRequest(k, "save-grade", (data_b)=>{place_data["grade_id"] = data_b["id"]}).then(
-                            r=>{
-                    
-                        indata.tags.forEach((tag)=>{
-                            k.set("grade_id", place_data["grade_id"].toString());
-                            k.set("subcategory_id", tag.toString());
-                            sendRequest(k, "save-subgrade");
-                        
-                            }
-                        );
-                    });
-                    }
-                });
-
-                }
-                
-                
-                
-            
-            }
-        );
+        if (place_data["image"]!=undefined && place_data["image"]!=null && place_data["image"]!=""){
+            d.set("image_name", `${uuidv4()}.${place_data["image"].name.split('.').pop()}`);
+            d.set("image", place_data["image"]);
+        }
+        let cats = [];
+        place_data["categories"].forEach((indata, i)=>{
+            cats.push({
+                category_id: indata["id"],
+                grade: indata["grade"],
+                subgrades: indata.tags.map(tag=>tag.toString())
+            })
+        });
+        d.append("observations", JSON.stringify(cats));
+        sendRequest(d, "save-all");
         window.location.href = '/add-pin/post-success';
         
 

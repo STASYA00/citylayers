@@ -23,6 +23,7 @@
         "@barba/core": "^2.9.7",
         "alpinejs": "^3.10.5",
         "flowbite": "^1.6.4",
+        "glob": "^10.4.1",
         "node-emoji": "^2.1.3",
         "rippleui": "^1.9.2"
     }

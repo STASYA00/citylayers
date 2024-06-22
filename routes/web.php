@@ -32,13 +32,7 @@ Route::controller(GlobalController::class)->group(function () {
     Route::get('/', 'getAll')->name('default');
 
     Route::get('grade', 'grade')->name('grade');
-    Route::get('dashboard', 'dashboard')->name('dashboard');
-
-    Route::post('/place/comment', 'comment')->name('comment');
-
-    Route::post('/place/grade-test', 'grade')->name('grade');
     
-    Route::get('delete', 'delete')->name('delete');
     
     Route::get('impressum', function () {
         return view('impressum');
@@ -88,19 +82,13 @@ Route::get('add-pin/post-error', function () {return view('postError');});
 Route::get('filter', [GlobalController::class, 'filter']);
 Route::get('truncate', [GlobalController::class, 'truncate']);
 
-Route::post('map/add/place', [GlobalController::class, 'addMapPlace'])->name('map.add.place');
-
-Route::post('add/new/place', [GlobalController::class, 'addNewPlace'])->name('add.new.place');
-
-// Route::post('map/add/grade', [GlobalController::class, 'addMapGrade'])->name('map.add.grade');
-// Route::post('map/add/subgrade', [GlobalController::class, 'addMapSubgrade'])->name('map.add.subgrade');
-
-// Route::post('/save-des', [GlobalController::class, 'saveDes']);
+Route::post('/save-all', [GlobalController::class, 'saveObs']);
 Route::post('/save-comment', [GlobalController::class, 'saveComment']);
 Route::post('/save-grade', [GlobalController::class, 'saveGrade']);
 Route::post('/save-image', [GlobalController::class, 'saveImage']);
 Route::post('/save-place', [GlobalController::class, 'savePlace']);
 Route::post('/save-subgrade', [GlobalController::class, 'saveSubgrade']);
+Route::post('/save-subgrades', [GlobalController::class, 'saveSubgrades']);
 
 
 

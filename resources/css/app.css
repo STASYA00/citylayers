@@ -160,6 +160,9 @@ input[type=range]::-moz-range-progress{
 }
 
 @media only screen and (min-width: 900px) {
+    .main-wrapper {
+      margin-top: 1%;
+    }
     .main-wrapper section {
         margin-top: 5%;
     }

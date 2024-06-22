@@ -1,6 +1,6 @@
 <div class="p-6 lg:p-12">
     <a href="/" class="">
-        <img src="{{ asset('img/icons/arrow.png') }}" class="arrow">
+        <img src="{{ asset('images/logo.svg') }}" class="arrow">
 
     </a>
     <div class="pt-12 lg:pt-20" x-cloak x-data="{ tab: 'place' }">
