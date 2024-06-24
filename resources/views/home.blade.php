@@ -117,7 +117,7 @@
         CategoryPanel.markertoggle = (subcat, on)=>{m.reloadMarkers(subcat, on)};
         CategoryPanel.getCoords = ()=>{return m.getCoords();};
         MapPanel.toggleComment = (i, on)=>{ CommentPanel.focusComment(i, on)};
-        CommentPanel.toggleMarker = (id, on)=>{m.activate(id, on)}
+        CommentPanel.toggleMarker = (id, on)=>{m.activate(id, on)};
         
         c.initiate();
         m.initiate();

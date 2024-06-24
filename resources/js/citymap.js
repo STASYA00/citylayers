@@ -203,13 +203,13 @@ class CityMap extends MapPanel{
     }
 
     toggleMarkers(subcategory, on){
-        return on==true? this.addMarkers(subcategory) : this.clearMarkers(subcategory);
+        return on==true ? this.addMarkers(subcategory) : this.clearMarkers(subcategory);
     }
 
     addMarkers(subcategory){
         
-        let _places = this.places.filter(c=>c["subcat"].map(s=>s.category_id==subcategory).length>0);
-        
+        let _places = this.places.filter(c=>c["subcat"].map(s=>s.subcategory_id==subcategory).length>0);
+        console.log(_places);
         _places.forEach(place =>{
             this.addMarker(place.pt.lat, place.pt.lng, place.pt.id, subcategory);
         })

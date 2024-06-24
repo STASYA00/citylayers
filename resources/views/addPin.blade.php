@@ -286,6 +286,8 @@ $lng = $_GET['lng'] ?? null;
             data: d,
             processData: false,
             contentType: false,
+            cache: false,
+            async: false,
             success: function (data) {
                 if (callback!=undefined){
                     callback(data);
@@ -306,10 +308,19 @@ $lng = $_GET['lng'] ?? null;
         place_data["id"] = uuidv4();
 
         $.ajaxSetup({
+            cache: false,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
+        if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+            var $inputs = $('input[type="file"]:not([disabled])', place_data);
+            $inputs.each(function(_, input) {
+                if (input.files.length > 0) return
+                $(input).prop('disabled', true);
+            });
+        }
 
         const d = new FormData();
         d.set("longitude", place_data["longitude"].toString());
@@ -325,18 +336,17 @@ $lng = $_GET['lng'] ?? null;
         }
         let cats = [];
         place_data["categories"].forEach((indata, i)=>{
-            cats.push({
-                category_id: indata["id"],
-                grade: indata["grade"],
-                subgrades: indata.tags.map(tag=>tag.toString())
-            })
+            if (indata["grade"]!=null && indata["grade"]!=undefined){
+                cats.push({
+                "category_id": indata["id"],
+                "grade": indata["grade"],
+                "subgrades": indata.tags.filter(tag=>tag!=null && tag!=undefined && tag!="").map(tag=>tag.toString())
+                });
+            }
         });
         d.append("observations", JSON.stringify(cats));
         sendRequest(d, "save-all");
         window.location.href = '/add-pin/post-success';
-        
-
-        
     }
 </script>
 
