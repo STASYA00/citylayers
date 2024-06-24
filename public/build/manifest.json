@@ -67,39 +67,19 @@
     "src": "resources/css/map.css",
     "isEntry": true
   },
-  "resources/css/main.css": {
-    "file": "assets/main.e8914042.css",
-    "src": "resources/css/main.css",
-    "isEntry": true
-  },
   "resources/css/sidepanel.css": {
     "file": "assets/sidepanel.67aa8ce1.css",
     "src": "resources/css/sidepanel.css",
     "isEntry": true
   },
-  "resources/css/scope.css": {
-    "file": "assets/scope.fc0edcf5.css",
-    "src": "resources/css/scope.css",
-    "isEntry": true
-  },
-  "resources/css/commentbar.css": {
-    "file": "assets/commentbar.6c010c43.css",
-    "src": "resources/css/commentbar.css",
-    "isEntry": true
-  },
-  "resources/css/dataCollection.css": {
-    "file": "assets/dataCollection.1463161d.css",
-    "src": "resources/css/dataCollection.css",
-    "isEntry": true
-  },
-  "resources/css/container.css": {
-    "file": "assets/container.0c3454d8.css",
-    "src": "resources/css/container.css",
-    "isEntry": true
-  },
   "resources/css/slideshow.css": {
     "file": "assets/slideshow.0c156917.css",
     "src": "resources/css/slideshow.css",
+    "isEntry": true
+  },
+  "resources/css/main.css": {
+    "file": "assets/main.e8914042.css",
+    "src": "resources/css/main.css",
     "isEntry": true
   },
   "resources/css/legal.css": {
@@ -110,6 +90,26 @@
   "resources/css/landing.css": {
     "file": "assets/landing.fa04a2d4.css",
     "src": "resources/css/landing.css",
+    "isEntry": true
+  },
+  "resources/css/commentbar.css": {
+    "file": "assets/commentbar.6c010c43.css",
+    "src": "resources/css/commentbar.css",
+    "isEntry": true
+  },
+  "resources/css/scope.css": {
+    "file": "assets/scope.fc0edcf5.css",
+    "src": "resources/css/scope.css",
+    "isEntry": true
+  },
+  "resources/css/container.css": {
+    "file": "assets/container.0c3454d8.css",
+    "src": "resources/css/container.css",
+    "isEntry": true
+  },
+  "resources/css/dataCollection.css": {
+    "file": "assets/dataCollection.1463161d.css",
+    "src": "resources/css/dataCollection.css",
     "isEntry": true
   },
   "resources/css/app.css": {

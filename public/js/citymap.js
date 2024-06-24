@@ -208,8 +208,8 @@ class CityMap extends MapPanel{
 
     addMarkers(subcategory){
         
-        let _places = this.places.filter(c=>c["subcat"].map(s=>s.category_id==subcategory).length>0);
-        
+        let _places = this.places.filter(c=>c["subcat"].filter(s=>s.subcategory_id==subcategory).length>0);
+        console.log(_places);
         _places.forEach(place =>{
             this.addMarker(place.pt.lat, place.pt.lng, place.pt.id, subcategory);
         })
