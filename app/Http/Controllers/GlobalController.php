@@ -258,20 +258,22 @@ class GlobalController extends Controller
             }
         }
 
-        if (isset($postData->observations)){
+        if (isset($request->observations)){
             $postData = json_decode($request->observations, true);
             if (is_array($postData) &&
                     count($postData) > 0) {
                 foreach ($postData as $obsrv) {
+                    
                     $ob = (object)$obsrv;
-                    $grade = PlaceGrade::create(
-                        [
-                            'place_id' => $val->id ,
-                            'category_id' => $ob->category_id,
-                            'grade' => $ob->grade,
-                        ]
-                    );
-                    if (isset($ob->subgrades) && is_array($ob->subgrades) &&
+                    if (!is_null($ob->grade)){
+                        $grade = PlaceGrade::create(
+                            [
+                                'place_id' => $val->id ,
+                                'category_id' => $ob->category_id,
+                                'grade' => $ob->grade,
+                            ]
+                        );
+                        if (isset($ob->subgrades) && is_array($ob->subgrades) &&
                         count($ob->subgrades) > 0) {
 
                             foreach ($ob->subgrades as $subgrade) {
@@ -285,6 +287,9 @@ class GlobalController extends Controller
                                 );
                             }
                         }
+
+                    }
+                
                     }
                 }
         }
