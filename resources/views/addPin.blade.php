@@ -317,8 +317,10 @@ $lng = $_GET['lng'] ?? null;
         if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
             var $inputs = $('input[type="file"]:not([disabled])', place_data);
             $inputs.each(function(_, input) {
-                if (input.files.length > 0) return
-                $(input).prop('disabled', true);
+                if (input.files.length == 0) {
+                    $(input).prop('disabled', true);
+                }
+                
             });
         }
 
