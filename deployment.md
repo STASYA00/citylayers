@@ -115,7 +115,7 @@ to the header of the html file.
 $output = is_array($postData) ? 'true' : 'false';;
 if (is_array($output)){
     echo "<script>console.log('Debug');</script>";
-    $output = implode(',', $output);}
+    $output = implode(',', $output);};
 
 echo "<script>console.log('Debug Objects: " . $output . "' );</script>";
 
