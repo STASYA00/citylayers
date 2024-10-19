@@ -20,6 +20,23 @@ body {
     ;
 }
 
+.citylayerspanel{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  background-color: var(--tertiary-color);
+  color: var(--secondary-color);
+  width: 30%;
+  height: 100%;
+
+  padding: 12px;
+  row-gap: 12px;
+  overflow: scroll;
+
+}
+
+
+
 .categorypanel{
     display: flex;
     flex-direction: column;
@@ -113,8 +130,9 @@ body {
   }
 
   /* input[type=range]::-webkit-slider-thumb:hover { 
-    /* background: #C4B5F0; */
-  }  */
+    /* background: #C4B5F0; 
+  }  
+  */
   
 
   input[type=range].startSlider::-webkit-slider-thumb{

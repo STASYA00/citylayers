@@ -3,7 +3,7 @@
     /* position: relative; */
     /* margin: auto; */
     height: 50%;
-    margin-top: 10%;
+    margin-top: 15%;
     justify-content: space-around;
     display: flex;
     flex-direction: column;
@@ -20,6 +20,7 @@
     justify-items: flex-end;
     flex-wrap: wrap;
     margin-bottom: 10px;
+    height: 20px;
 }
 
 .dot {
@@ -56,6 +57,9 @@
   display: none;
   flex-direction: column;
   padding-top: 5%;
+  position: relative;
+  height: 100%;
+  width: 100%;
 }
 
 .slides img {

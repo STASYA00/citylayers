@@ -1,206 +1,90 @@
-         @php use \App\Http\Controllers\GlobalController; @endphp
-         @php  $pages = GlobalController::pages();@endphp
-         @extends('layouts.app')
-
-         @section('main')
-          @php $locale = session()->get('locale');  @endphp
-             <div data-barba="container">
-                 <div class="flex flex-col h-screen mx-auto">
-                     <div class="p-3 pt-8 lg:mx-16 md:pt-20">
-                         <div class="flex flex-row items-center pt-2">
-                             <a href="/" class="prevent"> <i
-                                     class="ml-4 text-2xl text-gray-900 fas fa-close"></i></a>
-                         </div>
-                          @if ($locale == 'de')
-                            <h1 class="text-3xl font-bold text-gray-900 text-center">{{ $pages[7]->title }}</h1>
-                         @else
-                            <h1 class="text-3xl font-bold text-gray-900 text-center">{{ $pages[3]->title }}</h1>
-                            @endif
-                         <div class="mx-8 page all-initial pt-8">
-                            @php
-                            if ($locale == 'de'){
-                                echo $pages[7]->content;
-                           } else {
-                                   echo $pages[3]->content;
-                           }
-                          @endphp
-                         </div>
-                     </div>
-                 </div>
-                 <style>
-                     .page>h1 {
-                         font-size: 2.2em;
-                     }
-
-                     .page>h2 {
-                         font-size: 2.0em;
-                     }
-
-                     .page>h3 {
-                         font-size: 1.8em;
-                     }
-
-                     .page>h4 {
-                         font-size: 1.6em;
-                     }
-
-                     .page>h5 {
-                         font-size: 1.4em;
-                     }
-
-                     .page>p {
-                         display: block;
-                         margin-top: 1em;
-                         margin-bottom: 1em;
-                         margin-left: 0;
-                         margin-right: 0;
-                     }
-
-                     .page>table {
-                         display: table;
-                         border-collapse: separate;
-                         border-spacing: 2px;
-                         border-color: gray;
-                     }
-
-                     .page>td {
-                         display: table-cell;
-                         vertical-align: inherit;
-                     }
-
-                     .page>tbody {
-                         display: table-row-group;
-                         vertical-align: middle;
-                         border-color: inherit;
-                     }
-
-                     .page>tr {
-                         display: table-row;
-                         vertical-align: inherit;
-                         border-color: inherit;
-                     }
-
-                     .page>col {
-                         display: table-column;
-                     }
-
-                     .page>colgroup {
-                         display: table-column-group;
-                     }
-
-                     .page>datalist {
-                         display: none;
-                     }
-
-                     .page>a:link {
-                         color: #0000FF;
-                         text-decoration: underline;
-                         cursor: auto;
-                     }
-
-                     .page>a:visited {
-                         color: #0000FF;
-                         text-decoration: underline;
-                         cursor: auto;
-                     }
-
-                     .page>fieldset {
-                         display: block;
-                         margin-left: 2px;
-                         margin-right: 2px;
-                         padding-top: 0.35em;
-                         padding-bottom: 0.625em;
-                         padding-left: 0.75em;
-                         padding-right: 0.75em;
-
-                     }
-
-                     .page>ol {
-                         display: block;
-                         list-style-type: decimal;
-                         margin-top: 1em;
-                         margin-bottom: 1em;
-                         margin-left: 0;
-                         margin-right: 0;
-                         padding-left: 40px;
-                     }
-
-                     .page>hr {
-                         display: block;
-                         margin-top: 0.5em;
-                         margin-bottom: 0.5em;
-                         margin-left: auto;
-                         margin-right: auto;
-                         overflow: hidden;
-                         border-style: inset;
-                         border-width: 1px;
-                     }
-
-                     .page>ul {
-                         display: block;
-                         list-style-type: disc;
-                         margin-top: 1em;
-                         margin-bottom: 1 em;
-                         margin-left: 0;
-                         margin-right: 0;
-                         padding-left: 40px;
-                     }
-
-                     .page>li {
-                         display: list-item;
-                         text-align: -webkit-match-parent;
-
-                     }
-
-                     .page>p {
-                         display: block;
-                         margin-top: 1em;
-                         margin-bottom: 1em;
-                         margin-left: 0;
-                         margin-right: 0;
-                     }
+@php use \App\Http\Controllers\GlobalController; @endphp
+@php use \App\Http\Controllers\ProjectController; @endphp
+@php use \App\Http\Controllers\TeamController; @endphp
 
 
-                     .page>th {
-                         display: table-cell;
-                         vertical-align: inherit;
-                         font-weight: bold;
-                         text-align: center;
-                     }
+@php  $team = TeamController::all();@endphp
+@php  $teamprojects = TeamController::teamProjects();@endphp
+@php  $projects = ProjectController::all();@endphp
 
-                     .page>thead {
-                         display: table-header-group;
-                         vertical-align: middle;
-                         border-color: inherit;
-                     }
+@php
+    $locale = session()->get('locale');
+    if ($locale == null) {
+        $locale = 'en';
+    }
+@endphp
 
-                     .page>u {
-                         text-decoration: underline;
-                     }
-
-                     .page>tfoot {
-                         display: table-footer-group;
-                         vertical-align: middle;
-                         border-color: inherit;
-                     }
-
-                     .page>sup {
-                         vertical-align: super;
-                         font-size: smaller;
-                     }
+@extends('layouts.app')
 
 
-                     .page>sub {
-                         vertical-align: sub;
-                         font-size: smaller;
-                     }
+@vite('resources/css/team.css')
+@vite('resources/css/app.css')
 
-                     .page>summary {
-                         display: block;
-                     }
+@section('main')
+   
+            <script>
+                <?php require_once("js/classnames.js");?>
+                <?php require_once("js/logic/project.js");?>
+                <?php require_once("js/logic/teamperson.js");?>
+                <?php require_once("js/logic/state.js");?>
 
-                     .page>q {
-                         display: inline;
-                     }
-                 </style>
-             @endsection
+                
+                <?php require_once("js/ui/component/celement.js");?>
+                <?php require_once("js/ui/component/contentElement.js");?>
+                <?php require_once("js/ui/component/imageElement.js");?>
+                <?php require_once("js/ui/component/imageContainerElement.js");?>
+                <?php require_once("js/ui/component/logo.js");?>
+                <?php require_once("js/ui/component/partnerElement.js");?>
+                <?php require_once("js/ui/component/closeButton.js");?>
+                <?php require_once("js/ui/component/switch.js");?>
+                <?php require_once("js/ui/component/textElement.js");?>
+                <?php require_once("js/ui/component/linkElement.js");?>
+                <?php require_once("js/ui/container.js");?>
+                <?php require_once("js/ui/panel/contentPanel.js");?>
+                <?php require_once("js/ui/component/projectComponent.js");?>
+                
+                
+                <?php require_once("js/ui/panelcomponent/landing.js");?>
+                <?php require_once("js/ui/panelcomponent/teamComponent.js");?>
+                <?php require_once("js/ui/panel/legal.js");?>
+                <?php require_once("js/ui/panel/teamPanel.js");?>
+
+                
+                const teamInput = {!! json_encode($team) !!};
+                const roleInput = {!! json_encode($teamprojects) !!};
+                const projectInput = {!! json_encode($projects) !!};
+                
+                console.log(teamInput);
+                console.log(roleInput);
+                console.log(projectInput);
+                
+                let team = teamInput.filter(p=>p.external==0)
+                                    .map(p => new TeamPerson(p.id, p.name, p.link, 
+                                                            roleInput.filter(r=>r.team_id==p.id)
+                                                                     .map(r=> new Role(r.id, r.role, r.project_id, 
+                                                                                projectInput.filter(proj=>proj.id==r.project_id
+                                                                                ).length>0 ? projectInput.filter(proj=>proj.id==r.project_id)[0].name:"")),
+                                                                      p.external));
+                
+                
+                
+                
+                
+                let page = new TeamPanel();
+                page.initiate();
+                page.load(team);
+
+
+
+            </script>
+            
+
+
+        <!-- </div> -->
+
+        
+
+
+    <!-- </div> -->
+    
+@endsection

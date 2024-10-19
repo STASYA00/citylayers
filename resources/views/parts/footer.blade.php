@@ -1,4 +1,13 @@
  <!-- FOOTER -->
- <container id="footer" class="">
+ <container id="footer" class="footer">
+    
+    <script>
+        s = new SocialContainer("footer");
+        s.initiate();
+        s.load();
+        l = new LegalContainer("footer");
+        l.initiate();
+        l.load();
+    </script>
     
  </container>

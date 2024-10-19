@@ -1,4 +1,25 @@
-@media only screen and (max-width: 772px){
+
+.panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  background-color: var(--tertiary-color);
+  color: var(--secondary-color);
+  
+  min-width: 300px;
+  height: 150px;
+  
+  padding: 12px;
+  row-gap: var(--margin-1);
+  font-size: 12px;
+  /* overflow-y: scroll; */
+  overflow-y: clip;
+  padding-bottom: 100px;
+  width: 100%;
+}
+
+/* @media only screen and (max-width: 772px){ */
   .main-map{
     display: flex;
     width: 100vw;
@@ -7,18 +28,13 @@
     flex-direction: column;
   }
   .left-container{
-    height: 40%;
+    /* height: 40%; */
+    width: auto;
     overflow-y: scroll;
     width: 100%;
+    padding-bottom: 5%;
   }
-  .categorypanel {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    background-color: var(--tertiary-color);
-    color: var(--secondary-color);
-    /* width: 38vw; */
+  .panel.category {
     min-width: 300px;
     /* max-width: 350px; */
     /* height: 100vh; */
@@ -28,6 +44,7 @@
     overflow-y: scroll;
     padding-bottom: 100px;
 }
+
 .aboutpanel {
   display: flex;
   flex-direction: column;
@@ -86,7 +103,7 @@
     will-change: transform;
     transition: all .3s ease-in-out;
   }
-}
+/* } */
 
 .pinButton {
   position: fixed;
@@ -98,28 +115,35 @@
 }
 
 
-.categorypanel {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  background-color: var(--tertiary-color);
-  color: var(--secondary-color);
-  
-  min-width: 300px;
-  
-  height: 100vh;
-  padding: 12px;
-  row-gap: var(--margin-1);
-  font-size: 12px;
-  overflow-y: scroll;
-  padding-bottom: 100px;
+
+
+
+.config {
+  cursor: pointer;
+  justify-self: flex-end;
+}
+
+.click{
+  cursor: pointer;
 }
 
 @media only screen and (min-width: 772px) {
-  .categorypanel {
+  .panel {
     max-width: 350px;
-    width: 38vw;
+    width: auto;
+    height: 100vh;
+    width: 30%;
+    height: 100%;
+    /* width: 38vw; */
+  }
+  .panel.citylayers {
+    /* width: 38vw; */
+    padding: 12px;
+    width: auto;
+    height: 100vh;
+    /* width: 30%; */
+    width: 100%;
+    height: 100%;
   }
   .pinButton {
     width: calc(38vw - var(--margin-2));
@@ -162,6 +186,7 @@
   font-size: 14px;
   font-weight: 500;
   margin-bottom: 2px;
+  justify-items: flex-end;
 
   /* flex-wrap: nowrap;
   display: grid;
@@ -177,7 +202,7 @@
 }
 
 .categoryheadertitle{
-  margin-right: 33%;
+  /* margin-right: 33%; */
   margin-bottom: 5%;
 }
 
@@ -245,31 +270,31 @@ input[type=range]::-moz-range-thumb{
 }
 
 
-.categorypanel div:nth-child(1 of div.categorycontainer) > .categoryslider > input[type=range]::-webkit-slider-thumb{
+.panel.category div:nth-child(1 of div.categorycontainer) > .categoryslider > input[type=range]::-webkit-slider-thumb{
   background-color: var(--category1);
 }
 
-.categorypanel div:nth-child(2 of div.categorycontainer) > .categoryslider > input[type=range]::-webkit-slider-thumb{
+.panel.category div:nth-child(2 of div.categorycontainer) > .categoryslider > input[type=range]::-webkit-slider-thumb{
   background-color: var(--category2);
 }
 
-.categorypanel div:nth-child(3 of div.categorycontainer) > .categoryslider > input[type=range]::-webkit-slider-thumb{
+.panel.category div:nth-child(3 of div.categorycontainer) > .categoryslider > input[type=range]::-webkit-slider-thumb{
   background-color: var(--category3);
 }
 
-.categorypanel div:nth-child(4 of div.categorycontainer) > .categoryslider > input[type=range]::-webkit-slider-thumb{
+.panel.category div:nth-child(4 of div.categorycontainer) > .categoryslider > input[type=range]::-webkit-slider-thumb{
   background-color: var(--category4);
 }
 
-.categorypanel div:nth-child(5 of div.categorycontainer) > .categoryslider > input[type=range]::-webkit-slider-thumb{
+.panel.category div:nth-child(5 of div.categorycontainer) > .categoryslider > input[type=range]::-webkit-slider-thumb{
   background-color: var(--category5);
 }
 
-.categorypanel div:nth-child(6 of div.categorycontainer) > .categoryslider > input[type=range]::-webkit-slider-thumb{
+.panel.category div:nth-child(6 of div.categorycontainer) > .categoryslider > input[type=range]::-webkit-slider-thumb{
   background-color: var(--category6);
 }
 
-.categorypanel div:nth-child(n of div.categorycontainer) > .categoryslider > input[type=range]:disabled::-webkit-slider-thumb{
+.panel.category div:nth-child(n of div.categorycontainer) > .categoryslider > input[type=range]:disabled::-webkit-slider-thumb{
   background-color: var(--tertiary-color);
   cursor: not-allowed;
 }

@@ -21,6 +21,8 @@ body {
   align-items: flex-start;
   font-size: 14px;
   gap: var(--margin-1);
+  height: auto;
+  width: auto;
   /* box-shadow: 0px 4px 4px 1px rgba(58, 72, 76, 25%); */
 }
 
@@ -33,10 +35,13 @@ body {
   justify-items: flex-start;
   align-items: flex-start;
   align-content: flex-start;
+  width: auto;
+  height: auto;
 }
 
 .categorysidetagcontainer {
   width: 100%;
+  height: auto;
   display: flex;
   flex-direction: column;
   row-gap: var(--margin-1);
@@ -58,6 +63,8 @@ body {
   background-color: inherit;
   border: none;
   padding-bottom: var(--margin-1);
+  width: auto;
+  height: auto;
 }
 
 .sidepanelclose {
@@ -95,6 +102,8 @@ body {
 
 .aboutlabel {
   position: absolute;
+  height: auto;
+  width: auto;
   right: 0;
   top: 0;
   z-index: 21;
@@ -128,6 +137,7 @@ body {
   font-weight: 100;
   max-width: 350px;
   width: calc(100vw - var(--margin-2));
+  height: auto;
 }
 
 .aboutdescription{

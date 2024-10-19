@@ -9,9 +9,9 @@ return new class extends Migration
     public function up()
     {
         Schema::create('questions', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('category');
-            $table->longText('question');
+            $table->increments('id');
+            $table->unsignedBigInteger('question_type');
+            $table->longText('question')->nullable();
         });
     }
 

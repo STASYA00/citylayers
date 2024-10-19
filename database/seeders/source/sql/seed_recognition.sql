@@ -1,0 +1,3 @@
+INSERT INTO `project_recognition` (`id`, `project_id`, `partner_id`, `value`, `created_at`, `updated_at`) 
+VALUES (NULL, '16', '6', 'Winner of the EU Sparks for Climate Regional Hackathon Austria & Germany', NULL, NULL), 
+(NULL, '17', '3', 'Prize awarded by the Federal Minister of Science, Education and Research (BMBWF), OeAD Director and project lead Lovro Koncar-Gamulin to City Layers citizen scientists.', NULL, NULL);

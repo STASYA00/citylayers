@@ -10,10 +10,14 @@ use App\Models\PlaceGrade;
 use App\Models\PlaceImage;
 use App\Models\PlaceSubgrade;
 
+use App\Http\Controllers\PlaceController;
+
 use App\Models\Category;
 use App\Models\Subcategory;
 use App\Models\Question;
 use App\Models\Page;
+use App\Models\Partner;
+use App\Models\PartnerProject;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -121,6 +125,16 @@ class GlobalController extends Controller
         $pages = Page::all();
         return $pages;
     }
+    static function partners()
+    {
+        $value = Partner::all();
+        return $value;
+    }
+    static function partner_projects()
+    {
+        $value = PartnerProject::all();
+        return $value;
+    }
 
     
 
@@ -142,10 +156,20 @@ class GlobalController extends Controller
    
     public function saveComment(Request $request)
     {
+        $request->validate([
+            'comment' => 'required|string|max:1000|regex:/^[^<]+$/'
+        ]);
+        $request->validate([
+            'comment' => 'required|string|max:1000|regex:/^[^;]+$/'
+        ]);
+        $request->validate([
+            'comment' => 'required|string|max:1000|regex:/^[^{]+$/'
+        ]);
+        
         PlaceComment::create(
             [
                 'place_id' => $request->id,
-                'comment' => $request->comment,
+                'comment'  => $request->comment,
             ]
         );
         return response()->json([
@@ -227,12 +251,15 @@ class GlobalController extends Controller
 
     public function saveObs(Request $request)
     {
-        $val = Place::create(
-            [
-                'longitude' => $request->longitude,
-                'latitude' => $request->latitude,
-            ]
-        );
+
+        // $val = Place::create(
+        //     [
+        //         'longitude' => $request->longitude,
+        //         'latitude' => $request->latitude,
+        //     ]
+        // );
+        $val = PlaceController::savePlace(json(['longitude'=> $request->longitude,
+                                                'latitude'=> $request->latitude]));
         if (isset($request->comment) && $request->comment != ''){
             PlaceComment::create(
                 [

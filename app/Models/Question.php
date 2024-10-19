@@ -19,7 +19,7 @@ class Question extends Model
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
-    protected $fillable = ['category_id', 'question'];
+    protected $fillable = ['question', 'question_type'];
     // protected $hidden = [];
     // protected $dates = [];
 

@@ -1,13 +1,13 @@
-const LEGAL_CLASSNAMES = {
-    PANEL : "legalpanel",
-    HEADER : "legalheader",
-    BODY : "legalbody",
-    LEGALBODYCONTENT: "legalbodycontent",
-    CLOSE : "closebutton",
-    TITLE : "legaltitle",
-    TEXT : "legaltext",
-    TEXT_F : "legaltextframed"
-}
+// const LEGAL_CLASSNAMES = {
+//     PANEL : "legalpanel",
+//     HEADER : "legalheader",
+//     BODY : "legalbody",
+//     LEGALBODYCONTENT: "legalbodycontent",
+//     CLOSE : "closebutton",
+//     TITLE : "legaltitle",
+//     TEXT : "legaltext",
+//     TEXT_F : "legaltextframed"
+// }
 
 class LegalPanel extends CElement{
     constructor(parent, content){
@@ -70,7 +70,7 @@ class LegalBody extends CElement{
         this.content = content;
         this.elements = [LegalText, LegalBodyContent]; 
         this.classes = [LEGAL_CLASSNAMES.TITLE, LEGAL_CLASSNAMES.LEGALBODYCONTENT]
-        this.args = [content[0].title, content];
+        this.args = [content[0].name, content];
     }
 
     initiate() {

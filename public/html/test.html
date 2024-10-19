@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+    />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="stylesheet" type="text/css" href="test.css"/>
+    <link rel="stylesheet" type="text/css" href="../../resources/css/app.css"/>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="./sunburst.js"></script>
+    
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>Citylayers</title>
+  </head>
+  <body class="body overflow-x-hidden bg-white pattern">
+
+    <main>
+        <div class=left-container>
+          <section>
+            <div>
+              <img class="logo" src="../images/landing/0.svg">
+            </div>
+            <div>
+              An innovative city-mapping app that empowers citizens to shape the changes they want to see in their cities!
+
+An innovative city-mapping app that empowers citizens to shape the changes they want to see in their cities! An innovative city-mapping app that empowers citizens to shape the changes they want to see in their cities!
+            </div>
+          </section>
+          <section id="section-project">
+            <div class="title">
+              Make mapping your own!
+            </div>
+            
+          </section>
+          <section>
+            <div class="title">
+              Make mapping your own!
+            </div>
+            <div>
+              Make mapping your own!
+            </div>
+            <div>
+              Make mapping your own!
+            </div>
+          </section>
+          <div class="footer">
+            <div class="partners">
+              <a href="/">
+                <img class="logo" src="../images/icons/partners/tuwien.svg">
+              </a>
+              <a href="/">
+                <img class="logo" src="../images/icons/partners/fwf.svg">
+              </a>
+              <a href="/">
+                <img class="logo" src="../images/icons/partners/wienxtra.png">
+              </a>
+              <a href="/">
+                <img class="logo" src="../images/icons/partners/oead.png">
+              </a>
+              <a href="/">
+                <img class="logo" src="../images/icons/partners/forscht.png">
+              </a>
+              <div class="annotation">
+                <div class="type">Base</div>
+                <div class="type">Funding</div>
+                <div class="type">Collaboration</div>
+            </div>
+            </div>
+            <div class="social">
+              <a href="/">
+                <img class="logo" src="../images/icons/social/fb.svg">
+              </a>
+              <a href="/">
+                <img class="logo" src="../images/icons/social/linkedin.svg">
+              </a>
+              <a href="/">
+                <img class="logo" src="../images/icons/social/yt.svg">
+              </a>
+              <a href="/">
+                <img class="logo" src="../images/icons/social/insta.svg">
+              </a>
+              <a href="/">
+                <img class="logo" src="../images/icons/social/twitter.svg">
+              </a>
+              <a href="mailto:info@citylayers.org">
+                <img class="logo" src="../images/icons/social/mail.svg">
+              </a>
+              <!-- <a href="https://github.com/STASYA00/citylayers">
+                <img class="logo" src="../images/icons/social/git.svg">
+              </a> -->
+              <script>
+
+              </script>
+              
+            </div>
+          </div>
+        </div>
+        <div class=right-container>
+
+        </div>
+        <script>
+          let content = testData();
+          let diagram = new SunburstDiagram(content, "section-project");
+          diagram.make();
+        </script>
+        
+    </main>
+    <script>
+      let currentSection = 0;
+      
+      let sections = document.getElementsByTagName("section");
+      let currentSectionTop = sections[currentSection].getBoundingClientRect().top;
+      let container = document.getElementsByClassName("left-container")[0];
+      container.onscrollend = function(){
+      console.log(sections[currentSection].getBoundingClientRect().y);
+      if (sections[currentSection].getBoundingClientRect().y < 0){
+        currentSection += 1;
+      }
+      else if (0 <= sections[currentSection].getBoundingClientRect().y && 1 > sections[currentSection].getBoundingClientRect().y){
+
+      }
+      else {
+        currentSection -= 1;
+      }
+      currentSection = Math.min(Math.max(currentSection, 0), sections.length-1);
+      
+      sections[currentSection].scrollIntoView({behavior: "smooth"});
+      } 
+    </script>
+
+    <script>
+    
+    </script>
+
+</body>
+</html>

@@ -1,3 +1,5 @@
+
+
 .exit-button{
     text-decoration: underline;
 }
@@ -27,6 +29,7 @@ span {
     font-weight: 400;
     margin-bottom: 8px;
     opacity: 0.6;
+    width: auto;
 }
 
 hr{
@@ -49,6 +52,16 @@ hr{
 {
     .img-container{
         max-height: 25vw;
+    }
+
+    .qpanel{
+        padding: 2%;
+    }
+    .qheader{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
     }
 }
 
@@ -80,15 +93,19 @@ textarea::placeholder {
     display: flex;
     align-items: center;
     justify-content: center;
+    height: auto;
+    width: auto;
+    flex-direction: column;
 }
 
 .img-text div {
     font-size: 30px;
     font-weight: 300;
     margin-right: 6px;
+    
 }
 
-img{
+#img-preview{
     max-width: 60%;
 }
 
@@ -98,17 +115,24 @@ footer {
     left: 0;
     right: 0;
     padding: 24px;
+    height: 12%;
+    width: auto;
+    margin: 10px;
+
 }
 
 .nav-buttons {
     display: flex;
     justify-content: space-between;
     margin-top: 24px;
+    height: auto;
 }
 
 button {
     text-transform: capitalize;
     font-size: 14px;
+    width: 120px;
+    height: 32px;
 }
 
 .next-button {
@@ -166,11 +190,14 @@ input[type="range"]::-moz-range-thumb {
     justify-content: space-between;
     text-transform: capitalize;
     margin-top: 8px;
+    height: 100%;
 }
 
 .question-container {
-    margin-bottom: 40px;
+    /* margin-bottom: 40px; */
     width: 100%;
+    height: auto;
+    padding: 10%;
     /* margin-top: 5%; */
 }
 

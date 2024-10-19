@@ -19,7 +19,7 @@ class Subcategory extends Model
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
-    protected $fillable = ['name', 'category'];
+    protected $fillable = ['name'];
     // protected $hidden = [];
     // protected $dates = [];
 

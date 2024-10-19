@@ -8,26 +8,21 @@
 @section('main')
     <div class="main">
         @php $locale = session()->get('locale');  @endphp
-
-        <script>
-            <?php require_once("js/container.js");?>
-            <?php require_once("js/legal.js");?>
-            
-        </script>
-
-        <script>
-            const pageInput = {!! json_encode($pages) !!};
-            const url = location.href.split("/");
-            const endpoint = url[url.length-1];
-            
-            let pageInfo = pageInput.filter(p=>
-                p.title.toLowerCase().replaceAll(" ", "")==endpoint.toLowerCase()
-            );
-            const legalPanel = new LegalPanel("main", pageInfo);
-            legalPanel.initiate();
-            legalPanel.load();
-
-        </script>
-        
-    <div>
+        <div class="legalpanel">
+        <div class="legaltitle">
+            Impressum
+        </div>
+        <div class="legalbody">
+            DEPARTMENT OF VISUAL CULTURE (E264-03) 
+            <br>
+            INSTITUTE OF ART AND DESIGN TU Wien
+            <br>
+            Karlsplatz 13/264-03, 1040 Vienna
+            <br>
+            +43 1 58801-26403 
+            <br>
+            visualculture@tuwien.ac.at
+            <br>
+        </div>
+        </div></div>
 @endsection

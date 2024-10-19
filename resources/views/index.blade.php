@@ -3,7 +3,7 @@
 @vite('resources/css/landing.css')
 @vite('resources/css/legal.css')
 @vite('resources/css/slideshow.css')
-
+@vite('resources/js/swipedetector.js')
 
 
 @section('main')
@@ -11,6 +11,7 @@
         <!-- <div class="tabs"> -->
             
                 <!-- tabs content  -->
+                
                 <div class="legalpanel">
                     <div class="header">
             
@@ -61,11 +62,11 @@
                     <div class="buttoncontainer" x-show="tab=='1'">
                     
                     <div class="dots">
-                            <span class="dot" onclick="currentSlide(1)"></span>
-                            <span class="dot" onclick="currentSlide(2)"></span>
-                            <span class="dot" onclick="currentSlide(3)"></span>
-                            <span class="dot" onclick="currentSlide(4)"></span>
-                            <span class="dot" onclick="currentSlide(5)"></span>
+                            <span class="dot" onclick="SlideManager.current(1)"></span>
+                            <span class="dot" onclick="SlideManager.current(2)"></span>
+                            <span class="dot" onclick="SlideManager.current(3)"></span>
+                            <span class="dot" onclick="SlideManager.current(4)"></span>
+                            <span class="dot" onclick="SlideManager.current(5)"></span>
                         </div>
                         </button>
                         <a href="/explore" class="primary-button">
@@ -98,34 +99,10 @@
                 </div>
 
             </div>
-            <script>let slideIndex = 1;
-                showSlides(slideIndex);
-
-                // Next/previous controls
-                function plusSlides(n) {
-                showSlides(slideIndex += n);
-                }
-
-                // Thumbnail image controls
-                function currentSlide(n) {
-                showSlides(slideIndex = n);
-                }
-
-                function showSlides(n) {
-                let i;
-                let slides = document.getElementsByClassName("slides");
-                let dots = document.getElementsByClassName("dot");
-                if (n > slides.length) {slideIndex = 1}
-                if (n < 1) {slideIndex = slides.length}
-                for (i = 0; i < slides.length; i++) {
-                    slides[i].style.display = "none";
-                }
-                for (i = 0; i < dots.length; i++) {
-                    dots[i].className = dots[i].className.replace(" active", "");
-                }
-                slides[slideIndex-1].style.display = "flex";
-                dots[slideIndex-1].className += " active";
-                }</script>
+            <script>
+                    <?php require_once("js/ui/swipedetector.js");?>
+                </script>
+            
 
 
         <!-- </div> -->

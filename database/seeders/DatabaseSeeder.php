@@ -17,9 +17,10 @@ class DatabaseSeeder extends Seeder
         $this->call([
             
             // GlobalSeeder::class
-            CategoriesSeeder::class,
-            SubcategoriesSeeder::class,
-            QuestionSeeder::class
+            TeamSeeder::class,
+            SectionSeeder::class,
+            // SubcategoriesSeeder::class,
+            // QuestionSeeder::class
             
 
         ]);

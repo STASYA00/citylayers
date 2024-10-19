@@ -1,111 +1,68 @@
-const CLASSNAMES = {
-    LOGO : "logo",
-    CLOSE: "closebutton",
 
-    CATEGORY_PANEL: "categorypanel",
-    CATEGORY_CONTAINER: "categorycontainer",
-    CATEGORY_SLIDER_CONTAINER: "categoryslider",
-    CATEGORY_HEADER: "categoryheader",
-    CATEGORY_HEADER_TITLE: "categoryheadertitle",
-    CATEGORY_SWITCH: "categoryswitch",
-    SLIDER: "slider",
-    SLIDER_LABEL_CONTAINER: "sliderlabelcontainer",
-    SLIDER_LABEL: "sliderlabel",
-    TAG_CONTAINER: "tagcontainer",
-    SUBCATEGORY_TAG: "tag",
-
-    CATEGORYPANEL_HEADER: "categorypanelheader",
-    CATEGORYPANEL_LABEL: "categorypanellabel",
-    CATEGORYPANEL_DESCR: "categorypaneldescr",
-
-    CATEGORY_DESCRIPTION: "categorydescription",
-    CATEGORY_SIDE_PANEL: "categorysidepanel",
-    CATEGORY_SIDE_TAG_CONTAINER: "categorysidetagcontainer",
-    CATEGORY_SIDE_TAG_CONTAINER_TITLE: "categorysidetagcontainertitle",
-    CATEGORY_SIDE_TAG_CONTAINER_S: "categorysidetagcontainersmall",
-    CATEGORY_SIDE_TAG: "categorysidetag",
-    // SIDEPANEL_CLOSE: "sidepanelclose",
-
-    GEOCODONG_PANEL: "geopanel",
-    ABOUT_LABEL: "aboutlabel",
-    ABOUT_PANEL: "aboutpanel",
-    // ABOUTPANEL_CLOSE: "aboutpanelclose",
-    ABOUT_DESCRIPTION: "aboutdescription",
-    ABOUT_TEXT: "abouttext",
-
-    COMMENTPANEL: "commentpanel",
-    COMMENTCONTAINER: "commentcontainer",
-    COMMENTPANE: "commentpane",
-    COMMENTSYMBOL: "commentsymbol",
-    COMMENTTEXT: "commenttext",
-    COMMENTPANEL_CLOSE: "commentpanelclose",
-    COMMENTSEARCH: "commentsearch",
-    SELECTCOMMENT: "selected",
-
-}
-
-const SLIDER_IDS = {
-    LOW: "startSlider",
-    HIGH: "endSlider"
-
-}
-
-class CElement {
-    constructor(parent, id) {
-        this.id = id ? id : "id";
-        this.name = CLASSNAMES.CATEGORY_CONTAINER;
-        this.parent = parent;
-        this.elements = []
-    }
-
-    getElement() {
-        // let elements = document.getElementsByClassName(this.name);
-        // if (elements.length > 0){
-        //     return elements[0];
-        // }
-        return document.getElementById(`${this.name}_${this.id}`);
-        // return this.initiate();
-    }
-
-    getParent() {
-        let element = document.getElementById(this.parent);
-        return element;
-    }
-
-
-
-    initiate() {
-        let panel = document.createElement("div");
-        panel.setAttribute('class', this.name);
-        panel.setAttribute("id", this.make_id());
-        this.getParent().appendChild(panel);
-    }
-
-    load() {
-        for (let e = 0; e < this.elements.length; e++) {
-            let element = new this.elements[e](this.make_id(), this.id);
-            element.initiate();
-            element.load();
-        }
-    }
-    make_id() {
-        return `${this.name}_${this.id}`
-    }
-}
-
-
-
-class CategoryPanel extends CElement{
+class CityLayersPanel extends CElement{
     markertoggle = ()=>{console.log("No action assigned")}; // callback to toggle markers
     activation = ()=>{}; // callback to activate observations' categories or to filter observations
     getCoords = ()=>{}; // callback to get current coordinates
 
     constructor(parent){
         super(parent, "id");
+        this.name = CLASSNAMES.MAIN_PANEL;
+        this.parent = parent ? parent : "body";
+        this.id = "id";
+        this.elements = [Logo, PanelHeader, ContentPanel, ProjectContentPanel, PinButton];
+    }
+
+    switch(panel){
+        let el = panel==0 ? ProjectContentPanel : ContentPanel;
+        let el1 = panel==1 ? ProjectContentPanel : ContentPanel;
+        el.activate();
+        el1.activate(false);
+    }
+
+    load() {
+        this.elements.forEach(el => {
+            let element = new el(this.make_id(), "main");
+            element.initiate();
+            element.load();
+            if (el==ContentPanel){
+                el.hide();
+            }
+        });
+
+    }
+
+    getElement() {
+        let elements = document.getElementsByClassName(this.name);
+        if (elements.length > 0) {
+            return elements[0];
+        }
+        return this.initiate();
+    }
+
+    getParent() {
+        let elements = document.getElementsByClassName(this.parent);
+        if (elements.length > 0) {
+            return elements[0];
+        }
+    }
+
+    initiate() {
+        let panel = document.createElement("div");
+        panel.setAttribute('class', this.name);
+        panel.setAttribute("id", this.make_id());
+        this.getParent().appendChild(panel);
+        return panel;
+    }
+}
+
+class ContentPanel extends CElement{
+
+    constructor(parent){
+        super(parent, "id");
         this.name = CLASSNAMES.CATEGORY_PANEL;
         this.parent = parent ? parent : "body";
         this.id = "id";
-        this.elements = [Logo, CategoryPanelHeader, PinButton];
+        this.elements = [];
     }
 
     load(categories) {
@@ -121,7 +78,7 @@ class CategoryPanel extends CElement{
     }
 
 
-    addCategory(category) {
+    add(category) {
         let div = new CategoryElement(this.make_id(), category);
 
         div.initiate();
@@ -161,7 +118,7 @@ class CategoryPanel extends CElement{
 
 */
 
-class CategoryPanelHeader extends CElement {
+class PanelHeader extends CElement {
     constructor(parent, id) {
         super(parent);
         this.id = id;
@@ -179,25 +136,7 @@ class CategoryPanelHeader extends CElement {
 }
 
 
-class Logo extends CElement {
-    constructor(parent, category) {
-        super(parent, category);
-        this.name = CLASSNAMES.LOGO;
-        this.content = "images/logo_2.svg"; // U+02715
-    }
 
-    initiate() {
-        var el = document.createElement("a");
-        el.href = "/";
-        this.getParent().appendChild(el);
-        var element = document.createElement("img");
-        element.src = this.content;
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        // element.onclick = ()=>{};
-        el.appendChild(element);
-    }
-}
 
 class PinButton extends CElement {
     constructor(parent, category) {
@@ -213,8 +152,8 @@ class PinButton extends CElement {
         element.setAttribute("id", this.make_id());
         this.getParent().appendChild(element);
         element.addEventListener("click", () => {
-            console.log(CategoryPanel.getCoords());
-            let coords = CategoryPanel.getCoords();
+            console.log(CityLayersPanel.getCoords());
+            let coords = CityLayersPanel.getCoords();
             window.location.href = `/pin?lat=${coords.lat}&lng=${coords.lng}`;
         });
     }
@@ -392,7 +331,7 @@ class CategorySwitch extends CElement{
         e1.setAttribute("type", "checkbox");
 
         e1.onchange = ()=>{
-            CategoryPanel.activation(this.category, 
+            CityLayersPanel.activation(this.category, 
                             CategorySwitch.isActive(this.id) ? DoubleSlider.getCurrentValue(this.id).min : 0, 
                             CategorySwitch.isActive(this.id) ? DoubleSlider.getCurrentValue(this.id).max : 0);
             DoubleSlider.activate(this.id, CategorySwitch.isActive(this.id));
@@ -455,12 +394,12 @@ class DoubleSlider extends CElement{
 
 
         s1.limit(() => {s1.controlSlider(s2, true); 
-            CategoryPanel.activation(this.category, 
+            CityLayersPanel.activation(this.category, 
                 CategorySwitch.isActive(this.id) ? s1.getValue(): 0, 
                 CategorySwitch.isActive(this.id) ? s2.getValue() : 0);
         });
         s2.limit(() => {s2.controlSlider(s1, false); 
-            CategoryPanel.activation(this.category, 
+            CityLayersPanel.activation(this.category, 
                 CategorySwitch.isActive(this.id) ? s1.getValue(): 0, 
                 CategorySwitch.isActive(this.id) ? s2.getValue() : 0);
         });
@@ -670,7 +609,7 @@ class SubcategoryTag extends CElement {
         else {
             SubcategoryTagContainer.addLabel(category, this.id, true);
         }
-        CategoryPanel.markertoggle(this.subcat_id, !existing_ids.includes(new_id));
+        CityLayersPanel.markertoggle(this.subcat_id, !existing_ids.includes(new_id));
     }
 
     initiate(togglable) {
@@ -873,270 +812,3 @@ class CategorySidePanelTagContainerS extends CElement {
         });
     }
 }
-
-class TopTagPanel extends CElement {
-    constructor(parent) {
-        super(parent);
-        this.id = "geocodingpanelid";
-        this.parent = parent ? parent : "body";
-        this.name = CLASSNAMES.GEOCODONG_PANEL;
-        this.content = "";
-
-        this.elements = [];
-    }
-
-    getParent() {
-        let elements = document.getElementsByClassName(this.parent);
-        if (elements.length > 0) {
-            return elements[0];
-        }
-    }
-
-    static getUrl(lat, lon) {
-        console.log(lat, lon);
-        return `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=jsonv2&zoom=12`
-    }
-
-    initiate() {
-        let element = document.createElement("div");
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        element.innerHTML = this.content; //emoji.emojify(this.content);
-        this.getParent().appendChild(element);
-    }
-
-    load() {
-        if (navigator) {
-            if (navigator.geolocation) {
-                return navigator.geolocation.getCurrentPosition(this._call);
-            }
-        }
-        console.log("Geoposition undefined");
-    }
-
-    _call(geo) {
-
-        let url = TopTagPanel.getUrl(geo.coords.latitude, geo.coords.longitude);
-        console.log(url);
-        // fetch(url, )
-
-        return fetch(url, {
-            method: "GET",
-            headers: { 'Content-Type': 'application/json' },
-        }).then(result => {
-            if (result.status == 200) {
-                return result.json().then(res => {
-                    document.getElementsByClassName(CLASSNAMES.GEOCODONG_PANEL)[0].innerHTML = GeocodeParser.run(res);
-                    return res;
-                });
-            }
-            else if (result.status == 429) {
-                return sleep(1000).then(r => { return this.request() });
-            }
-            else if (result.status == 504) {
-                return this.request();
-            }
-            else {
-                console.log(`CODE: ${result.status}`);
-            }
-            return result;
-        });
-    }
-}
-
-class GeocodeParser {
-
-    static run(response) {
-        let res = response["address"];
-        if ("city" in res) {
-            return `${res["country"]}, ${res["city"]}`;
-        }
-        else if ("town" in res) {
-            return `${res["country"]}, ${res["town"]}`;
-        }
-        else {
-            return `${res["country"]}`;
-        }
-    }
-}
-
-class AboutLabel extends CElement {
-    constructor(parent) {
-        super(parent);
-        this.id = "aboutlabelid";
-        this.parent = parent ? parent : "body";
-        this.name = CLASSNAMES.ABOUT_LABEL;
-        this.content = "about";
-
-        this.elements = [];
-    }
-
-    getParent() {
-        let elements = document.getElementsByClassName(this.parent);
-        if (elements.length > 0) {
-            return elements[0];
-        }
-    }
-
-    initiate() {
-        let element = document.createElement("div");
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        element.innerHTML = this.content; //emoji.emojify(this.content);
-        element.onclick = (e) => {
-            console.log(e);
-
-            AboutPanel.toggle();
-
-
-        };
-        this.getParent().appendChild(element);
-    }
-
-    load() {
-    }
-
-    _call(geo) {
-
-        let url = TopTagPanel.getUrl(geo.coords.latitude, geo.coords.longitude);
-        console.log(url);
-        // fetch(url, )
-
-        return fetch(url, {
-            method: "GET",
-            headers: { 'Content-Type': 'application/json' },
-        }).then(result => {
-            if (result.status == 200) {
-                return result.json().then(res => {
-                    document.getElementsByClassName(CLASSNAMES.GEOCODONG_PANEL)[0].innerHTML = GeocodeParser.run(res);
-                    return res;
-                });
-            }
-            else if (result.status == 429) {
-                return sleep(1000).then(r => { return this.request() });
-            }
-            else if (result.status == 504) {
-                return this.request();
-            }
-            else {
-                console.log(`CODE: ${result.status}`);
-            }
-            return result;
-        });
-    }
-}
-
-class AboutPanel extends CElement {
-    constructor(parent) {
-        super(parent);
-        this.id = "id";
-        this.parent = parent ? parent : "body";
-        this.name = CLASSNAMES.ABOUT_PANEL;
-
-        this.elements = [CloseButton,
-            AboutDescription,
-            AboutLogo,
-            AboutText
-        ];
-        this.args = [() => { AboutPanel.toggle(); }]
-    }
-
-    getParent() {
-        let elements = document.getElementsByClassName(this.parent);
-        if (elements.length > 0) {
-            return elements[0];
-        }
-    }
-
-    load() {
-        for (let e = 0; e < this.elements.length; e++) {
-            let element = new this.elements[e](this.make_id(), undefined, e<this.args.length?this.args[e]:undefined);
-            element.initiate();
-            element.load();
-        }
-
-        this.getElement().style.display = "none";
-    }
-
-    static toggle() {
-        let panel = document.getElementById(`${CLASSNAMES.ABOUT_PANEL}_id`);
-        panel.style.display = panel.style.display === "none" ? "flex" : "none";
-    }
-}
-
-// class AboutPanelCloseButton extends CloseButton {
-//     constructor(parent) {
-//         super(parent);
-//         this.id = "aboutid";
-//     }
-
-//     initiate() {
-//         let element = document.createElement("button");
-//         element.setAttribute('class', this.name);
-//         element.setAttribute("id", this.make_id());
-//         element.innerHTML = this.content;
-//         element.onclick = () => { AboutPanel.toggle(); };
-//         this.getParent().appendChild(element);
-//     }
-// }
-
-class AboutDescription extends CElement {
-    constructor(parent) {
-        super(parent);
-        this.name = CLASSNAMES.ABOUT_DESCRIPTION;
-        this.content = `City layers is a city-making app that empowers citizens to shape the changes they want to see in their cities!`;
-    }
-
-    load() { }
-
-    initiate() {
-        let element = document.createElement("div");
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        element.innerHTML = this.content; //emoji.emojify(this.content);
-        this.getParent().appendChild(element);
-    }
-}
-
-class AboutText extends CElement {
-    constructor(parent) {
-        super(parent);
-        this.name = CLASSNAMES.ABOUT_TEXT;
-        this.content = `City Layers embody the motto “act local to go global” 
-        by relying on citizen mapping as a holistic and inclusive city-making 
-        practice that aims to tackle the contemporary spatial, social and 
-        environmental challenges our cities are facing. <br><br>
-
-        This powerful city mapping app serves as a means of 
-        communication between cities and their citizens, 
-        generating a new type of data that is 
-        collectively generated, managed and cared for. `
-    }
-
-    load() { }
-
-    initiate() {
-        let element = document.createElement("div");
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        element.innerHTML = this.content; //emoji.emojify(this.content);
-        this.getParent().appendChild(element);
-    }
-}
-
-class AboutLogo extends CElement {
-    constructor(parent, category) {
-        super(parent, category);
-        this.name = "aboutlogo";
-        this.content = "images/about.svg"; // U+02715
-    }
-
-    initiate() {
-        var element = document.createElement("img");
-        element.src = this.content;
-        element.setAttribute('class', this.name);
-        element.setAttribute("id", this.make_id());
-        this.getParent().appendChild(element);
-    }
-}
-

@@ -7,6 +7,35 @@ use Illuminate\Http\Request;
 
 class PlaceController extends Controller
 {
+
+    public function savePlace(Request $request)
+    {
+        $margin = 0.001;
+        $place = Place::where('longitude', '<', $request->longitude + $margin)
+        ->where('longitude', '>', $request->longitude - $margin)
+        ->where('latitude', '>', $request->latitude - $margin)
+        ->where('latitude', '<', $request->latitude);
+        $check = $place->exists();
+            if ($check) {
+                return response()->json([
+                    'status' => 'success',
+                    'id' => $place->id
+        
+                ]);
+            }
+        $val = Place::create(
+            [
+                'longitude' => $request->longitude,
+                'latitude' => $request->latitude,
+            ]
+        );
+        return response()->json([
+            'status' => 'success',
+            'id' => $val->id
+
+        ]);
+    }   
+
     /**
      * Display a listing of the resource.
      *

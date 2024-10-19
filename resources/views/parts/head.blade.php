@@ -48,8 +48,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <!-- Primary Meta Tags -->
 <meta name="title" content="CityLayers">
-<meta name="description" content="" />
-<meta name="keywords" content="" />
+<meta name="description" content="Digital urban participation platform" />
+<meta name="keywords" content="Citizen participation platform, digital tool, urban research" />
 <link rel="shortcut icon" href="/images/icons/icon-96x96.png" type="image/x-icon" />
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website">

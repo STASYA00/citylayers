@@ -1,10 +1,15 @@
 @php use \App\Http\Controllers\GlobalController; @endphp
+@php use \App\Http\Controllers\ConfigController; @endphp
+@php use \App\Http\Controllers\ProjectController; @endphp
 @php  $places = GlobalController::places();@endphp
 @php  $comments = GlobalController::comments();@endphp
 @php  $categories = GlobalController::categories();@endphp
 @php  $subcategories = GlobalController::subcategories();@endphp
 @php  $grades = GlobalController::grades();@endphp
 @php  $subgrades = GlobalController::subgrades();@endphp
+@php  $catconfigs = ConfigController::allcategories();@endphp
+@php  $configs = ConfigController::all();@endphp
+@php  $projects = ProjectController::all();@endphp
 @php
     $locale = session()->get('locale');
     if ($locale == null) {
@@ -24,10 +29,12 @@
 @vite('resources/css/sidepanel.css')
 
 @vite('resources/css/map.css')
-@vite('resources/js/map.js')
 
 @vite('resources/js/citymap.js')
 @vite('resources/js/category.js')
+
+@vite('resources/js/projectPanel.js')
+@vite('resources/js/project.js')
 
 @vite('resources/js/scope.js')
 @vite('resources/css/scope.css')
@@ -35,25 +42,58 @@
 @section('main')
 
 
-
-
 <div class="main-map">
     <div class="left-container"></div>
     <div class="right-container"></div>
 </div>
     <script>
-        <?php require_once("js/container.js");?>
-        <?php require_once("js/citymap.js");?>
-        <?php require_once("js/commentbar.js");?>
-        <?php require_once("js/category.js");?>
-        <?php require_once("js/dataGenerator.js");?>
-        <?php require_once("js/scope.js");?>
+        <?php require_once("js/classnames.js");?>
+        
+        <?php require_once("js/logic/project.js");?>
+        <?php require_once("js/logic/config.js");?>
+        <?php require_once("js/logic/category.js");?>
+        <?php require_once("js/logic/state.js");?>
+
+        <?php require_once("js/ui/component/celement.js");?>
+        <?php require_once("js/ui/component/imageElement.js");?>
+        <?php require_once("js/ui/component/textElement.js");?>
+        
+        <?php require_once("js/ui/component/logo.js");?>
+        <?php require_once("js/ui/component/pinButton.js");?>
+        <?php require_once("js/ui/component/closeButton.js");?>
+        <?php require_once("js/ui/component/switch.js");?>
+        <?php require_once("js/ui/component/scope.js");?>
+        <?php require_once("js/ui/component/slider.js");?>
+
+        <?php require_once("js/ui/container.js");?>
+        
+        <?php require_once("js/ui/geocodeParser.js");?>
+        
+        <?php require_once("js/ui/panel/contentPanel.js");?>
+        <?php require_once("js/ui/panel/sidePanel.js");?>
+        
+        <?php require_once("js/ui/panel/configPanel.js");?>
+        <?php require_once("js/ui/panel/projectPanel.js");?>
+        <?php require_once("js/ui/panel/topTagPanel.js");?>
+        <?php require_once("js/ui/panel/about.js");?>
+        <?php require_once("js/ui/panel/citylayerspanel.js");?>
+                
+        <?php require_once("js/karta/citymap.js");?>
+        
+        <?php require_once("js/ui/panel/commentbar.js");?>
+        
+        <?php require_once("js/ui/dataGenerator.js");?>
+        <?php require_once("js/ui/component/scope.js");?>
+        <?php require_once("js/ui/container.js");?>
     </script>
     
     <!-- <script src="resources/js/map.js"></script> -->
     <script>
+        let page_project_id = {!! json_encode($project_id) !!};
         const FAKEDATA = false;
-        
+        const projectInput = {!! json_encode($projects) !!};
+        const configInput = {!! json_encode($configs) !!};
+        const catConfigInput = {!! json_encode($catconfigs) !!};        
 
         let rightContainer = "right-container"; 
         let leftContainer = "left-container"; 
@@ -70,9 +110,21 @@
                                                              subcats.filter(e=>e.parent_id==c.id),
                                                              c.color, c.low, c.high
                                                             ));
+        let configs = configInput.map(s=>new Config(s.id, s.name, s.description, categories.filter(
+            c=>catConfigInput.filter(cat=>cat.config_id==s.id).map(cat=>cat.category_id).includes(c.id)
+        )))
+        let projects = projectInput.map(s => new Project(s.id, s.name, 
+                                s.description, 
+                                configs.filter(c=>c.id==s.config_id)[0]));
+        if (page_project_id){
+            State.setup(projects.filter(p=>p.id==page_project_id));
+        }
+        else{
+            State.setup(projects);
+        }
         
         
-
+        
         let obs = [];
 
         if (FAKEDATA == true){
@@ -104,18 +156,18 @@
 
 
         let m = new MapPanel(rightContainer);
-        let c = new CategoryPanel(leftContainer);
+        let c = new ConfigPanel(leftContainer);
         let scope = new Scope(rightContainer);
         let commentPanel = new CommentPanel(rightContainer);
         let aboutLabel = new AboutLabel(rightContainer);
         let aboutPanel = new AboutPanel(rightContainer);
         let topTagPanel = new TopTagPanel(rightContainer);
 
-        CategoryPanel.activation = (category, lower, upper)=>{m.reload(category, lower, upper)};
+        CityLayersPanel.activateProject = (project, active)=>{m.reloadProject(project, active)};
+        CityLayersPanel.activation = (category, lower, upper)=>{m.reload(category, lower, upper)};
 
-
-        CategoryPanel.markertoggle = (subcat, on)=>{m.reloadMarkers(subcat, on)};
-        CategoryPanel.getCoords = ()=>{return m.getCoords();};
+        CityLayersPanel.markertoggle = (subcat, on)=>{m.reloadMarkers(subcat, on)};
+        CityLayersPanel.getCoords = ()=>{return m.getCoords();};
         MapPanel.toggleComment = (i, on)=>{ CommentPanel.focusComment(i, on)};
         CommentPanel.toggleMarker = (id, on)=>{m.activate(id, on)};
         
@@ -126,12 +178,9 @@
         aboutLabel.initiate();
         aboutPanel.initiate();
 
-
-        // console.log(obs);
-        // console.log(categories);
-
         m.load(categories, obs);
-        c.load(categories);  // ["Accessibility", "Noise", "Safety", "Weather Resistance", "Amenities"]
+        // c.load(categories);  // ["Accessibility", "Noise", "Safety", "Weather Resistance", "Amenities"]
+        c.load(config);
 
         commentPanel.load(commentInput);
         topTagPanel.load();

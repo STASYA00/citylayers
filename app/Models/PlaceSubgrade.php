@@ -14,6 +14,6 @@ class PlaceSubgrade extends Model
     use HasFactory;
     protected $fillable = [
         'grade_id', 
-        'category_id',
+        'place_id',
         'subcategory_id'];
 }

@@ -1,0 +1,3 @@
+INSERT INTO `projects` (`id`, `name`, `config_id`, `description`, `mappable`, `start_date`, `end_date`, `created_at`, `updated_at`) VALUES (NULL, 'EU Sparks for Climate', NULL, 'City Layers for Greener Cities', '0', '2024-08-01 12:00:00', '2024-10-31 12:00:00', current_timestamp(), current_timestamp()),
+(NULL, 'Citizen Science Award 2023', NULL, '4 Cities, 540 Participants, and over 10,000 in-App Contributions', '0', '2023-04-01 12:00:00', '2024-08-31 12:00:00', current_timestamp(), current_timestamp()),
+(NULL, 'City Layers @Responsive Cities 2023', NULL, 'Contribution to the Topic of Co-Design and Living', '0', '2023-11-01 12:00:00', NULL, current_timestamp(), current_timestamp());
