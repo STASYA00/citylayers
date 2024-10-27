@@ -118,7 +118,6 @@
                         .then(res =>{
                             
                             props = res[0].get("p").properties;
-                            console.log(props);
                             let name = props.name;
                             let period = new ProjectPeriod(props.start_date, props.end_date);
                             let subtitle = props.subtitle;

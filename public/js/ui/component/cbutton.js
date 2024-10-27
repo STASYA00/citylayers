@@ -2,11 +2,11 @@
 
 class CButton extends CElement {
     
-    constructor(parent, category, onclick) {
-        super(parent, category ? category.name : "id");
+    constructor(parent, onclick) {
+        super(parent, "id");
         this.name = CLASSNAMES.CLOSE;
         this.content = "✕"; // U+02715
-        this.onclick = onclick ? onclick : () => { CategorySidePanel.toggle(category) };
+        this.onclick = onclick ? onclick : () => { }; //CategorySidePanel.toggle(category)
     }
 
     initiate() {

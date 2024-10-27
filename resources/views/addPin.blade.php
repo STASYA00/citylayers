@@ -1,16 +1,4 @@
-@php use \App\Http\Controllers\GlobalController; @endphp
-@php use \App\Http\Controllers\ProjectController; @endphp
-@php use \App\Http\Controllers\ConfigController; @endphp
 
-@php  $questions = GlobalController::questions();@endphp
-@php  $categories = GlobalController::categories();@endphp
-@php  $subcategories = GlobalController::subcategories();@endphp
-@php  $config = ProjectController::getConfig($project_id);@endphp
-@php  $aspects = ConfigController::getAspects($config->id);@endphp
-@php  $aspect_hierarchy = ConfigController::getHierarchy($config->id);@endphp
-@php  $levels = ConfigController::getLevels($config->id);@endphp
-@php  $questions = ConfigController::getQuestions($config->id);@endphp
-@php  $question_locs = ConfigController::getQuestionLocs($config->id);@endphp
 @php
     $locale = session()->get('locale');
     if ($locale == null) {
@@ -64,35 +52,106 @@ $lng = $_GET['lng'] ?? null;
     <?php require_once("js/parser/question.js");?>
 
     <?php require_once("js/logic/illustration.js");?>
+
+    <?php require_once("js/graph/graph.js");?>
     
+    let db = new DBConnection();
+    let questions = [];
+
+    // let project_name = "Urban%20Observations%202024";
+    let project_name = {!! json_encode($project_name) !!};
     
+    db.init()
+                    
+        .then(d=>{
+            return db.read(QUERYS.CONFIG_QUESTIONS_HL, {"name": project_name.replaceAll("%20", " ")})
+            .then(res =>{
+                let questions = res.map(r=>[
+                    r.get(GRAPH_KEYS.QUESTION).properties.value,
+                    r.get(GRAPH_KEYS.QUESTION).properties.help,
+                    r.get(GRAPH_KEYS.STEP).properties.step,
+                ]
+            ).sort((a,b)=>{return a[2]-b[2]})
+             .map(r=>r[0])
+             .filter(onlyUnique)
+             .map(q=>new Question(q, res.filter(r=>
+                    r.get(GRAPH_KEYS.QUESTION).properties.value==q)
+                            .map(t=>t.get(GRAPH_KEYS.QUESTION).properties.help)[0],
+                            res.filter(r=>
+                    r.get(GRAPH_KEYS.QUESTION).properties.value==q)
+                            .map(t=>t.get(GRAPH_KEYS.STEP).properties.step)[0]
+                    ));
+            
+            let qas = questions.map((q, i)=>{
+                let a = res.filter(r=>r.get(GRAPH_KEYS.QUESTION).properties.value==q.content)[0];
+                let qaset = new QASet(i);
+                qaset.add(new QAPair(q, AnswerParser.make(
+                                    a.get(GRAPH_KEYS.ANSWER).properties.atype, 
+                                    a.get(GRAPH_KEYS.ANSWER).properties)));
+                return qaset;
+                }
+            );
 
-    const mainContainer = document.getElementById('main-container');
-    const cats = {!! json_encode($categories) !!};
-    const subcats = {!! json_encode($subcategories) !!};
-    const questions = QuestionParser.make({!! json_encode($questions) !!});
-    
-    console.log({!! json_encode($levels) !!});
-    // console.log({!! json_encode($aspect_hierarchy) !!});
-    // console.log(questions);
-    /*We know that questions belong to the same aspect by checking it in question_locs->aspect_id */
-
-    let qtree = new QuestionTree({!! json_encode($aspect_hierarchy) !!}, 
-                                 {!! json_encode($question_locs) !!},
-                                questions);
-    let answerTree = new AnswerTree();
-    const qPanel = new QPanel('main-container');
-    qPanel.initiate();
-    qPanel.load(qtree, answerTree);
-
-    const lat = {!! json_encode($lat) !!};
-    const lng = {!! json_encode($lng) !!};
-
-    function uuidv4() {
-        return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
-            (+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16)
-        );
+            return qas;
+        });
     }
+        )
+        .then(qas=>{
+            console.log("stage 2", qas);
+            return db.read(QUERYS.FOLLOWUP_QUESTIONS, {"name": project_name.replaceAll("%20", " ")})
+                            .then(res =>{
+                                let questions = res.map(r=>
+                [
+                    r.get(GRAPH_KEYS.QUESTION).properties.value,
+                    r.get(GRAPH_KEYS.QUESTION).properties.help
+                ]
+            ).sort((a,b)=>{return a[2]-b[2]})
+             .map(r=>r[0])
+             .filter(onlyUnique)
+             .map(q=>new Question(q, res.filter(r=>
+                    r.get(GRAPH_KEYS.QUESTION).properties.value==q)
+                            .map(t=>t.get(GRAPH_KEYS.QUESTION).properties.help)[0],
+                            res.filter(r=>
+                    r.get(GRAPH_KEYS.QUESTION).properties.value==q)
+                            .map(t=>t.get(GRAPH_KEYS.STEP).properties.step)[0]
+                    )).forEach((q, i)=>{
+                let a = res.filter(r=>r.get(GRAPH_KEYS.QUESTION).properties.value==q.content)[0];
+                return qas[q.step-1].add(new QAPair(q, AnswerParser.make(
+                                    a.get(GRAPH_KEYS.ANSWER1).properties.atype, 
+                                    // a.get(GRAPH_KEYS.ANSWER1).properties,
+                                    res.filter(re=>re.get(GRAPH_KEYS.QUESTION).properties.value==q.content)
+                                        .map(c=>c.get(GRAPH_KEYS.CHOICE).properties.name)
+                                )))})
+                
+            return qas;
+                }
+            );
+            
+        })
+        .then(
+            qas=>{
+                const mainContainer = document.getElementById('main-container');
+                /*We know that questions belong to the same aspect by checking it in question_locs->aspect_id */
+
+                let qtree = new QuestionTree({}, 
+                                            {},
+                                            questions);
+                let answerTree = new AnswerTree();
+                const qPanel = new QPanel('main-container');
+                qPanel.initiate();
+                console.log("--!", qas);
+                qPanel.load(qas);
+                // qPanel.load(qtree, answerTree);
+
+
+            }
+        )
+    
+
+    const lat = 10;
+    const lng = 10;
+
+    
 
     function sendRequest(d, url, callback) {
         return $.ajax({

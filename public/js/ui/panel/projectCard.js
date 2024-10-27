@@ -8,6 +8,11 @@ class ProjectCardPanel extends LegalPanel{
         this.elements = [ProjectCardHeader, ProjectCardBody];
 
     }
+
+    getParent(){
+        let els = document.getElementsByTagName(this.parent);
+        return els.length>0 ? els[0] : document.body;
+    }
 }
 
 class ProjectCardHeader extends CElement{
@@ -65,7 +70,7 @@ class ProjectCardBody extends CElement{
                         CLASSNAMES.PARTNER
                     
                     ];
-        let cover = new Illustration(`/images/projects/${content.id}/cover.svg`, '');
+        let cover = new Illustration(`/images/projects/${content.name}/cover.svg`, '');
         this.args = [cover, 
                      content.name, 
                      content.info.recognition,

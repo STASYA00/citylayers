@@ -22,8 +22,10 @@
     "dependencies": {
         "@barba/core": "^2.9.7",
         "alpinejs": "^3.10.5",
+        "d3": "^7.9.0",
         "flowbite": "^1.6.4",
         "glob": "^10.4.1",
+        "neo4j-driver": "^5.26.0",
         "node-emoji": "^2.1.3",
         "rippleui": "^1.9.2"
     }

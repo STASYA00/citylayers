@@ -3,7 +3,8 @@
 class CElement {
     static _name = CLASSNAMES.CATEGORY_CONTAINER;
     constructor(parent, id) {
-        this.id = id ? id : "id";
+        this.id = id ? id : uuidv4();
+        this.name = "";
         this.parent = parent;
         this.elements = []
     }
@@ -40,5 +41,9 @@ class CElement {
     }
     make_id() {
         return `${this.name}_${this.id}`
+    }
+
+    show(display){
+        this.getElement().style.display = display==false ? "none" : "flex";
     }
 }

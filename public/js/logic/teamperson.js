@@ -11,10 +11,8 @@ class TeamPerson{
 }
 
 class Role{
-    constructor(id, role, project_id, project_name){
-        this.id = id;
+    constructor(role, project_name){
         this.role = role;
-        this.project_id = project_id;
         this.project_name = project_name;
     }
 }

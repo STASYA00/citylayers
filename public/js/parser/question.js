@@ -1,32 +1,34 @@
-class QuestionParser extends Parser{
+const ANSWERS = {
+    RANGE: "range",
+    BOOL: "bool",
+    CATEGORY: "category",
+    IMAGE: "image",
+    TEXT: "comment",
+    MULTICATEGORY: "multicategory",
+}
+
+class AnswerParser extends Parser{
 
     static content = new Map([
-        [1, QuestionRange],
-        [2, QuestionMultiCategorical],
-        [3, QuestionImage],
-        [4, QuestionText]
+        [ANSWERS.RANGE, AnswerRange],
+        [ANSWERS.BOOL, AnswerBool],
+        [ANSWERS.CATEGORY, AnswerCategorical],
+        [ANSWERS.IMAGE, AnswerImage],
+        [ANSWERS.TEXT, AnswerText],
+        [ANSWERS.MULTICATEGORY, AnswerMultiCategorical],
+
     ])
 
-    static make(inp){
-        
-
-        return inp.map(
-            el => {
-                let e = QuestionParser.content.get(parseInt(el.question_type));
-                return new e(el.id, el.question);
-            }
-        )
-        
+    static make(inp, args){
+        let e = AnswerParser.content.get(inp);
+        return new e(args);        
     }
 }
 
 class QuestionTreeParser extends Parser{
 
     static content = new Map([
-        [1, QuestionRange],
-        [2, QuestionMultiCategorical],
-        [3, QuestionImage],
-        [4, QuestionText]
+       
     ])
 
     static make(hierarchy, q_locs, questions){

@@ -2,9 +2,10 @@
 class InputElement extends CElement {
     constructor(parent, name, content) {
         super(parent);
-        this.id = IDS.TEXT_INPUT;
+        // this.id = IDS.TEXT_INPUT;
         this.name = name;
-        this.content = content ? content.replaceAll("\\n", "<br>") : "";
+        // console.log(content);
+        this.content = ""; //content ? content.replaceAll("\\n", "<br>") : "";
         this.t = "input";
     }
     load() { }
@@ -19,6 +20,7 @@ class InputElement extends CElement {
     }
 
     initiate(answerTree, nextid) {
+        
         let element = document.createElement(this.t);
         element.setAttribute('type', "text");
         element.setAttribute('name', this.name);
@@ -35,7 +37,8 @@ class InputElement extends CElement {
 class TextInputElement extends InputElement {
     constructor(parent, name, content) {
         super(parent, name, content);
-        this.id = IDS.TEXT_INPUT;
+        this.name = CLASSNAMES.TEXT_INPUT;
+        // this.id = IDS.TEXT_INPUT;
         this.t = "textarea";
     }
 
@@ -56,7 +59,8 @@ class TextInputElement extends InputElement {
 class ImageInputElement extends InputElement {
     constructor(parent, name, content) {
         super(parent, name, content);
-        this.id = IDS.IMG_INPUT;
+        this.name = CLASSNAMES.IMG_INPUT;
+        // this.id = IDS.IMG_INPUT;
     }
 
     initiate(answerTree, nextid) {
@@ -84,18 +88,27 @@ class ImageInputElement extends InputElement {
 }
 
 class InputContainer extends ContentPanel {
-    constructor(parent){
+    constructor(parent, content){
         super(parent, "");
         this.name = CLASSNAMES.IMGINPUT_CONTAINER;
-        this.content = ["", "or skip"];
+        this.content = content ? content : ["", "or skip"];
         this.elements = [];
+    }
+
+    getElement() {
+        // let elements = document.getElementsByClassName(this.name);
+        // if (elements.length > 0){
+        //     return elements[0];
+        // }
+        return document.getElementById(`${this.name}_${this.id}`);
     }
 
     load(answerTree) {
         this.elements.forEach((el, i) => {
             let element = new el(this.make_id(), this.parent, 
                                  this.content instanceof Array ? this.content[i] : this.content);
-            console.log("..", answerTree);
+            // console.log("..", answerTree);
+            
             element instanceof InputElement ? element.initiate(answerTree) : element.initiate();
             element instanceof InputContainer ? element.load(answerTree) : element.load();
         });
@@ -133,7 +146,14 @@ class RangeInputElement extends InputElement {
     constructor(parent, name, content) {
         super(parent, name, "");
         this.content = content;
-        this.id = IDS.RANGE_INPUT;
+        // this.id = IDS.RANGE_INPUT;
+        this.name = CLASSNAMES.RANGE_INPUT;
+        this.values = new Map(
+            [
+                [RANGE_LABELS.MIN, this.content["min"] ? this.content["min"] : 0],
+                [RANGE_LABELS.MAX, this.content["max"] ? this.content["max"] : 100],
+            ]
+        );
     }
 
     initiate(answerTree, nextid) {
@@ -142,8 +162,8 @@ class RangeInputElement extends InputElement {
         element.setAttribute("id", this.make_id());
         element.setAttribute("class", CLASSNAMES.RANGE_SLIDER);
         element.setAttribute('name', this.name);
-        element.setAttribute('min', "0");
-        element.setAttribute('max', "100");
+        element.setAttribute('min', this.values.get(RANGE_LABELS.MIN).toString());
+        element.setAttribute('max', this.values.get(RANGE_LABELS.MAX).toString());
         
         element.onchange = (ev)=>{
             this.activateNext(answerTree, nextid);
@@ -158,7 +178,14 @@ class RangeLabelElement extends InputContainer {
         super(parent, name);
         this.name = CLASSNAMES.RANGE_CONTAINER;
         this.elements = [SpanElement, SpanElement];
-        this.content = content ? content : ["Less", "More"];
+        this.content = content ? [content["minlabel"], content["maxlabel"]] : ["Less", "More"];
+        console.log(content);
+        // this.values = new Map(
+        //     [
+        //         [RANGE_LABELS.MIN, this.content["minlabel"] ? this.content["minlabel"] : "Low"],
+        //         [RANGE_LABELS.MAX, this.content["maxlabel"] ? this.content["maxlabel"] : "High"],
+        //     ]
+        // );
     }
 
 
@@ -166,9 +193,8 @@ class RangeLabelElement extends InputContainer {
 
 class RangeContainerElement extends InputContainer {
     constructor(parent, id, content){
-        super(parent, "", content);
+        super(parent, content);
         this.name = CLASSNAMES.TAG_CONTAINER;
-        this.content = [id, undefined];
         this.elements = [RangeInputElement, RangeLabelElement];
     }
 
@@ -180,14 +206,14 @@ class CheckboxContainerElement extends InputContainer {
         console.log(checks);
         this.name = CLASSNAMES.TAG_CONTAINER;
         this.content = checks;
-        this.elements = checks.map(c=>CheckboxInputElement);
+        this.elements = checks.map(c=>CheckboxElement);
     }
     
 }
 
 class CheckboxElement extends InputContainer {
-    constructor(parent, content){
-        super(parent, "", content);
+    constructor(parent, id, content){
+        super(parent, content);
         this.name = "tag selectable";
         this.content = content;
         this.elements = [CheckboxInputElement, CheckboxLabelElement];
@@ -197,15 +223,17 @@ class CheckboxElement extends InputContainer {
 
 class CheckboxInputElement extends InputElement {
     constructor(parent, name, content) {
-        super(parent, name, content);
-        this.id = IDS.MULTICHOICE_INPUT;
+        super(parent, content);
+        // this.id = IDS.MULTICHOICE_INPUT;
+        this.name = CLASSNAMES.MULTICHOICE_INPUT;
+        
     }
 
     initiate(answerTree, nextid) {
         let element = document.createElement(this.t);
         element.setAttribute('type', "checkbox");
         element.setAttribute("id", this.make_id());
-        element.setAttribute("class", CLASSNAMES.SUBCATEGORY_TAG);
+        element.setAttribute("class", CLASSNAMES.TAG_LABEL);
         element.setAttribute('name', this.name);
         
         element.onchange = (ev)=>{
@@ -222,15 +250,17 @@ class CheckboxLabelElement extends InputElement {
     constructor(parent, name, content) {
         super(parent, name, content);
         this.name = CLASSNAMES.TAG_LABEL;
+        this.content = content;
+        console.log("check", this.content);
     }
 
     initiate() {
         let element = document.createElement("div");
-        element.setAttribute("class", CLASSNAMES.SUBCATEGORY_TAG);
+        element.setAttribute("class", CLASSNAMES.TAG_LABEL);
         this.getParent().appendChild(element);
 
         let element1 = document.createElement("label");
-        element1.setAttribute("class", CLASSNAMES.SUBCATEGORY_TAG);
+        element1.setAttribute("class", CLASSNAMES.TAG_LABEL);
         element1.innerHTML = this.content;
         element.appendChild(element1);
     }

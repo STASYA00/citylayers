@@ -1,6 +1,6 @@
 
 
-class TeamPanel extends ContentPanel{
+class TeamPanel extends LegalPanel{
     static name = CLASSNAMES.HOME_PANEL;
     constructor(parent){
         super(parent, "id");
@@ -10,9 +10,14 @@ class TeamPanel extends ContentPanel{
         
     }
 
+    getParent(){
+        let els = document.getElementsByTagName(this.parent);
+        return els.length>0 ? els[0] : document.body;
+    }
+
     load(team) {
         this.elements.forEach(el => {
-            let element = new el(this.make_id(), "main");
+            let element = new el(this.make_id(), "team");
             element.initiate();
             element.load(team);
         });

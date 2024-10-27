@@ -2,10 +2,9 @@
 class ContentPanel extends CElement{
     static name = CLASSNAMES.CATEGORY_PANEL;
 
-    constructor(parent){
-        super(parent, "id");
+    constructor(parent, id){
+        super(parent, id);
         this.parent = parent ? parent : "body";
-        this.id = "id";
         this.name = CLASSNAMES.CATEGORY_PANEL;
         this.elements = [];
     }
@@ -16,10 +15,11 @@ class ContentPanel extends CElement{
             element.initiate();
             element.load();
         });
+        categories ?
         categories.forEach((category, c) => {
             this.addCategory(category);
             document.body.style.setProperty(`--category${c+1}`, `#${category.color}`);
-        });
+        }) : ()=>{};
     }
 
 
